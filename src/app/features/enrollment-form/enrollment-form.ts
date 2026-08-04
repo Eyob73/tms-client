@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -11,7 +11,8 @@ import {
   selector: 'app-enrollment-form',
   standalone: true,
   imports: [ReactiveFormsModule], // Required without this, Angular does notrecognize form directives
-  templateUrl: './enrollment-form.html'
+  changeDetection: ChangeDetectionStrategy.Eager,
+  templateUrl: './enrollment-form.html',
 })
 export class EnrollmentFormComponent {
   // inject(FormBuilder) is Angular's way of requesting a service.

@@ -1,14 +1,14 @@
-import { Component, input, effect, signal } from "@angular/core";
+import { Component, input, effect, signal, ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Course } from "../../models/course.model";
+import { Course } from '../../models/course.model';
 
 @Component({
-  selector: "app-course-detail",
+  selector: 'app-course-detail',
   standalone: true,
   imports: [RouterLink],
-  templateUrl: "./course-detail.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
+  templateUrl: './course-detail.component.html',
 })
-
 export class CourseDetailComponent {
   // This automatically receives the :id from the URL /courses/:id
   // Because we enabled withComponentInputBinding() in app.config.ts (Step 2 of Excercise 1),

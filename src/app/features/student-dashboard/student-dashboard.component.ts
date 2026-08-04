@@ -1,10 +1,11 @@
 // These are the Angular functions we need. signal() and computed() come from Angular's core.
-import { Component, signal, computed, inject } from '@angular/core';
+import { Component, signal, computed, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CourseCardComponent } from '../../ui/course-card/course-card.component';
 import { Course } from '../../models/course.model';
 import { EnrollmentFormComponent } from '../enrollment-form/enrollment-form';
 import { RouterLink } from '@angular/router';
 import { rxResource } from '@angular/core/rxjs-interop';
+import { resource } from '@angular/core';
 import { CourseService } from '../../services/course';
 
 // The @Component decorator tells Angular: "This class is a visual component."
@@ -14,6 +15,7 @@ import { CourseService } from '../../services/course';
   standalone: true, // This component manages its own imports (no NgModule)
   imports: [CourseCardComponent, RouterLink], // This tells Angular: "I use CourseCardComponent in my template"
   templateUrl: './student-dashboard.component.html', // Points to the HTML file
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './student-dashboard.component.scss', // Points to the styles file
 })
 export class StudentDashboardComponent {
@@ -45,8 +47,9 @@ export class StudentDashboardComponent {
   // It handles subscribing (starting the request) and unsubscribing(cleaning up
   // if the user navigates away before the response arrives) automatically.
   // You never write .subscribe() or .unsubscribe() with rxResource.
+
   coursesResource = rxResource({
-    loader: () => this.api.getAll(),
+    stream: () => this.api.getAll(),
   });
 
   // A regular method. When called, it updates the earnedCredits signal.

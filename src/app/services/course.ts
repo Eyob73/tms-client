@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Service, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { Course, CourseDetail, PagedResponse } from '../models/course.model';
@@ -6,7 +6,7 @@ import { Course, CourseDetail, PagedResponse } from '../models/course.model';
 // and shares it across the entire app. This is the Angular 22 shorthandreplacing legacy @Injectable.
 // This is similar to AddSingleton<T>() in .NET's dependency injection.
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class CourseService {
   // inject(HttpClient) requests Angular's HTTP client the same pattern asinject(FormBuilder)
   private http = inject(HttpClient);
