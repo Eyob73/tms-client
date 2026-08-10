@@ -28,7 +28,7 @@ export class EnrollmentFormComponent {
   // Each field is defined as: [defaultValue, validators]
   // Validators are rules that the value must pass before the form isconsidered valid.
   form = this.fb.nonNullable.group({
-    studentId: ['', [Validators.required, Validators.pattern('^STU-[0-9]{4}$')]],
+    studentId: [, [Validators.required, Validators.pattern('^STU-[0-9]{4}$')]],
     // ^^ default value is empty string
     // ^^ two validators: the field is required AND must matchthe pattern STU-1234
     courseId: ['', Validators.required],

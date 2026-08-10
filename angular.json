@@ -21,9 +21,7 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "polyfills": [
-              "zone.js"
-            ],
+            "polyfills": ["zone.js"],
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
@@ -33,9 +31,7 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.scss"
-            ]
+            "styles": ["src/styles.scss"]
           },
           "configurations": {
             "production": {
@@ -69,6 +65,9 @@
             },
             "development": {
               "buildTarget": "tms-client:build:development"
+            },
+            "options": {
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"
