@@ -9,6 +9,9 @@ import { environment } from '../../environments/environment';
 
 @Service()
 export class CourseService {
+  delete(id: number) {
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  }
   // inject(HttpClient) requests Angular's HTTP client the same pattern asinject(FormBuilder)
   private http = inject(HttpClient);
   private baseUrl = `${environment.apiUrl}/courses`;
