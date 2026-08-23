@@ -1,5 +1,12 @@
 import { Routes } from '@angular/router';
+import { roleGuard } from './guards/role.guard';
+import { AdminCourseListComponent } from './features/admin-course-list/admin-course-list.component';
+import { LoginComponent } from './features/login/login.component';
 export const routes: Routes = [
+  {
+    path: 'login',
+    component: LoginComponent,
+  },
   {
     path: 'dashboard',
     loadComponent: () =>
@@ -7,7 +14,12 @@ export const routes: Routes = [
         (m) => m.StudentDashboardComponent,
       ),
   },
-  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  {
+    path: 'admin/courses',
+    component: AdminCourseListComponent,
+    canActivate: [roleGuard('Admin')],
+  },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   {
     path: 'courses/:id',
     loadComponent: () =>

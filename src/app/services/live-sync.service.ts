@@ -2,6 +2,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { Service, PLATFORM_ID, signal, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
+import { environment } from '../../environments/environment';
 
 export interface EnrollmentStatusEvent {
   id: string;
@@ -22,9 +23,10 @@ export class LiveSyncService {
     // SignalR uses WebSocket which only exists in browsers, not on theNode.js server.
     // If SSR is enabled (Extension 1), this method runs during server render — skip it.
     if (!isPlatformBrowser(this.platformId)) return;
-    // Same hub URL and reconnect strategy you tested in M7 Session 3 browser DevTools
+    // Use the actual backend SignalR endpoint instead of the Angular dev-server origin.
+    // The browser was negotiating against http://localhost:4200/hubs/tms, which caused the 404.
     this.connection = new HubConnectionBuilder()
-      .withUrl('/hubs/tms')
+      .withUrl(environment.signalrUrl)
       .withAutomaticReconnect([0, 2000, 10000, 30000])
       .build();
     // The event name matches the ITmsHubClient method you just addedon the backend.
