@@ -6,12 +6,12 @@ import { Enrollment } from '../models/enrollment.model';
 @Service()
 export class EnrollmentService {
   private http = inject(HttpClient);
-  private baseUrl = 'http://localhost:5001/api/v2/enrollments';
+  private baseUrl = 'http://localhost:5001/api/enrollments';
 
   getAll(): Observable<Enrollment[]> {
     return this.http.get<Enrollment[]>(this.baseUrl);
   }
-  approve(id: string): Observable<void> {
-    return this.http.post<void>(`${this.baseUrl}/${id}/approve`, {});
+  approve(id: string): Observable<Enrollment> {
+    return this.http.post<Enrollment>(`${this.baseUrl}/${id}/approve`, {});
   }
 }

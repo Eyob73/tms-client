@@ -2,11 +2,13 @@ import { Routes } from '@angular/router';
 import { roleGuard } from './guards/role.guard';
 import { AdminCourseListComponent } from './features/admin-course-list/admin-course-list.component';
 import { LoginComponent } from './features/login/login.component';
+import { InstructorDashboard } from './features/instructor-dashboard/instructor-dashboard';
 export const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
   },
+  { path: 'command-center', component: InstructorDashboard, canActivate: [roleGuard] },
   {
     path: 'dashboard',
     loadComponent: () =>
