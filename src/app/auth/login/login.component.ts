@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -26,22 +27,40 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-  private router = inject(Router);
+  private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
 
   email = '';
   password = '';
   rememberMe = false;
   showPassword = false;
+  isSubmitting = false;
+  errorMessage = '';
 
   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
   }
 
-  onSubmit(): void {
-    if (!this.email || !this.password) {
+  async onSubmit(): Promise<void> {
+    if (!this.email.trim() || !this.password) {
+      this.errorMessage = 'Please enter both email and password.';
       return;
     }
-    console.log('Signing in', { email: this.email, rememberMe: this.rememberMe });
-    this.router.navigate(['/dashboard']);
+
+    this.isSubmitting = true;
+    this.errorMessage = '';
+
+    try {
+      await this.authService.login({
+        email: this.email.trim(),
+        password: this.password,
+      });
+
+      this.router.navigate(['/dashboard']);
+    } catch (error) {
+      this.errorMessage = 'Invalid email or password. Please try again.';
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 }

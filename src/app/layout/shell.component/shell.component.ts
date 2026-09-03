@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 interface NavItem {
   label: string;
@@ -23,7 +24,29 @@ interface NavGroup {
   styleUrl: './shell.component.scss',
 })
 export class ShellComponent {
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
   isCollapsed = false;
+
+  readonly currentUser = this.authService.currentUser;
+
+  get userDisplayName(): string {
+    return this.currentUser()?.displayName || 'Training User';
+  }
+
+  get userRole(): string {
+    return this.currentUser()?.role || 'Administrator';
+  }
+
+  get userInitials(): string {
+    const name = this.userDisplayName.trim();
+    if (!name) {
+      return 'TU';
+    }
+
+    const parts = name.split(/\s+/).slice(0, 2);
+    return parts.map((part) => part.charAt(0).toUpperCase()).join('') || 'TU';
+  }
 
   iconMap: Record<string, string> = {
     Dashboard: 'dashboard',
@@ -48,14 +71,19 @@ export class ShellComponent {
         {
           label: 'Training Programs',
           icon: 'fas fa-layer-group',
-          route: '/programs',
+          route: '#',
           tooltip: 'Training Programs',
         },
-        { label: 'Courses', icon: 'fas fa-book-open', route: '/courses', tooltip: 'Courses' },
+        {
+          label: 'Courses',
+          icon: 'fas fa-book-open',
+          route: '/courses',
+          tooltip: 'Course Management',
+        },
         {
           label: 'Schedule',
           icon: 'fas fa-calendar-alt',
-          route: '/schedule',
+          route: '#',
           tooltip: 'Schedule',
         },
       ],
@@ -66,20 +94,20 @@ export class ShellComponent {
         {
           label: 'Instructors',
           icon: 'fas fa-chalkboard-teacher',
-          route: '/instructors',
+          route: '/instructor',
           tooltip: 'Instructors',
         },
-        { label: 'Trainees', icon: 'fas fa-users', route: '/trainees', tooltip: 'Trainees' },
+        { label: 'Trainees', icon: 'fas fa-users', route: '/enrollments', tooltip: 'Trainees' },
         {
           label: 'Assessments',
           icon: 'fas fa-clipboard-check',
-          route: '/assessments',
+          route: '/grade-submission',
           tooltip: 'Assessments',
         },
         {
           label: 'Certifications',
           icon: 'fas fa-certificate',
-          route: '/certifications',
+          route: '#',
           tooltip: 'Certifications',
         },
       ],
@@ -87,11 +115,11 @@ export class ShellComponent {
     {
       title: 'Analytics',
       items: [
-        { label: 'Reports', icon: 'fas fa-chart-bar', route: '/reports', tooltip: 'Reports' },
+        { label: 'Reports', icon: 'fas fa-chart-bar', route: '#', tooltip: 'Reports' },
         {
           label: 'Compliance',
           icon: 'fas fa-shield-alt',
-          route: '/compliance',
+          route: '#',
           tooltip: 'Compliance',
         },
       ],
@@ -99,11 +127,11 @@ export class ShellComponent {
     {
       title: 'System',
       items: [
-        { label: 'Settings', icon: 'fas fa-cog', route: '/settings', tooltip: 'Settings' },
+        { label: 'Settings', icon: 'fas fa-cog', route: '#', tooltip: 'Settings' },
         {
           label: 'Help & Support',
           icon: 'fas fa-question-circle',
-          route: '/help',
+          route: '#',
           tooltip: 'Help & Support',
         },
       ],
@@ -112,5 +140,10 @@ export class ShellComponent {
 
   toggleSidebar(): void {
     this.isCollapsed = !this.isCollapsed;
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigateByUrl('/login');
   }
 }

@@ -14,6 +14,10 @@
       </div>
 
       <form (ngSubmit)="onSubmit()" #loginForm="ngForm" novalidate class="login-form">
+        @if (errorMessage) {
+          <div class="error-banner">{{ errorMessage }}</div>
+        }
+
         <!-- Email Field -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Email Address</mat-label>
@@ -77,9 +81,9 @@
           mat-raised-button
           color="primary"
           class="submit-button full-width"
-          [disabled]="!loginForm.form.valid"
+          [disabled]="!loginForm.form.valid || isSubmitting"
         >
-          <span>Sign In</span>
+          <span>{{ isSubmitting ? 'Signing In...' : 'Sign In' }}</span>
           <mat-icon>arrow_forward</mat-icon>
         </button>
       </form>

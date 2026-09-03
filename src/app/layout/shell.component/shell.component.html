@@ -14,7 +14,7 @@
       <div class="nav-section" *ngFor="let group of navGroups">
         <div class="nav-section-title">{{ group.title }}</div>
 
-        <a  
+        <a
           *ngFor="let item of group.items"
           class="nav-item"
           [routerLink]="item.route"
@@ -31,14 +31,14 @@
     <div class="sidebar-footer">
       <div class="sidebar-user">
         <div class="user-avatar-wrapper">
-          <div class="user-avatar">JD</div>
+          <div class="user-avatar">{{ userInitials }}</div>
           <span class="user-status-dot"></span>
         </div>
         <div class="user-info">
-          <h4>John Doe</h4>
-          <span>Training Administrator</span>
+          <h4>{{ userDisplayName }}</h4>
+          <span>{{ userRole }}</span>
         </div>
-        <button class="logout-btn" type="button" title="Sign out">
+        <button class="logout-btn" type="button" title="Sign out" (click)="logout()">
           <mat-icon>logout</mat-icon>
         </button>
       </div>
@@ -75,7 +75,7 @@
           <mat-icon>mail_outline</mat-icon>
         </button>
         <div class="header-profile">
-          <div class="header-avatar">JD</div>
+          <div class="header-avatar" [attr.title]="userDisplayName">{{ userInitials }}</div>
         </div>
       </div>
     </header>

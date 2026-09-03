@@ -1,26 +1,24 @@
 /*
-  TMS Theme — design tokens
+  TMS Theme v2 — Elevated design tokens & primitives
   ---------------------------------------------------------------------------
-  Single source of truth for color, type, spacing, radius, and elevation.
-  Every component in the app should read from these custom properties
-  instead of hardcoding values, so the whole product stays visually
-  consistent and can be re-themed by editing this file alone.
+  A more appealing, modern look with refined colours, deeper shadows,
+  and a subtle glow. Everything stays consistent and themable from one file.
 */
 
 :root {
   /* ---------------------------------------------------------------------
-     Color — brand
+     Color — brand (warmer, more vibrant blue)
      --------------------------------------------------------------------- */
-  --color-primary-50:  #eef3ff;
-  --color-primary-100: #dce6ff;
-  --color-primary-200: #b3c9ff;
-  --color-primary-300: #85a8ff;
-  --color-primary-400: #5b8def;
-  --color-primary-500: #3a6cf0;   /* primary brand blue */
-  --color-primary-600: #2f5cf0;
-  --color-primary-700: #2647c2;
-  --color-primary-800: #1e3894;
-  --color-primary-900: #172b70;
+  --color-primary-50:  #f0f5ff;
+  --color-primary-100: #e0ebff;
+  --color-primary-200: #b6d0ff;
+  --color-primary-300: #7aa9ff;
+  --color-primary-400: #4d85f5;
+  --color-primary-500: #2d6bf0;   /* primary brand blue, slightly warmer */
+  --color-primary-600: #1f57d9;
+  --color-primary-700: #1845b3;
+  --color-primary-800: #12348c;
+  --color-primary-900: #0d266b;
 
   --color-primary: var(--color-primary-500);
   --color-primary-hover: var(--color-primary-600);
@@ -28,50 +26,50 @@
   --color-primary-subtle: var(--color-primary-50);
 
   /* ---------------------------------------------------------------------
-     Color — neutrals (light surfaces)
+     Color — neutrals (softer, with subtle warmth)
      --------------------------------------------------------------------- */
   --color-white: #ffffff;
-  --color-gray-50:  #f7f8fb;
-  --color-gray-100: #eef2fc;
-  --color-gray-200: #e2e6f0;
-  --color-gray-300: #cdd3e3;
-  --color-gray-400: #a7afc4;
-  --color-gray-500: #8891ac;
-  --color-gray-600: #6b7690;
-  --color-gray-700: #4b5573;
-  --color-gray-800: #333d5c;
-  --color-gray-900: #1f2b4d;
+  --color-gray-50:  #f9fafc;
+  --color-gray-100: #f1f3f8;
+  --color-gray-200: #e3e6ef;
+  --color-gray-300: #cdd2e0;
+  --color-gray-400: #a8b0c8;
+  --color-gray-500: #7e88a8;
+  --color-gray-600: #5e6a8a;
+  --color-gray-700: #414b6b;
+  --color-gray-800: #2c3452;
+  --color-gray-900: #1a2140;
 
   /* ---------------------------------------------------------------------
-     Color — neutrals (dark surfaces, e.g. side panels, nav)
+     Color — dark surfaces (richer, less flat)
      --------------------------------------------------------------------- */
-  --color-ink-900: #0a0e1a;   /* base dark background */
-  --color-ink-800: #10162a;   /* elevated dark surface */
-  --color-ink-700: #171d2f;   /* dark border / hairline */
-  --color-ink-600: #1c2438;   /* dark border, slightly lighter */
-  --color-ink-500: #545e79;   /* muted text on dark */
-  --color-ink-400: #6f7da3;   /* secondary text on dark */
-  --color-ink-300: #8891ac;   /* tertiary text on dark */
-  --color-ink-100: #eef1f8;   /* near-white text on dark */
-  --color-ink-50:  #f5f7fb;   /* white text on dark */
+  --color-ink-900: #0c0f1a;
+  --color-ink-800: #141a2e;
+  --color-ink-700: #1b223a;
+  --color-ink-600: #232b45;
+  --color-ink-500: #5c6787;
+  --color-ink-400: #7a87ad;
+  --color-ink-300: #9aa6c4;
+  --color-ink-100: #eaeef7;
+  --color-ink-50:  #f4f6fc;
 
   /* ---------------------------------------------------------------------
-     Color — semantic
+     Color — semantic (more vibrant, clearer intent)
      --------------------------------------------------------------------- */
-  --color-success: #12b76a;
-  --color-success-subtle: #e7f9f0;
-  --color-warning: #f79009;
-  --color-warning-subtle: #fef3e2;
-  --color-danger: #f04438;
-  --color-danger-subtle: #feefee;
+  --color-success: #0f9d58;
+  --color-success-subtle: #e6f9ee;
+  --color-warning: #f5a623;
+  --color-warning-subtle: #fef5e5;
+  --color-danger: #e74c3c;
+  --color-danger-subtle: #fdedeb;
   --color-info: var(--color-primary-500);
   --color-info-subtle: var(--color-primary-50);
 
   /* ---------------------------------------------------------------------
-     Color — semantic aliases (use these in components)
+     Color — semantic aliases (components use these)
      --------------------------------------------------------------------- */
-  --color-bg: var(--color-gray-100);            /* app / page background */
-  --color-surface: var(--color-white);          /* cards, panels, inputs */
+  --color-bg: #f2f4f9;                        /* app background */
+  --color-surface: var(--color-white);
   --color-surface-sunken: var(--color-gray-50);
 
   --color-text-primary: var(--color-gray-900);
@@ -88,38 +86,38 @@
   --color-border-strong: var(--color-gray-300);
   --color-border-inverse: var(--color-ink-700);
 
-  --color-focus-ring: rgba(58, 108, 240, 0.16);
+  --color-focus-ring: rgba(45, 107, 240, 0.2);
 
   /* ---------------------------------------------------------------------
-     Typography
+     Typography — slightly adjusted for better readability
      --------------------------------------------------------------------- */
-  --font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 
-  --font-size-xs:   12px;
-  --font-size-sm:   13px;
-  --font-size-base: 14.5px;
+  --font-size-xs:   11px;
+  --font-size-sm:   12.5px;
+  --font-size-base: 14px;
   --font-size-md:   16px;
-  --font-size-lg:   18px;
-  --font-size-xl:   22px;
-  --font-size-2xl:  26px;
-  --font-size-3xl:  32px;
-  --font-size-4xl:  42px;
+  --font-size-lg:   19px;
+  --font-size-xl:   24px;
+  --font-size-2xl:  28px;
+  --font-size-3xl:  34px;
+  --font-size-4xl:  44px;
 
   --font-weight-regular:  400;
   --font-weight-medium:   500;
   --font-weight-semibold: 600;
   --font-weight-bold:     700;
 
-  --line-height-tight:   1.2;
-  --line-height-snug:    1.4;
-  --line-height-normal:  1.55;
-  --line-height-relaxed: 1.7;
+  --line-height-tight:   1.15;
+  --line-height-snug:    1.35;
+  --line-height-normal:  1.5;
+  --line-height-relaxed: 1.65;
 
-  --letter-spacing-tight: -0.015em;
-  --letter-spacing-wide:  0.03em;
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-wide:  0.02em;
 
   /* ---------------------------------------------------------------------
-     Spacing (4px base scale)
+     Spacing (4px base scale, slightly expanded)
      --------------------------------------------------------------------- */
   --space-1:  4px;
   --space-2:  8px;
@@ -132,37 +130,55 @@
   --space-12: 48px;
   --space-16: 64px;
   --space-20: 80px;
+  --space-24: 96px;
 
   /* ---------------------------------------------------------------------
-     Radius
+     Radius — larger, more pleasant curves
      --------------------------------------------------------------------- */
-  --radius-sm:   6px;
-  --radius-md:   10px;
-  --radius-lg:   14px;
-  --radius-xl:   20px;
+  --radius-sm:   8px;
+  --radius-md:   12px;
+  --radius-lg:   16px;
+  --radius-xl:   24px;
   --radius-full: 999px;
 
   /* ---------------------------------------------------------------------
-     Elevation
+     Elevation — deeper, more layered shadows
      --------------------------------------------------------------------- */
-  --shadow-sm: 0 1px 2px rgba(15, 27, 61, 0.06);
-  --shadow-md: 0 8px 24px -8px rgba(15, 27, 61, 0.16);
-  --shadow-lg: 0 24px 60px -20px rgba(23, 46, 110, 0.25);
+  --shadow-sm: 0 1px 3px rgba(10, 14, 26, 0.06), 0 1px 2px rgba(10, 14, 26, 0.04);
+  --shadow-md: 0 8px 30px -8px rgba(10, 14, 26, 0.12), 0 4px 12px -6px rgba(10, 14, 26, 0.05);
+  --shadow-lg: 0 30px 70px -16px rgba(10, 14, 26, 0.2), 0 10px 30px -12px rgba(10, 14, 26, 0.08);
+  --shadow-glow: 0 0 0 1px rgba(45, 107, 240, 0.2), 0 8px 24px -6px rgba(45, 107, 240, 0.2);
 
   /* ---------------------------------------------------------------------
-     Motion
+     Motion — slightly slowed for a smoother feel
      --------------------------------------------------------------------- */
-  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
-  --duration-fast: 120ms;
-  --duration-base: 180ms;
+  --ease-standard: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --duration-fast: 150ms;
+  --duration-base: 220ms;
+  --duration-slow: 350ms;
+}
+
+@keyframes appPageFadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.app-page-enter {
+  animation: appPageFadeInUp 0.45s var(--ease-standard) both;
 }
 
 /*
-  TMS Theme — component primitives
+  Component primitives — improved aesthetics
   ---------------------------------------------------------------------------
-  Generic, reusable classes built entirely from theme.css tokens. Import
-  after theme.css. These are plain CSS classes so they work the same in
-  any Angular component (standalone or module-based) without extra setup.
+  Same class names, but with refined styling: softer hover states,
+  smoother transitions, and a hint of visual depth.
 */
 
 /* Buttons -------------------------------------------------------------- */
@@ -172,7 +188,7 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  padding: 12px 20px;
+  padding: 12px 22px;
   border-radius: var(--radius-md);
   border: 1.5px solid transparent;
   font-family: var(--font-family-base);
@@ -182,35 +198,50 @@
   cursor: pointer;
   transition: background var(--duration-fast) var(--ease-standard),
               border-color var(--duration-fast) var(--ease-standard),
-              filter var(--duration-fast) var(--ease-standard),
+              box-shadow var(--duration-fast) var(--ease-standard),
               transform var(--duration-fast) var(--ease-standard);
+  text-decoration: none;
 }
-.btn:disabled { opacity: 0.55; cursor: not-allowed; }
-.btn:active:not(:disabled) { transform: translateY(1px); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn:active:not(:disabled) { transform: scale(0.97); }
 .btn svg { width: 18px; height: 18px; }
 
 .btn--primary {
   background: var(--color-primary);
   color: var(--color-text-on-primary);
+  box-shadow: var(--shadow-sm);
 }
-.btn--primary:hover:not(:disabled) { background: var(--color-primary-hover); }
-.btn--primary:active:not(:disabled) { background: var(--color-primary-active); }
+.btn--primary:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+  box-shadow: var(--shadow-md);
+}
+.btn--primary:active:not(:disabled) {
+  background: var(--color-primary-active);
+  box-shadow: var(--shadow-sm);
+}
 
 .btn--secondary {
   background: var(--color-surface);
   color: var(--color-text-primary);
   border-color: var(--color-border);
 }
-.btn--secondary:hover:not(:disabled) { border-color: var(--color-border-strong); background: var(--color-surface-sunken); }
+.btn--secondary:hover:not(:disabled) {
+  border-color: var(--color-border-strong);
+  background: var(--color-surface-sunken);
+  box-shadow: var(--shadow-sm);
+}
 
 .btn--ghost {
   background: transparent;
   color: var(--color-primary);
 }
-.btn--ghost:hover:not(:disabled) { background: var(--color-primary-subtle); }
+.btn--ghost:hover:not(:disabled) {
+  background: var(--color-primary-subtle);
+  color: var(--color-primary-hover);
+}
 
 .btn--sm { padding: 8px 14px; font-size: var(--font-size-sm); }
-.btn--lg { padding: 14px 24px; font-size: var(--font-size-md); }
+.btn--lg { padding: 14px 26px; font-size: var(--font-size-md); }
 .btn--full { width: 100%; }
 
 /* Inputs ----------------------------------------------------------------- */
@@ -221,11 +252,12 @@
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
   margin-bottom: var(--space-2);
+  letter-spacing: var(--letter-spacing-wide);
 }
 
 .input {
   width: 100%;
-  padding: 13px 14px;
+  padding: 12px 16px;
   border-radius: var(--radius-md);
   border: 1.5px solid var(--color-border);
   font-family: var(--font-family-base);
@@ -239,9 +271,13 @@
 .input::placeholder { color: var(--color-text-placeholder); }
 .input:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px var(--color-focus-ring);
+  box-shadow: var(--shadow-glow);
 }
-.input:disabled { background: var(--color-surface-sunken); color: var(--color-text-tertiary); cursor: not-allowed; }
+.input:disabled {
+  background: var(--color-surface-sunken);
+  color: var(--color-text-tertiary);
+  cursor: not-allowed;
+}
 
 /* Badges ------------------------------------------------------------------ */
 
@@ -249,14 +285,16 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
-  padding: 4px 10px;
+  padding: 3px 12px;
   border-radius: var(--radius-full);
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
 }
 .badge--primary { background: var(--color-primary-subtle); color: var(--color-primary-700); }
-.badge--success { background: var(--color-success-subtle); color: #067a45; }
-.badge--warning { background: var(--color-warning-subtle); color: #a15c05; }
+.badge--success { background: var(--color-success-subtle); color: #0a7a44; }
+.badge--warning { background: var(--color-warning-subtle); color: #b8770a; }
 .badge--danger  { background: var(--color-danger-subtle);  color: #b3261e; }
 .badge--neutral { background: var(--color-gray-100); color: var(--color-text-secondary); }
 
@@ -267,8 +305,16 @@
   border-radius: var(--radius-xl);
   border: 1px solid var(--color-border);
   padding: var(--space-6);
+  transition: box-shadow var(--duration-base) var(--ease-standard),
+              transform var(--duration-fast) var(--ease-standard);
 }
-.card--elevated { border: none; box-shadow: var(--shadow-lg); }
+.card--elevated {
+  border: none;
+  box-shadow: var(--shadow-md);
+}
+.card--elevated:hover {
+  box-shadow: var(--shadow-lg);
+}
 
 /* Typography helpers -------------------------------------------------------- */
 
@@ -284,4 +330,4 @@
 .text-h3 { font-size: var(--font-size-xl); font-weight: var(--font-weight-semibold); line-height: var(--line-height-snug); color: var(--color-text-primary); }
 .text-body { font-size: var(--font-size-base); font-weight: var(--font-weight-regular); line-height: var(--line-height-normal); color: var(--color-text-primary); }
 .text-muted { color: var(--color-text-secondary); }
-.text-caption { font-size: var(--font-size-xs); color: var(--color-text-tertiary); }
+.text-caption { font-size: var(--font-size-xs); color: var(--color-text-tertiary); letter-spacing: var(--letter-spacing-wide); }

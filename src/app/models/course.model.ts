@@ -10,6 +10,12 @@ export interface Course {
   maxCapacity: number;
   enrollmentCount: number;
   status?: string;
+  department?: string;
+  creditHours?: number;
+  createdAt?: string;
+  description?: string;
+  duration?: string;
+  trainer?: string;
 }
 /** Envelope for `GET /api/courses` — TMS API contract list shape (`Pag
 edResponse<T>`). */

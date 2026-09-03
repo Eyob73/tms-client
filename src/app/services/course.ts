@@ -6,7 +6,7 @@ import { environment } from '../../environments/environment';
 @Injectable({ providedIn: 'root' })
 export class CourseService {
   private http = inject(HttpClient);
-  private baseUrl = `${environment.apiUrl}/courses`;
+  private baseUrl = `${environment.apiUrl}courses`;
 
   getAll(page = 1, pageSize = 50, search?: string) {
     const params: Record<string, string> = {

@@ -82,6 +82,17 @@
   padding: 0 var(--space-4) !important;
 }
 
+.error-banner {
+  margin-bottom: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--color-danger-subtle);
+  color: var(--color-danger);
+  border: 1px solid rgba(231, 76, 60, 0.15);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
 .login-form {
   display: flex;
   flex-direction: column;

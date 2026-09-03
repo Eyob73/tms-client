@@ -1,14 +1,11 @@
 import { Routes } from '@angular/router';
 import { roleGuard } from './guards/role.guard';
-import { AdminCourseListComponent } from './features/admin-course-list/admin-course-list.component';
-import { LoginComponent } from './auth/login/login.component';
-import { InstructorDashboard } from './features/instructor-dashboard/instructor-dashboard';
 import { ShellComponent } from './layout/shell.component/shell.component';
 
 export const routes: Routes = [
   {
     path: 'login',
-    component: LoginComponent,
+    loadComponent: () => import('./auth/login/login.component').then((m) => m.LoginComponent),
   },
   {
     path: '',
@@ -28,12 +25,21 @@ export const routes: Routes = [
             (m) => m.TmsDashboardComponent,
           ),
       },
-      { path: 'command-center', component: InstructorDashboard, canActivate: [roleGuard] },
       {
-        path: 'admin/courses',
-        component: AdminCourseListComponent,
+        path: 'command-center',
+        loadComponent: () =>
+          import('./features/instructor-dashboard/instructor-dashboard').then(
+            (m) => m.InstructorDashboard,
+          ),
+        canActivate: [roleGuard],
+      },
+      {
+        path: 'courses',
+        loadComponent: () =>
+          import('./features/course/course').then((m) => m.CourseComponent),
         canActivate: [roleGuard('Admin')],
       },
+
       {
         path: 'courses/:id',
         loadComponent: () =>

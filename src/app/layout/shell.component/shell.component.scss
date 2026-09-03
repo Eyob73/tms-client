@@ -243,6 +243,7 @@
 .sidebar-user {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: var(--space-3);
   padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-md);
@@ -308,6 +309,16 @@
   opacity: 0;
   width: 0;
   pointer-events: none;
+}
+
+.sidebar.collapsed .sidebar-user {
+  justify-content: center;
+  gap: 0;
+  padding-inline: 0;
+}
+
+.sidebar.collapsed .logout-btn {
+  display: none;
 }
 
 .logout-btn {
@@ -554,6 +565,11 @@
 .router-outlet {
   flex: 1;
   padding: var(--space-6);
+}
+
+.router-outlet > * {
+  display: block;
+  animation: appPageFadeInUp 0.45s var(--ease-standard) both;
 }
 
 /* Mobile Responsiveness */
