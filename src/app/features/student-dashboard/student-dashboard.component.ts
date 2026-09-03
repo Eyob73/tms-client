@@ -7,6 +7,7 @@ import { RouterLink } from '@angular/router';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { resource } from '@angular/core';
 import { CourseService } from '../../services/course';
+import { map } from 'rxjs/operators';
 
 // The @Component decorator tells Angular: "This class is a visual component."
 // It is metadata it describes how this class connects to the HTML template.
@@ -49,7 +50,7 @@ export class StudentDashboardComponent {
   // You never write .subscribe() or .unsubscribe() with rxResource.
 
   coursesResource = rxResource({
-    stream: () => this.api.getAll(),
+    stream: () => this.api.getAll().pipe(map((res) => res.items)),
   });
 
   // A regular method. When called, it updates the earnedCredits signal.

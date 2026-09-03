@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { rxResource } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs/operators';
 import { CourseService } from '../../services/course';
 
 @Component({
@@ -15,7 +16,7 @@ export class AdminCourseListComponent {
   private courseService = inject(CourseService);
 
   coursesResource = rxResource({
-    stream: () => this.courseService.getAll(),
+    stream: () => this.courseService.getAll().pipe(map((res) => res.items)),
   });
 
   readonly courses = computed(() => this.coursesResource.value() ?? []);

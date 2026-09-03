@@ -19,6 +19,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { Chart, registerables } from 'chart.js';
+import { CourseStore } from '../../store/course.store';
+import { Course } from '../../models/course.model';
 
 Chart.register(...registerables);
 
@@ -100,6 +102,7 @@ export interface CalendarCell {
 })
 export class TmsDashboardComponent implements OnInit, AfterViewInit {
   private cdr = inject(ChangeDetectorRef);
+  readonly courseStore = inject(CourseStore);
 
   @ViewChild('progressCanvas') progressCanvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild('categoryCanvas') categoryCanvas!: ElementRef<HTMLCanvasElement>;
@@ -203,6 +206,7 @@ export class TmsDashboardComponent implements OnInit, AfterViewInit {
     ];
 
     this.generateCalendar();
+    this.courseStore.loadCourses({ pageSize: 50 });
   }
 
   ngAfterViewInit(): void {

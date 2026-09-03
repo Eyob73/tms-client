@@ -413,6 +413,21 @@
   padding: 24px;
 }
 
+.recent-activity-scroll {
+  max-height: 600px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.recent-activity-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.recent-activity-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
 .card-action {
   color: var(--primary-light);
   font-size: 13px;
