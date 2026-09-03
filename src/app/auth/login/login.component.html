@@ -1,0 +1,94 @@
+<div class="login-page">
+  <mat-card class="login-card" appearance="raised">
+    <!-- Card Header / Brand -->
+    <mat-card-header class="login-header">
+      <div mat-card-avatar class="brand-avatar">
+        <mat-icon color="primary">school</mat-icon>
+      </div>
+    </mat-card-header>
+
+    <mat-card-content class="login-content">
+      <div class="welcome-text">
+        <h2>Welcome Back</h2>
+        <p>Please enter your credentials to sign in</p>
+      </div>
+
+      <form (ngSubmit)="onSubmit()" #loginForm="ngForm" novalidate class="login-form">
+        <!-- Email Field -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email Address</mat-label>
+
+          <input
+            matInput
+            id="email"
+            name="email"
+            type="email"
+            placeholder="name@organization.com"
+            [(ngModel)]="email"
+            required
+            autocomplete="email"
+            #emailInput="ngModel"
+          />
+          <mat-error *ngIf="emailInput.invalid && emailInput.touched">
+            Please enter a valid email address
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Password Field -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Password</mat-label>
+
+          <input
+            matInput
+            id="password"
+            name="password"
+            [type]="showPassword ? 'text' : 'password'"
+            placeholder="Enter your password"
+            [(ngModel)]="password"
+            required
+            autocomplete="current-password"
+            #passwordInput="ngModel"
+          />
+          <button
+            type="button"
+            mat-icon-button
+            matSuffix
+            (click)="togglePasswordVisibility()"
+            [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+          >
+            <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <mat-error *ngIf="passwordInput.invalid && passwordInput.touched">
+            Password is required
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Form Options Row -->
+        <div class="form-options">
+          <mat-checkbox name="rememberMe" [(ngModel)]="rememberMe" color="primary">
+            Remember me
+          </mat-checkbox>
+          <a href="#" class="forgot-link">Forgot Password?</a>
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          mat-raised-button
+          color="primary"
+          class="submit-button full-width"
+          [disabled]="!loginForm.form.valid"
+        >
+          <span>Sign In</span>
+          <mat-icon>arrow_forward</mat-icon>
+        </button>
+      </form>
+    </mat-card-content>
+
+    <mat-card-footer class="login-footer">
+      <p class="signup-prompt">
+        Don't have an account? <a href="#" class="admin-link">Contact Administrator</a>
+      </p>
+    </mat-card-footer>
+  </mat-card>
+</div>

@@ -1,0 +1,87 @@
+<div class="app-shell">
+  <aside class="sidebar" [class.collapsed]="isCollapsed">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <mat-icon>school</mat-icon>
+      </div>
+      <div class="sidebar-brand">
+        <h2>TMS</h2>
+        <span>Training Management System</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section" *ngFor="let group of navGroups">
+        <div class="nav-section-title">{{ group.title }}</div>
+
+        <a  
+          *ngFor="let item of group.items"
+          class="nav-item"
+          [routerLink]="item.route"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: item.route === '/dashboard' }"
+          [attr.data-tooltip]="item.tooltip || item.label"
+        >
+          <mat-icon class="nav-icon">{{ iconMap[item.label] || 'dashboard' }}</mat-icon>
+          <span class="nav-item-text">{{ item.label }}</span>
+        </a>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="user-avatar-wrapper">
+          <div class="user-avatar">JD</div>
+          <span class="user-status-dot"></span>
+        </div>
+        <div class="user-info">
+          <h4>John Doe</h4>
+          <span>Training Administrator</span>
+        </div>
+        <button class="logout-btn" type="button" title="Sign out">
+          <mat-icon>logout</mat-icon>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main-wrapper">
+    <header class="header">
+      <div class="header-left">
+        <button class="menu-toggle" type="button" (click)="toggleSidebar()" title="Toggle Sidebar">
+          <mat-icon>{{ isCollapsed ? 'menu' : 'menu_open' }}</mat-icon>
+        </button>
+        <div class="header-title-group">
+          <h1 class="page-title">Dashboard</h1>
+          <div class="page-breadcrumb">
+            <span class="crumb">Home</span>
+            <mat-icon class="crumb-sep">chevron_right</mat-icon>
+            <span class="crumb active">Dashboard</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <div class="search-box">
+          <mat-icon class="search-icon">search</mat-icon>
+          <input type="text" placeholder="Search courses, trainees, schedules..." />
+          <kbd class="search-shortcut">⌘K</kbd>
+        </div>
+        <button class="header-btn" type="button" title="Notifications">
+          <mat-icon>notifications_none</mat-icon>
+          <span class="notification-dot"></span>
+        </button>
+        <button class="header-btn" type="button" title="Messages">
+          <mat-icon>mail_outline</mat-icon>
+        </button>
+        <div class="header-profile">
+          <div class="header-avatar">JD</div>
+        </div>
+      </div>
+    </header>
+
+    <main class="router-outlet">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

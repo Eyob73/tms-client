@@ -1,0 +1,287 @@
+/*
+  TMS Theme — design tokens
+  ---------------------------------------------------------------------------
+  Single source of truth for color, type, spacing, radius, and elevation.
+  Every component in the app should read from these custom properties
+  instead of hardcoding values, so the whole product stays visually
+  consistent and can be re-themed by editing this file alone.
+*/
+
+:root {
+  /* ---------------------------------------------------------------------
+     Color — brand
+     --------------------------------------------------------------------- */
+  --color-primary-50:  #eef3ff;
+  --color-primary-100: #dce6ff;
+  --color-primary-200: #b3c9ff;
+  --color-primary-300: #85a8ff;
+  --color-primary-400: #5b8def;
+  --color-primary-500: #3a6cf0;   /* primary brand blue */
+  --color-primary-600: #2f5cf0;
+  --color-primary-700: #2647c2;
+  --color-primary-800: #1e3894;
+  --color-primary-900: #172b70;
+
+  --color-primary: var(--color-primary-500);
+  --color-primary-hover: var(--color-primary-600);
+  --color-primary-active: var(--color-primary-700);
+  --color-primary-subtle: var(--color-primary-50);
+
+  /* ---------------------------------------------------------------------
+     Color — neutrals (light surfaces)
+     --------------------------------------------------------------------- */
+  --color-white: #ffffff;
+  --color-gray-50:  #f7f8fb;
+  --color-gray-100: #eef2fc;
+  --color-gray-200: #e2e6f0;
+  --color-gray-300: #cdd3e3;
+  --color-gray-400: #a7afc4;
+  --color-gray-500: #8891ac;
+  --color-gray-600: #6b7690;
+  --color-gray-700: #4b5573;
+  --color-gray-800: #333d5c;
+  --color-gray-900: #1f2b4d;
+
+  /* ---------------------------------------------------------------------
+     Color — neutrals (dark surfaces, e.g. side panels, nav)
+     --------------------------------------------------------------------- */
+  --color-ink-900: #0a0e1a;   /* base dark background */
+  --color-ink-800: #10162a;   /* elevated dark surface */
+  --color-ink-700: #171d2f;   /* dark border / hairline */
+  --color-ink-600: #1c2438;   /* dark border, slightly lighter */
+  --color-ink-500: #545e79;   /* muted text on dark */
+  --color-ink-400: #6f7da3;   /* secondary text on dark */
+  --color-ink-300: #8891ac;   /* tertiary text on dark */
+  --color-ink-100: #eef1f8;   /* near-white text on dark */
+  --color-ink-50:  #f5f7fb;   /* white text on dark */
+
+  /* ---------------------------------------------------------------------
+     Color — semantic
+     --------------------------------------------------------------------- */
+  --color-success: #12b76a;
+  --color-success-subtle: #e7f9f0;
+  --color-warning: #f79009;
+  --color-warning-subtle: #fef3e2;
+  --color-danger: #f04438;
+  --color-danger-subtle: #feefee;
+  --color-info: var(--color-primary-500);
+  --color-info-subtle: var(--color-primary-50);
+
+  /* ---------------------------------------------------------------------
+     Color — semantic aliases (use these in components)
+     --------------------------------------------------------------------- */
+  --color-bg: var(--color-gray-100);            /* app / page background */
+  --color-surface: var(--color-white);          /* cards, panels, inputs */
+  --color-surface-sunken: var(--color-gray-50);
+
+  --color-text-primary: var(--color-gray-900);
+  --color-text-secondary: var(--color-gray-600);
+  --color-text-tertiary: var(--color-gray-500);
+  --color-text-placeholder: var(--color-gray-400);
+  --color-text-on-primary: var(--color-white);
+
+  --color-text-primary-inverse: var(--color-ink-50);
+  --color-text-secondary-inverse: var(--color-ink-300);
+  --color-text-tertiary-inverse: var(--color-ink-500);
+
+  --color-border: var(--color-gray-200);
+  --color-border-strong: var(--color-gray-300);
+  --color-border-inverse: var(--color-ink-700);
+
+  --color-focus-ring: rgba(58, 108, 240, 0.16);
+
+  /* ---------------------------------------------------------------------
+     Typography
+     --------------------------------------------------------------------- */
+  --font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  --font-size-xs:   12px;
+  --font-size-sm:   13px;
+  --font-size-base: 14.5px;
+  --font-size-md:   16px;
+  --font-size-lg:   18px;
+  --font-size-xl:   22px;
+  --font-size-2xl:  26px;
+  --font-size-3xl:  32px;
+  --font-size-4xl:  42px;
+
+  --font-weight-regular:  400;
+  --font-weight-medium:   500;
+  --font-weight-semibold: 600;
+  --font-weight-bold:     700;
+
+  --line-height-tight:   1.2;
+  --line-height-snug:    1.4;
+  --line-height-normal:  1.55;
+  --line-height-relaxed: 1.7;
+
+  --letter-spacing-tight: -0.015em;
+  --letter-spacing-wide:  0.03em;
+
+  /* ---------------------------------------------------------------------
+     Spacing (4px base scale)
+     --------------------------------------------------------------------- */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+
+  /* ---------------------------------------------------------------------
+     Radius
+     --------------------------------------------------------------------- */
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   14px;
+  --radius-xl:   20px;
+  --radius-full: 999px;
+
+  /* ---------------------------------------------------------------------
+     Elevation
+     --------------------------------------------------------------------- */
+  --shadow-sm: 0 1px 2px rgba(15, 27, 61, 0.06);
+  --shadow-md: 0 8px 24px -8px rgba(15, 27, 61, 0.16);
+  --shadow-lg: 0 24px 60px -20px rgba(23, 46, 110, 0.25);
+
+  /* ---------------------------------------------------------------------
+     Motion
+     --------------------------------------------------------------------- */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --duration-fast: 120ms;
+  --duration-base: 180ms;
+}
+
+/*
+  TMS Theme — component primitives
+  ---------------------------------------------------------------------------
+  Generic, reusable classes built entirely from theme.css tokens. Import
+  after theme.css. These are plain CSS classes so they work the same in
+  any Angular component (standalone or module-based) without extra setup.
+*/
+
+/* Buttons -------------------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: 12px 20px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid transparent;
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1;
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-standard),
+              border-color var(--duration-fast) var(--ease-standard),
+              filter var(--duration-fast) var(--ease-standard),
+              transform var(--duration-fast) var(--ease-standard);
+}
+.btn:disabled { opacity: 0.55; cursor: not-allowed; }
+.btn:active:not(:disabled) { transform: translateY(1px); }
+.btn svg { width: 18px; height: 18px; }
+
+.btn--primary {
+  background: var(--color-primary);
+  color: var(--color-text-on-primary);
+}
+.btn--primary:hover:not(:disabled) { background: var(--color-primary-hover); }
+.btn--primary:active:not(:disabled) { background: var(--color-primary-active); }
+
+.btn--secondary {
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  border-color: var(--color-border);
+}
+.btn--secondary:hover:not(:disabled) { border-color: var(--color-border-strong); background: var(--color-surface-sunken); }
+
+.btn--ghost {
+  background: transparent;
+  color: var(--color-primary);
+}
+.btn--ghost:hover:not(:disabled) { background: var(--color-primary-subtle); }
+
+.btn--sm { padding: 8px 14px; font-size: var(--font-size-sm); }
+.btn--lg { padding: 14px 24px; font-size: var(--font-size-md); }
+.btn--full { width: 100%; }
+
+/* Inputs ----------------------------------------------------------------- */
+
+.field-label {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-2);
+}
+
+.input {
+  width: 100%;
+  padding: 13px 14px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--color-border);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+  background: var(--color-surface);
+  outline: none;
+  transition: border-color var(--duration-fast) var(--ease-standard),
+              box-shadow var(--duration-fast) var(--ease-standard);
+}
+.input::placeholder { color: var(--color-text-placeholder); }
+.input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-focus-ring);
+}
+.input:disabled { background: var(--color-surface-sunken); color: var(--color-text-tertiary); cursor: not-allowed; }
+
+/* Badges ------------------------------------------------------------------ */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+}
+.badge--primary { background: var(--color-primary-subtle); color: var(--color-primary-700); }
+.badge--success { background: var(--color-success-subtle); color: #067a45; }
+.badge--warning { background: var(--color-warning-subtle); color: #a15c05; }
+.badge--danger  { background: var(--color-danger-subtle);  color: #b3261e; }
+.badge--neutral { background: var(--color-gray-100); color: var(--color-text-secondary); }
+
+/* Cards -------------------------------------------------------------------- */
+
+.card {
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border);
+  padding: var(--space-6);
+}
+.card--elevated { border: none; box-shadow: var(--shadow-lg); }
+
+/* Typography helpers -------------------------------------------------------- */
+
+.text-display {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tight);
+  color: var(--color-text-primary);
+}
+.text-h1 { font-size: var(--font-size-3xl); font-weight: var(--font-weight-bold); line-height: var(--line-height-tight); color: var(--color-text-primary); }
+.text-h2 { font-size: var(--font-size-2xl); font-weight: var(--font-weight-bold); line-height: var(--line-height-snug); color: var(--color-text-primary); }
+.text-h3 { font-size: var(--font-size-xl); font-weight: var(--font-weight-semibold); line-height: var(--line-height-snug); color: var(--color-text-primary); }
+.text-body { font-size: var(--font-size-base); font-weight: var(--font-weight-regular); line-height: var(--line-height-normal); color: var(--color-text-primary); }
+.text-muted { color: var(--color-text-secondary); }
+.text-caption { font-size: var(--font-size-xs); color: var(--color-text-tertiary); }
