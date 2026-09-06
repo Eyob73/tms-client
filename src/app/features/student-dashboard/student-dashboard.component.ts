@@ -26,7 +26,7 @@ export class StudentDashboardComponent {
 
   handleEnroll(course: Course) {
     this.selectedCourse.set(course);
-    console.log('Enrollment requested for:', course.title);
+    console.log('Enrollment requested for:', course.courseName || course.title);
   }
 
   private api = inject(CourseService);

@@ -83,8 +83,15 @@
           class="submit-button full-width"
           [disabled]="!loginForm.form.valid || isSubmitting"
         >
+          @if (isSubmitting) {
+            <mat-progress-spinner
+              mode="indeterminate"
+              diameter="18"
+              strokeWidth="3"
+              class="submit-spinner"
+            ></mat-progress-spinner>
+          }
           <span>{{ isSubmitting ? 'Signing In...' : 'Sign In' }}</span>
-          <mat-icon>arrow_forward</mat-icon>
         </button>
       </form>
     </mat-card-content>

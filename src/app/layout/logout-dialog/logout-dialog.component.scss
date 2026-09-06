@@ -1,0 +1,231 @@
+:host {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(6px);
+
+  animation: fadeIn 180ms ease-out;
+}
+
+.logout-modal {
+  width: min(100%, 420px);
+
+  padding: 32px;
+
+  background: var(--surface-color, #ffffff);
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 20px;
+
+  box-shadow:
+    0 20px 50px rgba(15, 23, 42, 0.18),
+    0 8px 20px rgba(15, 23, 42, 0.08);
+
+  text-align: center;
+
+  animation: modalIn 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Icon */
+
+.logout-icon-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.logout-icon {
+  width: 64px;
+  height: 64px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  color: var(--primary-color, #4f46e5);
+  background: var(--primary-light, #eef2ff);
+}
+
+.logout-icon svg {
+  width: 30px;
+  height: 30px;
+}
+
+/* Content */
+
+.modal-content h2 {
+  margin: 0 0 8px;
+
+  color: var(--text-primary, #111827);
+
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.modal-content p {
+  max-width: 320px;
+  margin: 0 auto;
+
+  color: var(--text-secondary, #6b7280);
+
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* Actions */
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+
+  margin-top: 28px;
+}
+
+.modal-actions button {
+  flex: 1;
+
+  height: 44px;
+
+  border: 0;
+  border-radius: 10px;
+
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    transform 150ms ease,
+    background-color 150ms ease,
+    box-shadow 150ms ease,
+    opacity 150ms ease;
+}
+
+.modal-actions button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.modal-actions button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.modal-actions button:focus-visible {
+  outline: 3px solid rgba(79, 70, 229, 0.25);
+  outline-offset: 2px;
+}
+
+/* Cancel */
+
+.cancel-button {
+  color: var(--text-primary, #374151);
+  background: var(--surface-secondary, #f3f4f6);
+}
+
+.cancel-button:hover:not(:disabled) {
+  background: var(--surface-hover, #e5e7eb);
+}
+
+/* Logout */
+
+.logout-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  color: #ffffff;
+  background: var(--primary-color, #4f46e5);
+}
+
+.logout-button:hover:not(:disabled) {
+  background: var(--primary-hover, #4338ca);
+
+  box-shadow: 0 5px 14px rgba(79, 70, 229, 0.25);
+}
+
+.logout-button:disabled,
+.cancel-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+/* Loading spinner */
+
+.spinner {
+  width: 16px;
+  height: 16px;
+
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #ffffff;
+
+  border-radius: 50%;
+
+  animation: spin 700ms linear infinite;
+}
+
+/* Animations */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 480px) {
+  .modal-backdrop {
+    padding: 16px;
+  }
+
+  .logout-modal {
+    padding: 26px 20px;
+    border-radius: 18px;
+  }
+
+  .modal-actions {
+    flex-direction: column-reverse;
+  }
+
+  .modal-actions button {
+    width: 100%;
+  }
+}

@@ -17,8 +17,8 @@ describe('CourseCardComponent', () => {
     // Set signal-based required input
     fixture.componentRef.setInput('course', {
       id: 1,
-      code: 'CSE-101',
-      title: 'Advanced Web Dev',
+      courseCode: 'CSE-101',
+      courseName: 'Advanced Web Dev',
       maxCapacity: 30,
       enrollmentCount: 12,
     });
@@ -34,8 +34,8 @@ describe('CourseCardComponent', () => {
 
     fixture.componentRef.setInput('course', {
       id: 1,
-      code: 'CSE-101',
-      title: 'Advanced Web Dev',
+      courseCode: 'CSE-101',
+      courseName: 'Advanced Web Dev',
       maxCapacity: 30,
       enrollmentCount: 12,
     });
@@ -49,6 +49,6 @@ describe('CourseCardComponent', () => {
     await fixture.whenStable();
 
     expect(emittedCourse).toBeTruthy();
-    expect(emittedCourse.title).toBe('Advanced Web Dev');
+    expect(emittedCourse.courseName).toBe('Advanced Web Dev');
   });
 });

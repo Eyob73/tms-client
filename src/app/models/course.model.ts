@@ -5,15 +5,32 @@
 */
 export interface Course {
   id: number;
-  code: string;
-  title: string;
-  maxCapacity: number;
-  enrollmentCount: number;
-  status?: string;
+  courseCode: string;
+  courseName: string;
+  description?: string;
+  credits: number;
+  departmentId: string;
+  programId?: string;
+  level?: string;
+  semester?: string;
+  courseType: string;
+  prerequisiteCourseId?: string;
+  durationHours?: number;
+  status: string;
+  isPublished: boolean;
+  createdAt: string;
+  updatedAt?: string;
+  createdBy?: string;
+  updatedBy?: string;
+  isDeleted: boolean;
+  deletedAt?: string;
+  // Legacy fields for backward compatibility
+  code?: string;
+  title?: string;
+  maxCapacity?: number;
+  enrollmentCount?: number;
   department?: string;
   creditHours?: number;
-  createdAt?: string;
-  description?: string;
   duration?: string;
   trainer?: string;
 }

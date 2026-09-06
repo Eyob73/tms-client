@@ -35,16 +35,24 @@ export const CourseStore = signalStore(
         courses: computed(() => store.entities()),
         totalCourses: computed(() => store.totalCount()),
         openCourses: computed(
-            () => store.entities().filter((c) => c.enrollmentCount < c.maxCapacity).length
+            () => store.entities().filter((c) =>
+                (c.enrollmentCount ?? 0) < (c.maxCapacity ?? Number.MAX_SAFE_INTEGER)
+            ).length
         ),
         fullCourses: computed(
-            () => store.entities().filter((c) => c.enrollmentCount >= c.maxCapacity).length
+            () => store.entities().filter((c) =>
+                (c.enrollmentCount ?? 0) >= (c.maxCapacity ?? 0)
+            ).length
         ),
         averageEnrollmentRate: computed(() => {
             const entities = store.entities();
             if (entities.length === 0) return 0;
             const total = entities.reduce(
-                (sum, c) => sum + (c.maxCapacity > 0 ? (c.enrollmentCount / c.maxCapacity) * 100 : 0),
+                (sum, c) => {
+                    const capacity = c.maxCapacity ?? 0;
+                    const enrollment = c.enrollmentCount ?? 0;
+                    return sum + (capacity > 0 ? (enrollment / capacity) * 100 : 0);
+                },
                 0
             );
             return Math.round(total / entities.length);

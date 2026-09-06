@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { LogoutDialogComponent } from '../logout-dialog/logout-dialog.component';
 
 interface NavItem {
   label: string;
@@ -26,6 +28,7 @@ interface NavGroup {
 export class ShellComponent {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly dialog = inject(MatDialog);
   isCollapsed = false;
 
   readonly currentUser = this.authService.currentUser;
@@ -143,7 +146,17 @@ export class ShellComponent {
   }
 
   logout(): void {
-    this.authService.logout();
-    this.router.navigateByUrl('/login');
+    this.dialog
+      .open(LogoutDialogComponent, {
+        width: 'min(100vw - 24px, 420px)',
+        maxWidth: '420px',
+        panelClass: 'logout-dialog-panel',
+        disableClose: false,
+        autoFocus: true,
+        restoreFocus: true,
+        hasBackdrop: true,
+      })
+      .afterClosed()
+      .subscribe();
   }
 }

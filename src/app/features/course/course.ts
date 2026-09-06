@@ -14,6 +14,7 @@ import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { Course } from '../../models/course.model';
 import { CourseStore } from '../../store/course.store';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-admin-course-list',
@@ -38,14 +39,21 @@ import { CourseStore } from '../../store/course.store';
 })
 export class CourseComponent {
   private readonly store = inject(CourseStore);
+  private readonly authService = inject(AuthService);
 
   readonly displayedColumns = [
-    'code',
-    'name',
-    'department',
-    'creditHours',
+    'courseName',
+    'description',
+    'credits',
+    'departmentId',
+    'programId',
+    'courseType',
+    'prerequisiteCourseId',
+    'durationHours',
     'status',
+    'isPublished',
     'createdAt',
+    'updatedAt',
     'actions',
   ];
 
@@ -63,6 +71,24 @@ export class CourseComponent {
   readonly courses = this.store.courses;
   readonly totalCount = this.store.totalCourses;
 
+  readonly departmentOptions = computed(() => {
+    const values = new Set<string>();
+    for (const course of this.courses()) {
+      const department = course.departmentId || course.department;
+      if (department) {
+        values.add(department);
+      }
+    }
+    return Array.from(values).sort((a, b) => a.localeCompare(b));
+  });
+
+  readonly hasActiveFilters = computed(
+    () =>
+      !!this.searchTerm().trim() ||
+      this.statusFilter() !== 'all' ||
+      this.departmentFilter() !== 'all',
+  );
+
   filteredCourses = computed(() => {
     let list = [...this.courses()];
     const term = this.searchTerm().trim().toLowerCase();
@@ -71,20 +97,29 @@ export class CourseComponent {
     const sort = this.sortState();
 
     list = list.filter((course) => {
+      const code = course.courseCode || course.code || '';
+      const name = course.courseName || course.title || '';
+      const department = course.departmentId || course.department || '';
+
       const matchesText =
         !term ||
-        course.code.toLowerCase().includes(term) ||
-        course.title.toLowerCase().includes(term) ||
-        (course.department && course.department.toLowerCase().includes(term));
+        code.toLowerCase().includes(term) ||
+        name.toLowerCase().includes(term) ||
+        (course.description && course.description.toLowerCase().includes(term)) ||
+        department.toLowerCase().includes(term);
 
       let matchesStatus = true;
       if (status === 'open') {
-        matchesStatus = course.enrollmentCount < course.maxCapacity;
+        const capacity = course.maxCapacity;
+        const enrolled = course.enrollmentCount;
+        matchesStatus = capacity && enrolled ? enrolled < capacity : true;
       } else if (status === 'full') {
-        matchesStatus = course.enrollmentCount >= course.maxCapacity;
+        const capacity = course.maxCapacity;
+        const enrolled = course.enrollmentCount;
+        matchesStatus = capacity && enrolled ? enrolled >= capacity : false;
       }
 
-      const matchesDept = dept === 'all' || course.department === dept;
+      const matchesDept = dept === 'all' || department === dept;
 
       return matchesText && matchesStatus && matchesDept;
     });
@@ -161,48 +196,90 @@ export class CourseComponent {
 
   private getSortValue(course: Course, column: string): string | number {
     switch (column) {
-      case 'code':
-        return course.code.toLowerCase();
-      case 'name':
-        return course.title.toLowerCase();
-      case 'department':
-        return (course.department || '').toLowerCase();
-      case 'creditHours':
-        return course.creditHours || 0;
+      case 'courseCode':
+        return (course.courseCode || course.code || '').toLowerCase();
+      case 'courseName':
+        return (course.courseName || course.title || '').toLowerCase();
+      case 'description':
+        return (course.description || '').toLowerCase();
+      case 'credits':
+        return course.credits || course.creditHours || 0;
+      case 'departmentId':
+        return (course.departmentId || course.department || '').toLowerCase();
+      case 'programId':
+        return (course.programId || '').toLowerCase();
+      case 'courseType':
+        return (course.courseType || '').toLowerCase();
+      case 'prerequisiteCourseId':
+        return (course.prerequisiteCourseId || '').toLowerCase();
+      case 'durationHours':
+        return course.durationHours || 0;
       case 'status':
-        return course.enrollmentCount < course.maxCapacity ? 1 : 0;
+        return (course.status || '').toLowerCase();
+      case 'isPublished':
+        return course.isPublished ? 1 : 0;
       case 'createdAt':
         return new Date(course.createdAt || 0).getTime();
+      case 'updatedAt':
+        return new Date(course.updatedAt || 0).getTime();
       default:
-        return course.title.toLowerCase();
+        return (course.courseName || course.title || '').toLowerCase();
     }
   }
 
+  getCourseCode(course: Course): string {
+    return course.courseCode || course.code || '—';
+  }
+
+  getCourseName(course: Course): string {
+    return course.courseName || course.title || 'Untitled course';
+  }
+
   getCourseCreatedAt(course: Course): string {
-    const createdAt = (course as Course & { createdAt?: string }).createdAt;
+    const createdAt = course.createdAt;
     return createdAt ? new Date(createdAt).toLocaleDateString() : '—';
   }
 
+  getCourseUpdatedAt(course: Course): string {
+    const updatedAt = course.updatedAt;
+    return updatedAt ? new Date(updatedAt).toLocaleDateString() : '—';
+  }
+
   getCourseStatus(course: Course): 'open' | 'full' {
-    return course.enrollmentCount < course.maxCapacity ? 'open' : 'full';
+    const capacity = course.maxCapacity;
+    const enrolled = course.enrollmentCount;
+    if (capacity && enrolled) {
+      return enrolled < capacity ? 'open' : 'full';
+    }
+    return 'open';
   }
 
   getStatusLabel(course: Course): string {
-    return this.getCourseStatus(course) === 'open' ? 'Open' : 'Full';
+    return course.status || 'Active';
+  }
+
+  getIsPublishedLabel(course: Course): string {
+    return course.isPublished ? 'Published' : 'Draft';
   }
 
   editCourse(course: Course): void {
-    this.successMessage.set(`Editing ${course.title}.`);
+    const courseName = this.getCourseName(course);
+    this.successMessage.set(`Editing ${courseName}.`);
     // Optionally navigate to edit page
   }
 
   deleteCourse(course: Course): void {
-    const confirmed = window.confirm(`Delete ${course.title}? This action cannot be undone.`);
+    const courseName = this.getCourseName(course);
+    const confirmed = window.confirm(`Delete ${courseName}? This action cannot be undone.`);
     if (!confirmed) {
       return;
     }
     this.store.deleteCourse(course.id);
-    this.successMessage.set(`${course.title} was deleted successfully.`);
-    this.loadCourses();
+    this.successMessage.set(`${courseName} was deleted.`);
+    setTimeout(() => this.loadCourses(), 100);
+  }
+
+  isAdmin(): boolean {
+    return this.authService.hasRole('Admin');
   }
 }

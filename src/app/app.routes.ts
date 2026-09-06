@@ -37,7 +37,6 @@ export const routes: Routes = [
         path: 'courses',
         loadComponent: () =>
           import('./features/course/course').then((m) => m.CourseComponent),
-        canActivate: [roleGuard('Admin')],
       },
 
       {
