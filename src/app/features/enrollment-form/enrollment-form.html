@@ -1,12 +1,9 @@
-<h2>Course Enrollment</h2>
-@if (submitted()) {
-  <div class="success">Enrollment submitted. Check the console for the payload.</div>
-} @else {
-  <!-- [formGroup]="form" connects this <form> tag to the TypeScript form
-    object you built above. -->
-  <!-- (ngSubmit)="submit()" calls your submit() method when the user presses
-    Enter or clicks the submit button. -->
-  <form [formGroup]="form" (ngSubmit)="submit()">
+<div class="enrollment-form-page animate-in">
+  <h2 class="animate-in">Course Enrollment</h2>
+  @if (submitted()) {
+    <div class="success animate-in delay-1">Enrollment submitted. Check the console for the payload.</div>
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="submit()" class="animate-in delay-1">
     <label for="studentId">Student ID</label>
     <!-- formControlName="studentId" links this input to the 'studentId' field
      in the form group. -->
@@ -53,3 +50,4 @@
     <button type="submit" [disabled]="form.invalid">Confirm Enrollment</button>
   </form>
 }
+</div>

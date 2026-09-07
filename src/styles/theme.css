@@ -158,10 +158,10 @@
   --duration-slow: 350ms;
 }
 
-@keyframes appPageFadeInUp {
+@keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(14px);
+    transform: translateY(20px);
   }
 
   to {
@@ -170,8 +170,59 @@
   }
 }
 
+@keyframes appPageFadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-in {
+  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.delay-1 {
+  animation-delay: 0.08s;
+}
+
+.delay-2 {
+  animation-delay: 0.16s;
+}
+
+.delay-3 {
+  animation-delay: 0.24s;
+}
+
+.delay-4 {
+  animation-delay: 0.32s;
+}
+
+.delay-5 {
+  animation-delay: 0.40s;
+}
+
+.delay-6 {
+  animation-delay: 0.48s;
+}
+
 .app-page-enter {
   animation: appPageFadeInUp 0.45s var(--ease-standard) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-in,
+  .app-page-enter,
+  .router-outlet > *:not(router-outlet),
+  app-root > *:not(router-outlet) {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
 }
 
 /*
@@ -204,7 +255,12 @@
 }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .btn:active:not(:disabled) { transform: scale(0.97); }
-.btn svg { width: 18px; height: 18px; }
+.btn svg,
+.btn mat-icon {
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
+}
 
 .btn--primary {
   background: var(--color-primary);
@@ -265,18 +321,29 @@
   color: var(--color-text-primary);
   background: var(--color-surface);
   outline: none;
+  box-sizing: border-box;
   transition: border-color var(--duration-fast) var(--ease-standard),
-              box-shadow var(--duration-fast) var(--ease-standard);
+              box-shadow var(--duration-fast) var(--ease-standard),
+              background-color var(--duration-fast) var(--ease-standard);
 }
 .input::placeholder { color: var(--color-text-placeholder); }
+.input:hover:not(:focus):not(:disabled) {
+  border-color: var(--color-gray-400);
+}
 .input:focus {
   border-color: var(--color-primary);
-  box-shadow: var(--shadow-glow);
+  box-shadow: 0 0 0 3.5px var(--color-focus-ring);
 }
 .input:disabled {
   background: var(--color-surface-sunken);
   color: var(--color-text-tertiary);
   cursor: not-allowed;
+}
+
+textarea.input {
+  min-height: 80px;
+  line-height: var(--line-height-normal);
+  resize: vertical;
 }
 
 /* Badges ------------------------------------------------------------------ */

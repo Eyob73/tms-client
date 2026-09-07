@@ -9,6 +9,15 @@ export const roleGuard = (requiredRole: string): CanActivateFn => {
     if (auth.hasRole(requiredRole)) {
       return true;
     }
-    return router.createUrlTree(['/unauthorized']);
+    return router.createUrlTree(['/dashboard']);
   };
+};
+
+export const adminGuard: CanActivateFn = () => {
+  const auth = inject(AuthService);
+  const router = inject(Router);
+  if (auth.hasRole('Admin')) {
+    return true;
+  }
+  return router.createUrlTree(['/dashboard']);
 };

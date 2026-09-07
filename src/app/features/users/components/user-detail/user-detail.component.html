@@ -1,0 +1,213 @@
+<div class="user-detail-page">
+  <div class="dashboard-content">
+    @if (isLoading()) {
+      <div class="loading-state">
+        <mat-spinner diameter="38"></mat-spinner>
+        <span>Loading user details...</span>
+      </div>
+    } @else if (errorMessage()) {
+      <div class="error-state card">
+        <div class="error-state__icon">
+          <mat-icon>error_outline</mat-icon>
+        </div>
+        <h2>Unable to load user details</h2>
+        <p>{{ errorMessage() }}</p>
+        <a class="btn btn--secondary btn--sm" routerLink="/users">
+          <mat-icon>arrow_back</mat-icon>
+          <span>Back to Users</span>
+        </a>
+      </div>
+    } @else if (user()) {
+      <!-- Back Navigation Header -->
+      <div class="page-header animate-in">
+        <div class="page-header__left">
+          <a class="back-link" routerLink="/users">
+            <mat-icon>arrow_back</mat-icon>
+            <span>Back to Users</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Success Banner -->
+      @if (successMessage()) {
+        <div class="status-banner status-banner--success animate-in">
+          <mat-icon>check_circle</mat-icon>
+          <span>{{ successMessage() }}</span>
+        </div>
+      }
+
+      <!-- Hero Profile Card -->
+      <header class="hero card animate-in delay-1">
+        <div class="hero__content">
+          <div class="hero__avatar-row">
+            <div class="hero__avatar" [class.hero__avatar--inactive]="!user()?.isActive">
+              {{ getUserInitials() }}
+            </div>
+            <div class="hero__titles">
+              <div class="hero__eyebrow">User Profile</div>
+              <h1>{{ getUserFullName() }}</h1>
+              <div class="hero__meta">
+                <span class="meta-username">@{{ user()?.userName }}</span>
+                <span
+                  class="status-indicator"
+                  [class.status-indicator--active]="user()?.isActive"
+                  [class.status-indicator--inactive]="!user()?.isActive"
+                >
+                  <span class="status-dot"></span>
+                  <span>{{ user()?.isActive ? 'Active' : 'Inactive' }}</span>
+                </span>
+                @if (isSelf()) {
+                  <span class="badge badge--primary">Your Account</span>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero__actions">
+          <a class="btn btn--secondary" [routerLink]="['/users/edit', user()?.id]">
+            <mat-icon>edit</mat-icon>
+            <span>Edit</span>
+          </a>
+
+          <button class="btn btn--secondary" type="button" (click)="openManageRoles()">
+            <mat-icon>shield</mat-icon>
+            <span>Manage Roles</span>
+          </button>
+
+          <button class="btn btn--secondary" type="button" (click)="openChangePassword()">
+            <mat-icon>{{ isSelf() ? 'password' : 'lock_reset' }}</mat-icon>
+            <span>{{ isSelf() ? 'Change Password' : 'Reset Password' }}</span>
+          </button>
+
+          <button
+            class="btn btn--ghost"
+            type="button"
+            (click)="toggleStatus()"
+            [disabled]="isSelf()"
+          >
+            <mat-icon>{{ user()?.isActive ? 'block' : 'check_circle' }}</mat-icon>
+            <span>{{ user()?.isActive ? 'Deactivate' : 'Activate' }}</span>
+          </button>
+
+          <button
+            class="btn btn--ghost btn--danger"
+            type="button"
+            (click)="deleteUser()"
+            [disabled]="isSelf()"
+          >
+            <mat-icon>delete</mat-icon>
+            <span>Delete</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Overview Cards -->
+      <section class="overview-grid animate-in delay-2">
+        <div class="info-card card">
+          <div class="info-card__icon info-card__icon--primary">
+            <mat-icon>vpn_key</mat-icon>
+          </div>
+          <div class="info-card__body">
+            <span>User ID</span>
+            <strong>{{ user()?.id }}</strong>
+          </div>
+        </div>
+
+        <div class="info-card card">
+          <div class="info-card__icon info-card__icon--success">
+            <mat-icon>verified_user</mat-icon>
+          </div>
+          <div class="info-card__body">
+            <span>Assigned Roles</span>
+            <div class="roles-chips">
+              @for (role of user()?.roles; track role) {
+                <span class="badge badge--primary">{{ role }}</span>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="info-card card">
+          <div class="info-card__icon info-card__icon--info">
+            <mat-icon>calendar_today</mat-icon>
+          </div>
+          <div class="info-card__body">
+            <span>Registered</span>
+            <strong>{{ user()?.createdAt | date: 'mediumDate' }}</strong>
+          </div>
+        </div>
+      </section>
+
+      <!-- Detailed Info Sections -->
+      <section class="detail-grid animate-in delay-3">
+        <!-- Personal Information Card -->
+        <div class="card detail-card">
+          <div class="card-header">
+            <div class="card-title">Personal & Contact Information</div>
+          </div>
+          <div class="card-body">
+            <div class="detail-list">
+              <div class="detail-row">
+                <span class="detail-label">First Name</span>
+                <span class="detail-value">{{ user()?.firstName || '—' }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Last Name</span>
+                <span class="detail-value">{{ user()?.lastName || '—' }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Email Address</span>
+                <span class="detail-value">{{ user()?.email || '—' }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Phone Number</span>
+                <span class="detail-value">{{ user()?.phoneNumber || '—' }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Department</span>
+                <span class="detail-value">{{ user()?.department || '—' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Account Security Card -->
+        <div class="card detail-card">
+          <div class="card-header">
+            <div class="card-title">Account Security & Access</div>
+          </div>
+          <div class="card-body">
+            <div class="detail-list">
+              <div class="detail-row">
+                <span class="detail-label">Username</span>
+                <span class="detail-value"><code>@{{ user()?.userName }}</code></span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Account Status</span>
+                <span class="detail-value">
+                  <span
+                    class="status-indicator"
+                    [class.status-indicator--active]="user()?.isActive"
+                    [class.status-indicator--inactive]="!user()?.isActive"
+                  >
+                    <span class="status-dot"></span>
+                    <span>{{ user()?.isActive ? 'Active (Full Access)' : 'Inactive (Deactivated)' }}</span>
+                  </span>
+                </span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Created At</span>
+                <span class="detail-value">{{ user()?.createdAt | date: 'medium' }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Last Updated</span>
+                <span class="detail-value">{{ user()?.updatedAt ? (user()?.updatedAt | date: 'medium') : 'Never' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    }
+  </div>
+</div>

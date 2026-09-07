@@ -4,6 +4,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../environments/environment.development';
 
 export interface TmsUser {
+  id?: string;
   email: string;
   displayName: string;
   role: string;
@@ -93,6 +94,12 @@ export class AuthService {
         const payloadPart = res.accessToken.split('.')[1];
         const payload = JSON.parse(atob(payloadPart ?? ''));
 
+        const idClaim =
+          payload.nameid ||
+          payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'] ||
+          payload.sub ||
+          '';
+
         const emailClaim =
           payload.email ||
           payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'] ||
@@ -111,6 +118,7 @@ export class AuthService {
           [firstName, lastName].filter(Boolean).join(' ') || payload.Name || emailClaim || 'User';
 
         const user: TmsUser = {
+          id: idClaim,
           email: emailClaim || 'user@unknown.local',
           displayName,
           role: Array.isArray(roleClaim) ? roleClaim[0] : roleClaim,

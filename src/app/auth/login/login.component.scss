@@ -103,15 +103,7 @@
 }
 
 mat-form-field {
-  margin-bottom: var(--space-1);
-
-  ::ng-deep {
-    .mdc-text-field--outlined {
-      --mdc-outlined-text-field-container-shape: var(--radius-md);
-      --mdc-outlined-text-field-outline-color: var(--color-border);
-      --mdc-outlined-text-field-focus-outline-color: var(--color-primary);
-    }
-  }
+  margin-bottom: var(--space-2);
 }
 
 .form-options {

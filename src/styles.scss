@@ -4,6 +4,7 @@
 // Learn more about theming and how to use it for your application's
 // custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
+@use './styles/inputs';
 
 @import './styles/theme.css';
 
@@ -17,6 +18,14 @@ html {
       ),
       typography: Roboto,
       density: 0,
+    )
+  );
+
+  @include mat.form-field-overrides(
+    (
+      outlined-container-shape: 12px,
+      outlined-outline-width: 1.5px,
+      outlined-focus-outline-width: 1.5px,
     )
   );
 }
@@ -57,4 +66,22 @@ body::-webkit-scrollbar-thumb,
 *::-webkit-scrollbar-thumb {
   background: var(--color-border);
   border-radius: var(--radius-sm);
+}
+
+/* ==========================================================================
+   Page Entrance Transitions (Consistent across all pages like the dashboard)
+   ========================================================================== */
+.router-outlet > *:not(router-outlet) {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  animation: appPageFadeInUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: opacity, transform;
+}
+
+app-root > *:not(router-outlet):not(.app-shell) {
+  display: block;
+  animation: appPageFadeInUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: opacity, transform;
 }

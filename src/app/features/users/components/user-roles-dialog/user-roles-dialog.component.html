@@ -1,0 +1,90 @@
+<div class="dialog-container">
+  <div class="dialog-header">
+    <div class="dialog-header__icon">
+      <mat-icon>shield</mat-icon>
+    </div>
+    <div class="dialog-header__text">
+      <h2 mat-dialog-title>Manage User Roles</h2>
+      <p class="dialog-subtitle">
+        Update assigned roles for <strong>{{ data.fullName }}</strong> ({{ data.userName }}).
+      </p>
+    </div>
+  </div>
+
+  <mat-dialog-content class="dialog-content">
+    @if (errorMessage()) {
+      <div class="status-banner status-banner--error">
+        <mat-icon>error_outline</mat-icon>
+        <span>{{ errorMessage() }}</span>
+      </div>
+    }
+
+    @if (data.isSelf) {
+      <div class="status-banner status-banner--info">
+        <mat-icon>info</mat-icon>
+        <span>You are editing your own roles. The Admin role cannot be removed.</span>
+      </div>
+    }
+
+    @if (isLoading()) {
+      <div class="dialog-loading">
+        <mat-spinner diameter="32"></mat-spinner>
+        <span>Loading system roles...</span>
+      </div>
+    } @else {
+      <div class="roles-list">
+        @for (role of availableRoles(); track role) {
+          <div
+            class="role-card"
+            [class.role-card--selected]="isRoleSelected(role)"
+            [class.role-card--disabled]="isRoleDisabled(role)"
+            (click)="toggleRole(role, !isRoleSelected(role))"
+          >
+            <div class="role-card__checkbox">
+              <mat-checkbox
+                [checked]="isRoleSelected(role)"
+                [disabled]="isRoleDisabled(role)"
+                (change)="toggleRole(role, $event.checked)"
+                (click)="$event.stopPropagation()"
+              ></mat-checkbox>
+            </div>
+            <div class="role-card__details">
+              <div class="role-card__title">
+                <span class="role-name">{{ role }}</span>
+                @if (isRoleSelected(role)) {
+                  <span class="badge badge--primary">Assigned</span>
+                }
+              </div>
+              <p class="role-card__desc">{{ getRoleDescription(role) }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="dialog-actions">
+    <button
+      class="btn btn--secondary"
+      type="button"
+      (click)="cancel()"
+      [disabled]="isSubmitting()"
+    >
+      Cancel
+    </button>
+    <button
+      class="btn btn--primary"
+      type="button"
+      (click)="submit()"
+      [disabled]="isSubmitting() || isLoading() || selectedRoles().size === 0"
+    >
+      @if (isSubmitting()) {
+        <mat-spinner diameter="18"></mat-spinner>
+        <span>Saving...</span>
+      } @else {
+        <mat-icon>check</mat-icon>
+        <span>Save Roles</span>
+      }
+    </button>
+  </mat-dialog-actions>
+</div>

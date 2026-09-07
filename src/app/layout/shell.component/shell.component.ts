@@ -62,6 +62,7 @@ export class ShellComponent {
     Certifications: 'workspace_premium',
     Reports: 'bar_chart',
     Compliance: 'security',
+    Users: 'manage_accounts',
     Settings: 'settings',
     'Help & Support': 'help_outline',
   };
@@ -94,6 +95,12 @@ export class ShellComponent {
     {
       title: 'Management',
       items: [
+        {
+          label: 'Users',
+          icon: 'fas fa-user-shield',
+          route: '/users',
+          tooltip: 'User Management',
+        },
         {
           label: 'Instructors',
           icon: 'fas fa-chalkboard-teacher',

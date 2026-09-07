@@ -1,0 +1,241 @@
+<div class="user-form-page">
+  <div class="dashboard-content">
+    <!-- Back Navigation Header -->
+    <div class="page-header animate-in">
+      <div class="page-header__left">
+        <a class="back-link" [routerLink]="isEditMode() ? ['/users', userId()] : ['/users']">
+          <mat-icon>arrow_back</mat-icon>
+          <span>{{ isEditMode() ? 'Back to User Profile' : 'Back to Users' }}</span>
+        </a>
+        <h1>{{ isEditMode() ? 'Edit User Profile' : 'Add New User' }}</h1>
+        <p class="page-subtitle">
+          {{ isEditMode()
+            ? 'Update user information, contact details, and account status.'
+            : 'Register a new user account with credentials and role assignments.' }}
+        </p>
+      </div>
+    </div>
+
+    @if (errorMessage()) {
+      <div class="status-banner status-banner--error animate-in">
+        <mat-icon>error_outline</mat-icon>
+        <span>{{ errorMessage() }}</span>
+      </div>
+    }
+
+    @if (isLoading()) {
+      <div class="loading-state">
+        <mat-spinner diameter="38"></mat-spinner>
+        <span>Loading user information...</span>
+      </div>
+    } @else {
+      <form [formGroup]="form" (ngSubmit)="submit()" class="form-card card animate-in delay-1">
+        <!-- 1. Personal Information Section -->
+        <div class="form-section">
+          <div class="form-section__header">
+            <div class="form-section__icon">
+              <mat-icon>person</mat-icon>
+            </div>
+            <div>
+              <h2>Personal Information</h2>
+              <p>Basic contact and profile details of the user.</p>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <mat-form-field appearance="outline">
+              <mat-label>First Name</mat-label>
+              <input matInput formControlName="firstName" placeholder="e.g. Eyob" />
+              @if (form.get('firstName')?.hasError('required')) {
+                <mat-error>First name is required</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Last Name</mat-label>
+              <input matInput formControlName="lastName" placeholder="e.g. Getachew" />
+              @if (form.get('lastName')?.hasError('required')) {
+                <mat-error>Last name is required</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Email Address</mat-label>
+              <input matInput type="email" formControlName="email" placeholder="e.g. user@tms.local" />
+              @if (form.get('email')?.hasError('required')) {
+                <mat-error>Email address is required</mat-error>
+              }
+              @if (form.get('email')?.hasError('email')) {
+                <mat-error>Invalid email address format</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Phone Number</mat-label>
+              <input matInput type="tel" formControlName="phoneNumber" placeholder="e.g. +1234567890" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="col-span-full">
+              <mat-label>Department</mat-label>
+              <input matInput formControlName="department" placeholder="e.g. Computer Science" />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="form-divider"></div>
+
+        <!-- 2. Account Information Section -->
+        <div class="form-section">
+          <div class="form-section__header">
+            <div class="form-section__icon">
+              <mat-icon>badge</mat-icon>
+            </div>
+            <div>
+              <h2>Account Credentials & Status</h2>
+              <p>Username, access state, and authentication credentials.</p>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <mat-form-field appearance="outline">
+              <mat-label>Username</mat-label>
+              <input matInput formControlName="userName" placeholder="e.g. eyob.g" />
+              @if (form.get('userName')?.hasError('required')) {
+                <mat-error>Username is required</mat-error>
+              }
+              @if (form.get('userName')?.hasError('minlength')) {
+                <mat-error>Username must be at least 3 characters</mat-error>
+              }
+            </mat-form-field>
+
+            <div class="toggle-container">
+              <mat-slide-toggle formControlName="isActive" color="primary">
+                <span class="toggle-label">Account Active</span>
+              </mat-slide-toggle>
+              <span class="toggle-hint">Active accounts can authenticate and access the system.</span>
+            </div>
+
+            @if (!isEditMode()) {
+              <mat-form-field appearance="outline">
+                <mat-label>Password</mat-label>
+                <input
+                  matInput
+                  [type]="hidePassword() ? 'password' : 'text'"
+                  formControlName="password"
+                  autocomplete="new-password"
+                />
+                <button
+                  mat-icon-button
+                  matSuffix
+                  type="button"
+                  (click)="togglePasswordVisibility()"
+                  [attr.aria-label]="hidePassword() ? 'Show password' : 'Hide password'"
+                >
+                  <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+                @if (form.get('password')?.hasError('required')) {
+                  <mat-error>Password is required</mat-error>
+                }
+                @if (form.get('password')?.hasError('minlength') || form.get('password')?.hasError('pattern')) {
+                  <mat-error>At least 12 chars with uppercase, lowercase, digit, and symbol</mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Confirm Password</mat-label>
+                <input
+                  matInput
+                  [type]="hideConfirmPassword() ? 'password' : 'text'"
+                  formControlName="confirmPassword"
+                  autocomplete="new-password"
+                />
+                <button
+                  mat-icon-button
+                  matSuffix
+                  type="button"
+                  (click)="toggleConfirmVisibility()"
+                  [attr.aria-label]="hideConfirmPassword() ? 'Show password' : 'Hide password'"
+                >
+                  <mat-icon>{{ hideConfirmPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+                @if (form.get('confirmPassword')?.hasError('required')) {
+                  <mat-error>Please confirm the password</mat-error>
+                }
+              </mat-form-field>
+
+              @if (form.hasError('passwordMismatch') && form.get('confirmPassword')?.touched) {
+                <div class="col-span-full password-mismatch-banner">
+                  <mat-icon>warning</mat-icon>
+                  <span>Passwords do not match.</span>
+                </div>
+              }
+            }
+          </div>
+        </div>
+
+        <div class="form-divider"></div>
+
+        <!-- 3. Roles Section -->
+        <div class="form-section">
+          <div class="form-section__header">
+            <div class="form-section__icon">
+              <mat-icon>shield</mat-icon>
+            </div>
+            <div>
+              <h2>Assign Roles</h2>
+              <p>Select the roles that determine system permissions for this user.</p>
+            </div>
+          </div>
+
+          <div class="roles-selection-grid">
+            @for (role of availableRoles(); track role) {
+              <div
+                class="role-option card"
+                [class.role-option--selected]="isRoleSelected(role)"
+                (click)="toggleRole(role, !isRoleSelected(role))"
+              >
+                <mat-checkbox
+                  [checked]="isRoleSelected(role)"
+                  (change)="toggleRole(role, $event.checked)"
+                  (click)="$event.stopPropagation()"
+                ></mat-checkbox>
+                <div class="role-option__info">
+                  <strong class="role-option__name">{{ role }}</strong>
+                  <span class="role-option__badge badge badge--primary" *ngIf="isRoleSelected(role)">
+                    Selected
+                  </span>
+                </div>
+              </div>
+            }
+          </div>
+
+          @if (selectedRoles().size === 0) {
+            <p class="role-warning">
+              <mat-icon>warning</mat-icon>
+              <span>At least one role must be assigned to this user.</span>
+            </p>
+          }
+        </div>
+
+        <!-- Form Action Buttons -->
+        <div class="form-actions">
+          <a
+            class="btn btn--secondary"
+            [routerLink]="isEditMode() ? ['/users', userId()] : ['/users']"
+          >
+            Cancel
+          </a>
+          <button class="btn btn--primary" type="submit" [disabled]="isSubmitting()">
+            @if (isSubmitting()) {
+              <mat-spinner diameter="18"></mat-spinner>
+              <span>Saving User...</span>
+            } @else {
+              <mat-icon>{{ isEditMode() ? 'check' : 'person_add' }}</mat-icon>
+              <span>{{ isEditMode() ? 'Save Changes' : 'Create User' }}</span>
+            }
+          </button>
+        </div>
+      </form>
+    }
+  </div>
+</div>

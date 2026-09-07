@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { roleGuard } from './guards/role.guard';
+import { roleGuard, adminGuard } from './guards/role.guard';
 import { ShellComponent } from './layout/shell.component/shell.component';
 
 export const routes: Routes = [
@@ -50,6 +50,38 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/course-detail/course-detail.component').then(
             (m) => m.CourseDetailComponent,
+          ),
+      },
+      {
+        path: 'users',
+        canActivate: [adminGuard],
+        loadComponent: () =>
+          import('./features/users/components/user-management/user-management.component').then(
+            (m) => m.UserManagementComponent,
+          ),
+      },
+      {
+        path: 'users/new',
+        canActivate: [adminGuard],
+        loadComponent: () =>
+          import('./features/users/components/user-form/user-form.component').then(
+            (m) => m.UserFormComponent,
+          ),
+      },
+      {
+        path: 'users/edit/:id',
+        canActivate: [adminGuard],
+        loadComponent: () =>
+          import('./features/users/components/user-form/user-form.component').then(
+            (m) => m.UserFormComponent,
+          ),
+      },
+      {
+        path: 'users/:id',
+        canActivate: [adminGuard],
+        loadComponent: () =>
+          import('./features/users/components/user-detail/user-detail.component').then(
+            (m) => m.UserDetailComponent,
           ),
       },
       {

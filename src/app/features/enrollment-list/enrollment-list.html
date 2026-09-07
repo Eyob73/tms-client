@@ -1,52 +1,56 @@
-@if (store.isLoading()) {
-  <p>Loading enrollments...</p>
-}
-@for (enrollment of store.entities(); track enrollment.id) {
-  <div class="enrollment-card">
-    <span>Enrollment ID: {{ enrollment.id }}</span>
-    <br />
-    <span>Course ID: {{ enrollment.courseId }}</span>
-    <br />
-    <span>Student ID: {{ enrollment.studentId }}</span>
-    <br />
-    <span>Enrolled At: {{ enrollment.enrolledAt }}</span>
-    <br />
-    <span>Is Archived: {{ enrollment.isArchived }}</span>
-    <br />
-    <span class="status">{{ enrollment.status }}</span>
-    <br />
-    @if (enrollment.status === 'Pending') {
-      <button (click)="onApprove(enrollment.id)">Approve</button>
-    }
-    <br /><br />
-  </div>
-}
-@if (store.error()) {
-  <p class="error">{{ store.error() }}</p>
-}
-
-<table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-  <ng-container matColumnDef="studentId">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Student</th>
-    <td mat-cell *matCellDef="let row">{{ row.studentId }}</td>
-  </ng-container>
-  <ng-container matColumnDef="courseId">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Course</th>
-    <td mat-cell *matCellDef="let row">{{ row.courseId }}</td>
-  </ng-container>
-  <ng-container matColumnDef="status">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-    <td mat-cell *matCellDef="let row">{{ row.status }}</td>
-  </ng-container>
-  <ng-container matColumnDef="actions">
-    <th mat-header-cell *matHeaderCellDef>Actions</th>
-    <td mat-cell *matCellDef="let row">
-      @if (row.status === 'Pending') {
-        <button (click)="store.approveEnrollment(row.id)">Approve</button>
+<div class="enrollment-list-page animate-in">
+  @if (store.isLoading()) {
+    <p>Loading enrollments...</p>
+  }
+  @for (enrollment of store.entities(); track enrollment.id) {
+    <div class="enrollment-card animate-in delay-1">
+      <span>Enrollment ID: {{ enrollment.id }}</span>
+      <br />
+      <span>Course ID: {{ enrollment.courseId }}</span>
+      <br />
+      <span>Student ID: {{ enrollment.studentId }}</span>
+      <br />
+      <span>Enrolled At: {{ enrollment.enrolledAt }}</span>
+      <br />
+      <span>Is Archived: {{ enrollment.isArchived }}</span>
+      <br />
+      <span class="status">{{ enrollment.status }}</span>
+      <br />
+      @if (enrollment.status === 'Pending') {
+        <button (click)="onApprove(enrollment.id)">Approve</button>
       }
-    </td>
-  </ng-container>
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-</table>
-<mat-paginator style="border: 1px solid #ccc;" [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons> </mat-paginator>
+      <br /><br />
+    </div>
+  }
+  @if (store.error()) {
+    <p class="error">{{ store.error() }}</p>
+  }
+
+  <div class="table-container animate-in delay-2">
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+      <ng-container matColumnDef="studentId">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Student</th>
+        <td mat-cell *matCellDef="let row">{{ row.studentId }}</td>
+      </ng-container>
+      <ng-container matColumnDef="courseId">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Course</th>
+        <td mat-cell *matCellDef="let row">{{ row.courseId }}</td>
+      </ng-container>
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+        <td mat-cell *matCellDef="let row">{{ row.status }}</td>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let row">
+          @if (row.status === 'Pending') {
+            <button (click)="store.approveEnrollment(row.id)">Approve</button>
+          }
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+    <mat-paginator style="border: 1px solid #ccc;" [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons> </mat-paginator>
+  </div>
+</div>

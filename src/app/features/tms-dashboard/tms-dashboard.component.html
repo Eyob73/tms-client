@@ -12,29 +12,23 @@
         </p>
         <div class="welcome-actions">
           <button class="welcome-btn welcome-btn-primary" (click)="createTraining()">
-            <mat-icon
-              style="
+            <mat-icon style="
                 font-size: 16px;
                 width: 16px;
                 height: 16px;
                 vertical-align: middle;
                 margin-right: 4px;
-              "
-              >add</mat-icon
-            >
+              ">add</mat-icon>
             New Training
           </button>
           <button class="welcome-btn welcome-btn-secondary">
-            <mat-icon
-              style="
+            <mat-icon style="
                 font-size: 16px;
                 width: 16px;
                 height: 16px;
                 vertical-align: middle;
                 margin-right: 4px;
-              "
-              >download</mat-icon
-            >
+              ">download</mat-icon>
             Export Report
           </button>
         </div>
@@ -74,7 +68,7 @@
           </div>
         </div>
         <div class="stat-value">{{ stats.totalEmployees }}</div>
-        <div class="stat-label">Enrolled Employees</div>
+        <div class="stat-label">Enrolled Students</div>
         <div class="stat-progress">
           <div class="stat-progress-bar" style="width: 65%; background: var(--success)"></div>
         </div>
@@ -110,50 +104,26 @@
         <div class="stat-value">{{ stats.completionRate }}%</div>
         <div class="stat-label">Completion Rate</div>
         <div class="stat-progress">
-          <div
-            class="stat-progress-bar"
-            [style.width.%]="stats.completionRate"
-            style="background: #8b5cf6"
-          ></div>
+          <div class="stat-progress-bar" [style.width.%]="stats.completionRate" style="background: #8b5cf6"></div>
         </div>
       </div>
     </div>
 
     <!-- Filter Bar -->
-    <div class="filter-bar">
-      <div
-        class="filter-chip"
-        [ngClass]="{ active: activeFilter === 'all' }"
-        (click)="setFilter('all')"
-      >
+    <div class="filter-bar animate-in delay-2">
+      <div class="filter-chip" [ngClass]="{ active: activeFilter === 'all' }" (click)="setFilter('all')">
         All
       </div>
-      <div
-        class="filter-chip"
-        [ngClass]="{ active: activeFilter === 'active' }"
-        (click)="setFilter('active')"
-      >
+      <div class="filter-chip" [ngClass]="{ active: activeFilter === 'active' }" (click)="setFilter('active')">
         Active
       </div>
-      <div
-        class="filter-chip"
-        [ngClass]="{ active: activeFilter === 'upcoming' }"
-        (click)="setFilter('upcoming')"
-      >
+      <div class="filter-chip" [ngClass]="{ active: activeFilter === 'upcoming' }" (click)="setFilter('upcoming')">
         Upcoming
       </div>
-      <div
-        class="filter-chip"
-        [ngClass]="{ active: activeFilter === 'completed' }"
-        (click)="setFilter('completed')"
-      >
+      <div class="filter-chip" [ngClass]="{ active: activeFilter === 'completed' }" (click)="setFilter('completed')">
         Completed
       </div>
-      <div
-        class="filter-chip"
-        [ngClass]="{ active: activeFilter === 'overdue' }"
-        (click)="setFilter('overdue')"
-      >
+      <div class="filter-chip" [ngClass]="{ active: activeFilter === 'overdue' }" (click)="setFilter('overdue')">
         Overdue
       </div>
       <div class="view-toggle">
@@ -167,7 +137,7 @@
     </div>
 
     <!-- Charts Row -->
-    <div class="content-grid">
+    <div class="content-grid animate-in delay-3">
       <div class="card">
         <div class="card-header">
           <div>
@@ -199,7 +169,7 @@
     </div>
 
     <!-- Training Table & Activity -->
-    <div class="content-grid">
+    <div class="content-grid animate-in delay-4">
       <div class="card">
         <div class="card-header">
           <div>
@@ -235,16 +205,13 @@
                 <td>
                   <span class="status-badge" [ngClass]="'status-' + course.status">{{
                     course.statusLabel
-                  }}</span>
+                    }}</span>
                 </td>
                 <td>
                   <div class="progress-bar-container">
                     <div class="progress-bar-bg">
-                      <div
-                        class="progress-bar-fill"
-                        [style.width.%]="course.progress"
-                        [style.background]="course.progressColor"
-                      ></div>
+                      <div class="progress-bar-fill" [style.width.%]="course.progress"
+                        [style.background]="course.progressColor"></div>
                     </div>
                     <span class="progress-text">{{ course.progress }}%</span>
                   </div>
@@ -252,8 +219,7 @@
                 <td>
                   <span style="font-weight: 600">{{ course.enrolled }}</span>
                   <span style="color: var(--text-secondary); font-size: 11px">
-                    / {{ course.capacity }}</span
-                  >
+                    / {{ course.capacity }}</span>
                 </td>
                 <td>
                   <span style="font-size: 13px">{{ course.dueDate }}</span>
@@ -286,7 +252,7 @@
     </div>
 
     <!-- Bottom Row -->
-    <div class="content-grid-equal">
+    <div class="content-grid-equal animate-in delay-5">
       <!-- Upcoming Trainings -->
       <div class="card">
         <div class="card-header">
@@ -307,11 +273,7 @@
               <div class="upcoming-meta">{{ item.time }} • {{ item.trainer }}</div>
             </div>
             <div class="upcoming-avatars">
-              <div
-                class="mini-avatar"
-                *ngFor="let av of item.avatars"
-                [style.background]="av.color"
-              >
+              <div class="mini-avatar" *ngFor="let av of item.avatars" [style.background]="av.color">
                 {{ av.initials }}
               </div>
             </div>
@@ -349,49 +311,37 @@
 
           <!-- Mini Calendar -->
           <div style="border-top: 1px solid var(--bg); padding-top: 16px">
-            <div
-              style="
+            <div style="
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
                 margin-bottom: 12px;
-              "
-            >
+              ">
               <span style="font-size: 14px; font-weight: 600">September 2026</span>
               <div style="display: flex; gap: 4px">
-                <mat-icon
-                  style="
+                <mat-icon style="
                     font-size: 18px;
                     width: 18px;
                     height: 18px;
                     cursor: pointer;
                     color: var(--text-secondary);
-                  "
-                  >chevron_left</mat-icon
-                >
-                <mat-icon
-                  style="
+                  ">chevron_left</mat-icon>
+                <mat-icon style="
                     font-size: 18px;
                     width: 18px;
                     height: 18px;
                     cursor: pointer;
                     color: var(--text-secondary);
-                  "
-                  >chevron_right</mat-icon
-                >
+                  ">chevron_right</mat-icon>
               </div>
             </div>
             <div class="calendar-grid">
               <div class="calendar-header-cell" *ngFor="let d of calendarDays">{{ d }}</div>
-              <div
-                class="calendar-cell"
-                *ngFor="let cell of calendarCells"
-                [ngClass]="{
+              <div class="calendar-cell" *ngFor="let cell of calendarCells" [ngClass]="{
                   today: cell.isToday,
                   'has-event': cell.hasEvent,
                   'other-month': cell.otherMonth,
-                }"
-              >
+                }">
                 {{ cell.day }}
               </div>
             </div>
@@ -414,11 +364,8 @@
           <div class="cert-item" *ngFor="let cert of certifications">
             <div class="cert-info">
               <div class="cert-icon" [style.background]="cert.iconBg">
-                <mat-icon
-                  [style.color]="cert.iconColor"
-                  style="font-size: 18px; width: 18px; height: 18px"
-                  >{{ cert.icon }}</mat-icon
-                >
+                <mat-icon [style.color]="cert.iconColor" style="font-size: 18px; width: 18px; height: 18px">{{ cert.icon
+                  }}</mat-icon>
               </div>
               <div>
                 <div class="cert-name">{{ cert.name }}</div>
@@ -436,25 +383,18 @@
   <div class="dashboard-content" *ngIf="currentPage !== 'dashboard' && currentPage !== 'courses'">
     <div class="card">
       <div class="card-body" style="text-align: center; padding: 80px 40px">
-        <mat-icon
-          style="
+        <mat-icon style="
             font-size: 64px;
             width: 64px;
             height: 64px;
             color: var(--primary-light);
             opacity: 0.3;
-          "
-          >construction</mat-icon
-        >
+          ">construction</mat-icon>
         <h3 style="margin-top: 16px; color: var(--text-primary)">{{ pageTitles[currentPage] }}</h3>
         <p style="color: var(--text-secondary); margin-top: 8px">
           This section is under development. Check back soon!
         </p>
-        <button
-          class="welcome-btn welcome-btn-primary"
-          style="margin-top: 20px"
-          (click)="setPage('dashboard')"
-        >
+        <button class="welcome-btn welcome-btn-primary" style="margin-top: 20px" (click)="setPage('dashboard')">
           Back to Dashboard
         </button>
       </div>
@@ -474,11 +414,7 @@
   <div class="dialog-body">
     <div class="form-group">
       <label>Course Title</label>
-      <input
-        class="form-input"
-        [(ngModel)]="newTraining.title"
-        placeholder="e.g. Advanced Cybersecurity"
-      />
+      <input class="form-input" [(ngModel)]="newTraining.title" placeholder="e.g. Advanced Cybersecurity" />
     </div>
     <div class="form-group">
       <label>Category</label>
@@ -510,12 +446,8 @@
     </div>
     <div class="form-group">
       <label>Description</label>
-      <textarea
-        class="form-textarea"
-        [(ngModel)]="newTraining.description"
-        rows="3"
-        placeholder="Course overview..."
-      ></textarea>
+      <textarea class="form-textarea" [(ngModel)]="newTraining.description" rows="3"
+        placeholder="Course overview..."></textarea>
     </div>
   </div>
   <div class="dialog-actions">

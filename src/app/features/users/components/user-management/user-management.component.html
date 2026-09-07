@@ -1,0 +1,322 @@
+<div class="users-page">
+  <div class="dashboard-content">
+    <!-- 1. Page Header -->
+    <div class="page-header animate-in">
+      <div class="page-header__text">
+        <h1>User Management</h1>
+        <p class="page-subtitle">Manage system users, roles, and account access.</p>
+        <div class="page-header__meta">
+        </div>
+      </div>
+      <div class="page-header__actions">
+        <a class="btn btn--primary" routerLink="/users/new">
+          <mat-icon>person_add</mat-icon>
+          <span>Add User</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 2. User Statistics Cards -->
+    <section class="stats-grid animate-in delay-1">
+      <div class="stat-card card">
+        <div class="stat-card__icon stat-card__icon--primary">
+          <mat-icon>people</mat-icon>
+        </div>
+        <div class="stat-card__info">
+          <span class="stat-card__label">Total Users</span>
+          <strong class="stat-card__value">{{ stats().totalUsers }}</strong>
+        </div>
+      </div>
+
+      <div class="stat-card card">
+        <div class="stat-card__icon stat-card__icon--success">
+          <mat-icon>check_circle</mat-icon>
+        </div>
+        <div class="stat-card__info">
+          <span class="stat-card__label">Active Users</span>
+          <strong class="stat-card__value">{{ stats().activeUsers }}</strong>
+        </div>
+      </div>
+
+      <div class="stat-card card">
+        <div class="stat-card__icon stat-card__icon--warning">
+          <mat-icon>pause_circle</mat-icon>
+        </div>
+        <div class="stat-card__info">
+          <span class="stat-card__label">Inactive</span>
+          <strong class="stat-card__value">{{ stats().inactiveUsers }}</strong>
+        </div>
+      </div>
+
+      <div class="stat-card card">
+        <div class="stat-card__icon stat-card__icon--info">
+          <mat-icon>school</mat-icon>
+        </div>
+        <div class="stat-card__info">
+          <span class="stat-card__label">Instructors</span>
+          <strong class="stat-card__value">{{ stats().instructorCount }}</strong>
+        </div>
+      </div>
+
+      <div class="stat-card card">
+        <div class="stat-card__icon stat-card__icon--neutral">
+          <mat-icon>badge</mat-icon>
+        </div>
+        <div class="stat-card__info">
+          <span class="stat-card__label">Students</span>
+          <strong class="stat-card__value">{{ stats().studentCount }}</strong>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Search and Filters Toolbar -->
+    <div class="toolbar animate-in delay-2">
+      <div class="toolbar__filters">
+        <!-- Search Input -->
+        <div class="search-field">
+          <mat-icon>search</mat-icon>
+          <input type="text" placeholder="Search by name, username, or email..." [ngModel]="searchInput()"
+            (ngModelChange)="onSearchChange($event)" />
+          @if (searchInput().trim()) {
+          <button class="clear-btn" (click)="onSearchChange('')" aria-label="Clear search">
+            <mat-icon>close</mat-icon>
+          </button>
+          }
+        </div>
+
+        <!-- Role Filter -->
+        <mat-form-field appearance="outline" class="filter-select">
+          <mat-label>Role</mat-label>
+          <mat-select [value]="selectedRole()" (selectionChange)="onRoleFilterChange($event.value)">
+            <mat-option value="all">All Roles</mat-option>
+            @for (role of availableRoles(); track role) {
+            <mat-option [value]="role">{{ role }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Status Filter -->
+        <mat-form-field appearance="outline" class="filter-select">
+          <mat-label>Status</mat-label>
+          <mat-select [value]="selectedStatus()" (selectionChange)="onStatusFilterChange($event.value)">
+            <mat-option value="all">All Statuses</mat-option>
+            <mat-option value="active">Active</mat-option>
+            <mat-option value="inactive">Inactive</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        @if (hasActiveFilters()) {
+        <button class="btn btn--ghost btn--sm" (click)="clearFilters()">
+          <mat-icon>filter_alt_off</mat-icon>
+          <span>Clear filters</span>
+        </button>
+        }
+      </div>
+
+      <div class="toolbar__actions">
+        <span class="page-header__meta toolbar__count">{{ users().length }} shown</span>
+      </div>
+    </div>
+
+    <!-- 4. Notifications & Banners -->
+    @if (error()) {
+    <div class="status-banner status-banner--error">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ error() }}</span>
+    </div>
+    }
+
+    @if (successMessage()) {
+    <div class="status-banner status-banner--success">
+      <mat-icon>check_circle</mat-icon>
+      <span>{{ successMessage() }}</span>
+    </div>
+    }
+
+    <!-- 5. User Table Card -->
+    <div class="card table-card animate-in delay-3">
+      <div class="card-header">
+        <div>
+          <div class="card-title">User Directory</div>
+          <div class="card-subtitle">Manage accounts, status, credentials, and roles</div>
+        </div>
+      </div>
+
+      <div class="card-body">
+        @if (isLoading()) {
+        <div class="table-state table-state--loading">
+          <mat-spinner diameter="36"></mat-spinner>
+          <span>Loading users...</span>
+        </div>
+        } @else if (users().length === 0) {
+        <div class="table-state">
+          <div class="table-state__icon">
+            <mat-icon>person_search</mat-icon>
+          </div>
+          <h3>No users found</h3>
+          <p>
+            @if (hasActiveFilters()) {
+            No user accounts match your search or filter criteria. Try adjusting your query.
+            } @else {
+            No users have been registered in the system yet.
+            }
+          </p>
+          @if (hasActiveFilters()) {
+          <button class="btn btn--ghost btn--sm" (click)="clearFilters()">
+            <mat-icon>filter_alt_off</mat-icon>
+            <span>Clear filters</span>
+          </button>
+          } @else {
+          <a class="btn btn--primary btn--sm" routerLink="/users/new">
+            <mat-icon>person_add</mat-icon>
+            <span>Add First User</span>
+          </a>
+          }
+        </div>
+        } @else {
+        <div class="table-wrapper">
+          <table mat-table [dataSource]="sortedUsers()" matSort (matSortChange)="onSortChange($event)" class="users-table">
+            <!-- User Column: Avatar + Full Name -->
+            <ng-container matColumnDef="user">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>User</th>
+              <td mat-cell *matCellDef="let user">
+                <div class="user-cell">
+                  <div class="user-avatar" [class.user-avatar--inactive]="!user.isActive">
+                    {{ getUserInitials(user) }}
+                  </div>
+                  <div class="user-cell__names">
+                    <a class="user-fullname" [routerLink]="['/users', user.id]">
+                      {{ getUserFullName(user) }}
+                    </a>
+                    @if (isCurrentUser(user)) {
+                    <span class="badge-self">You</span>
+                    }
+                  </div>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Username Column -->
+            <ng-container matColumnDef="userName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Username</th>
+              <td mat-cell *matCellDef="let user" class="cell-username">
+                <code>@{{ user.userName }}</code>
+              </td>
+            </ng-container>
+
+            <!-- Email Column -->
+            <ng-container matColumnDef="email">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+              <td mat-cell *matCellDef="let user" class="cell-muted">
+                {{ user.email }}
+              </td>
+            </ng-container>
+
+            <!-- Roles Column -->
+            <ng-container matColumnDef="roles">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Role</th>
+              <td mat-cell *matCellDef="let user">
+                <div class="roles-chips">
+                  @if (user.roles && user.roles.length > 0) {
+                  @for (role of user.roles; track role) {
+                  <span class="badge"
+                    [class.badge--primary]="role.toLowerCase() === 'admin' || role.toLowerCase() === 'super admin'"
+                    [class.badge--info]="role.toLowerCase() === 'instructor'"
+                    [class.badge--neutral]="role.toLowerCase() === 'student'">
+                    {{ role }}
+                  </span>
+                  }
+                  } @else {
+                  <span class="cell-muted">No roles</span>
+                  }
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Phone Column -->
+            <ng-container matColumnDef="phoneNumber">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Phone</th>
+              <td mat-cell *matCellDef="let user" class="cell-muted">
+                {{ user.phoneNumber || '—' }}
+              </td>
+            </ng-container>
+
+            <!-- Status Column -->
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+              <td mat-cell *matCellDef="let user">
+                <span class="status-indicator" [class.status-indicator--active]="user.isActive"
+                  [class.status-indicator--inactive]="!user.isActive">
+                  <span class="status-dot"></span>
+                  <span class="status-text">{{ user.isActive ? 'Active' : 'Inactive' }}</span>
+                </span>
+              </td>
+            </ng-container>
+
+            <!-- Created Date Column -->
+            <ng-container matColumnDef="createdAt">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Created</th>
+              <td mat-cell *matCellDef="let user" class="cell-muted">
+                {{ user.createdAt | date: 'mediumDate' }}
+              </td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef class="cell-actions-header"></th>
+              <td mat-cell *matCellDef="let user" class="cell-actions">
+                <button mat-icon-button [matMenuTriggerFor]="userMenu" aria-label="User actions"
+                  class="action-menu-btn">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+
+                <mat-menu #userMenu="matMenu" xPosition="before" class="user-actions-menu">
+                  <a mat-menu-item [routerLink]="['/users', user.id]">
+                    <mat-icon>visibility</mat-icon>
+                    <span>View Profile</span>
+                  </a>
+
+                  <a mat-menu-item [routerLink]="['/users/edit', user.id]">
+                    <mat-icon>edit</mat-icon>
+                    <span>Edit User</span>
+                  </a>
+
+                  <button mat-menu-item (click)="openChangePassword(user)">
+                    <mat-icon>{{ isCurrentUser(user) ? 'password' : 'lock_reset' }}</mat-icon>
+                    <span>{{ isCurrentUser(user) ? 'Change Password' : 'Reset Password' }}</span>
+                  </button>
+
+                  <button mat-menu-item (click)="openManageRoles(user)">
+                    <mat-icon>shield</mat-icon>
+                    <span>Manage Roles</span>
+                  </button>
+
+                  <mat-divider></mat-divider>
+
+                  <button mat-menu-item (click)="toggleUserStatus(user)" [disabled]="isCurrentUser(user)">
+                    <mat-icon>{{ user.isActive ? 'block' : 'check_circle' }}</mat-icon>
+                    <span>{{ user.isActive ? 'Deactivate User' : 'Activate User' }}</span>
+                  </button>
+
+                  <button mat-menu-item (click)="deleteUser(user)" [disabled]="isCurrentUser(user)" class="danger-item">
+                    <mat-icon>delete</mat-icon>
+                    <span>Delete User</span>
+                  </button>
+                </mat-menu>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns" class="user-row"></tr>
+          </table>
+        </div>
+        }
+
+        <!-- Paginator -->
+        <mat-paginator [length]="totalCount()" [pageSize]="pageSize()" [pageSizeOptions]="[10, 25, 50]"
+          [pageIndex]="pageIndex()" showFirstLastButtons (page)="onPageChange($event)"
+          class="users-paginator"></mat-paginator>
+      </div>
+    </div>
+  </div>
+</div>

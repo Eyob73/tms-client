@@ -1,42 +1,33 @@
 <div class="course-page">
   <div class="dashboard-content">
     <!-- Page Header -->
-    <div class="page-header">
+    <div class="page-header animate-in">
       <div class="page-header__text">
         <h1>Courses</h1>
         <p class="page-subtitle">Manage and organize courses offered by the institution.</p>
-        <div class="page-header__meta">
-          <span class="meta-count">{{ totalCount() }}</span>
-          <span>{{ totalCount() === 1 ? 'course' : 'courses' }} total</span>
-        </div>
       </div>
       <div class="page-header__actions">
         @if (isAdmin()) {
-          <button class="btn btn--primary" routerLink="/courses/new">
-            <mat-icon>add</mat-icon>
-            <span>Add Course</span>
-          </button>
+        <button class="btn btn--primary" routerLink="/courses/new">
+          <mat-icon>add</mat-icon>
+          <span>Add Course</span>
+        </button>
         }
       </div>
     </div>
 
     <!-- Toolbar -->
-    <div class="toolbar">
+    <div class="toolbar animate-in delay-1">
       <div class="toolbar__filters">
         <!-- Search -->
         <div class="search-field">
           <mat-icon>search</mat-icon>
-          <input
-            type="text"
-            placeholder="Search by name, code, or department"
-            [value]="searchTerm()"
-            (input)="onSearchInput($event)"
-            (keydown.enter)="loadCourses()"
-          />
+          <input type="text" placeholder="Search by name, code, or department" [value]="searchTerm()"
+            (input)="onSearchInput($event)" (keydown.enter)="loadCourses()" />
           @if (searchTerm().trim()) {
-            <button class="clear-btn" (click)="clearSearch()" aria-label="Clear search">
-              <mat-icon>close</mat-icon>
-            </button>
+          <button class="clear-btn" (click)="clearSearch()" aria-label="Clear search">
+            <mat-icon>close</mat-icon>
+          </button>
           }
         </div>
 
@@ -53,22 +44,19 @@
         <!-- Department Filter -->
         <mat-form-field appearance="outline" class="filter-select">
           <mat-label>Department</mat-label>
-          <mat-select
-            [value]="departmentFilter()"
-            (selectionChange)="applyDepartmentFilter($event.value)"
-          >
+          <mat-select [value]="departmentFilter()" (selectionChange)="applyDepartmentFilter($event.value)">
             <mat-option value="all">All departments</mat-option>
             @for (department of departmentOptions(); track department) {
-              <mat-option [value]="department">{{ department }}</mat-option>
+            <mat-option [value]="department">{{ department }}</mat-option>
             }
           </mat-select>
         </mat-form-field>
 
         @if (hasActiveFilters()) {
-          <button class="btn btn--ghost btn--sm" (click)="clearAllFilters()">
-            <mat-icon>filter_alt_off</mat-icon>
-            <span>Clear filters</span>
-          </button>
+        <button class="btn btn--ghost btn--sm" (click)="clearAllFilters()">
+          <mat-icon>filter_alt_off</mat-icon>
+          <span>Clear filters</span>
+        </button>
         }
       </div>
 
@@ -79,20 +67,20 @@
 
     <!-- Status Messages -->
     @if (errorMessage()) {
-      <div class="status-banner status-banner--error">
-        <mat-icon>error_outline</mat-icon>
-        <span>{{ errorMessage() }}</span>
-      </div>
+    <div class="status-banner status-banner--error">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ errorMessage() }}</span>
+    </div>
     }
     @if (successMessage()) {
-      <div class="status-banner status-banner--success">
-        <mat-icon>check_circle</mat-icon>
-        <span>{{ successMessage() }}</span>
-      </div>
+    <div class="status-banner status-banner--success">
+      <mat-icon>check_circle</mat-icon>
+      <span>{{ successMessage() }}</span>
+    </div>
     }
 
     <!-- Table Card -->
-    <div class="card table-card">
+    <div class="card table-card animate-in delay-2">
       <div class="card-header">
         <div>
           <div class="card-title">Course List</div>
@@ -101,193 +89,176 @@
       </div>
       <div class="card-body">
         @if (loading()) {
-          <div class="table-state table-state--loading">
-            <mat-spinner diameter="36"></mat-spinner>
-            <span>Loading courses…</span>
-          </div>
+        <div class="table-state table-state--loading">
+          <mat-spinner diameter="36"></mat-spinner>
+          <span>Loading courses…</span>
+        </div>
         } @else if (filteredCourses().length === 0) {
-          <div class="table-state">
-            <div class="table-state__icon">
-              <mat-icon>search_off</mat-icon>
-            </div>
-            <h3>No courses found</h3>
-            <p>
-              @if (hasActiveFilters()) {
-                No courses match the current search or filters. Try adjusting them.
-              } @else {
-                Courses added to the institution will appear here.
-              }
-            </p>
+        <div class="table-state">
+          <div class="table-state__icon">
+            <mat-icon>search_off</mat-icon>
+          </div>
+          <h3>No courses found</h3>
+          <p>
             @if (hasActiveFilters()) {
-              <button class="btn btn--ghost btn--sm" (click)="clearAllFilters()">
-                <mat-icon>filter_alt_off</mat-icon>
-                <span>Clear filters</span>
-              </button>
+            No courses match the current search or filters. Try adjusting them.
+            } @else {
+            Courses added to the institution will appear here.
             }
-          </div>
+          </p>
+          @if (hasActiveFilters()) {
+          <button class="btn btn--ghost btn--sm" (click)="clearAllFilters()">
+            <mat-icon>filter_alt_off</mat-icon>
+            <span>Clear filters</span>
+          </button>
+          }
+        </div>
         } @else {
-          <div class="table-wrapper">
-            <table
-              mat-table
-              [dataSource]="filteredCourses()"
-              matSort
-              (matSortChange)="onSortChange($event)"
-              class="course-table"
-            >
-              <!-- Course Name Column (includes course code) -->
-              <ng-container matColumnDef="courseName">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Course</th>
-                <td mat-cell *matCellDef="let course">
-                  <div class="course-name-cell">
-                    <span class="course-name">{{ getCourseName(course) }}</span>
-                    <span class="course-code">{{ getCourseCode(course) }}</span>
-                  </div>
-                </td>
-              </ng-container>
+        <div class="table-wrapper">
+          <table mat-table [dataSource]="filteredCourses()" matSort (matSortChange)="onSortChange($event)"
+            class="course-table">
+            <!-- Course Name Column (includes course code) -->
+            <ng-container matColumnDef="courseName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Course</th>
+              <td mat-cell *matCellDef="let course">
+                <div class="course-name-cell">
+                  <span class="course-name">{{ getCourseName(course) }}</span>
+                  <span class="course-code">{{ getCourseCode(course) }}</span>
+                </div>
+              </td>
+            </ng-container>
 
-              <!-- Description Column -->
-              <ng-container matColumnDef="description">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
-                <td mat-cell *matCellDef="let course">
-                  <span class="description-text" [title]="course.description">{{
-                    course.description || '—'
+            <!-- Description Column -->
+            <ng-container matColumnDef="description">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
+              <td mat-cell *matCellDef="let course">
+                <span class="description-text" [title]="course.description">{{
+                  course.description || '—'
                   }}</span>
-                </td>
-              </ng-container>
+              </td>
+            </ng-container>
 
-              <!-- Credits Column -->
-              <ng-container matColumnDef="credits">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header class="cell-center">
-                  Credits
-                </th>
-                <td mat-cell *matCellDef="let course" class="cell-center cell-muted">
-                  {{ course.credits || course.creditHours || '—' }}
-                </td>
-              </ng-container>
+            <!-- Credits Column -->
+            <ng-container matColumnDef="credits">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="cell-center">
+                Credits
+              </th>
+              <td mat-cell *matCellDef="let course" class="cell-center cell-muted">
+                {{ course.credits || course.creditHours || '—' }}
+              </td>
+            </ng-container>
 
-              <!-- Department ID Column -->
-              <ng-container matColumnDef="departmentId">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Department</th>
-                <td mat-cell *matCellDef="let course" class="cell-muted">
-                  {{ course.departmentId || course.department || '—' }}
-                </td>
-              </ng-container>
+            <!-- Department ID Column -->
+            <ng-container matColumnDef="departmentId">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Department</th>
+              <td mat-cell *matCellDef="let course" class="cell-muted">
+                {{ course.departmentId || course.department || '—' }}
+              </td>
+            </ng-container>
 
-              <!-- Program ID Column -->
-              <ng-container matColumnDef="programId">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Program</th>
-                <td mat-cell *matCellDef="let course" class="cell-muted">
-                  {{ course.programId || '—' }}
-                </td>
-              </ng-container>
+            <!-- Program ID Column -->
+            <ng-container matColumnDef="programId">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Program</th>
+              <td mat-cell *matCellDef="let course" class="cell-muted">
+                {{ course.programId || '—' }}
+              </td>
+            </ng-container>
 
-              <!-- Course Type Column -->
-              <ng-container matColumnDef="courseType">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
-                <td mat-cell *matCellDef="let course" class="cell-muted">
-                  {{ course.courseType || '—' }}
-                </td>
-              </ng-container>
+            <!-- Course Type Column -->
+            <ng-container matColumnDef="courseType">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
+              <td mat-cell *matCellDef="let course" class="cell-muted">
+                {{ course.courseType || '—' }}
+              </td>
+            </ng-container>
 
-              <!-- Prerequisite Course ID Column -->
-              <ng-container matColumnDef="prerequisiteCourseId">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Prerequisite</th>
-                <td mat-cell *matCellDef="let course" class="cell-muted">
-                  {{ course.prerequisiteCourseId || '—' }}
-                </td>
-              </ng-container>
+            <!-- Prerequisite Course ID Column -->
+            <ng-container matColumnDef="prerequisiteCourseId">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Prerequisite</th>
+              <td mat-cell *matCellDef="let course" class="cell-muted">
+                {{ course.prerequisiteCourseId || '—' }}
+              </td>
+            </ng-container>
 
-              <!-- Duration Hours Column -->
-              <ng-container matColumnDef="durationHours">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header class="cell-center">Hours</th>
-                <td mat-cell *matCellDef="let course" class="cell-center cell-muted">
-                  {{ course.durationHours || '—' }}
-                </td>
-              </ng-container>
+            <!-- Duration Hours Column -->
+            <ng-container matColumnDef="durationHours">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="cell-center">Hours</th>
+              <td mat-cell *matCellDef="let course" class="cell-center cell-muted">
+                {{ course.durationHours || '—' }}
+              </td>
+            </ng-container>
 
-              <!-- Status Column -->
-              <ng-container matColumnDef="status">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-                <td mat-cell *matCellDef="let course">
-                  <span
-                    class="badge"
-                    [class.badge--success]="course.status === 'Active'"
-                    [class.badge--warning]="course.status === 'Inactive'"
-                    [class.badge--neutral]="course.status === 'Archived'"
-                  >
-                    {{ getStatusLabel(course) }}
-                  </span>
-                </td>
-              </ng-container>
+            <!-- Status Column -->
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+              <td mat-cell *matCellDef="let course">
+                <span class="badge" [class.badge--success]="course.status === 'Active'"
+                  [class.badge--warning]="course.status === 'Inactive'"
+                  [class.badge--neutral]="course.status === 'Archived'">
+                  {{ getStatusLabel(course) }}
+                </span>
+              </td>
+            </ng-container>
 
-              <!-- Is Published Column -->
-              <ng-container matColumnDef="isPublished">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Publishing</th>
-                <td mat-cell *matCellDef="let course">
-                  <span
-                    class="badge"
-                    [class.badge--success]="course.isPublished"
-                    [class.badge--neutral]="!course.isPublished"
-                  >
-                    {{ getIsPublishedLabel(course) }}
-                  </span>
-                </td>
-              </ng-container>
+            <!-- Is Published Column -->
+            <ng-container matColumnDef="isPublished">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Publishing</th>
+              <td mat-cell *matCellDef="let course">
+                <span class="badge" [class.badge--success]="course.isPublished"
+                  [class.badge--neutral]="!course.isPublished">
+                  {{ getIsPublishedLabel(course) }}
+                </span>
+              </td>
+            </ng-container>
 
-              <!-- Created Date Column -->
-              <ng-container matColumnDef="createdAt">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Created</th>
-                <td mat-cell *matCellDef="let course" class="cell-muted">
-                  {{ getCourseCreatedAt(course) }}
-                </td>
-              </ng-container>
+            <!-- Created Date Column -->
+            <ng-container matColumnDef="createdAt">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Created</th>
+              <td mat-cell *matCellDef="let course" class="cell-muted">
+                {{ getCourseCreatedAt(course) }}
+              </td>
+            </ng-container>
 
-              <!-- Updated Date Column -->
-              <ng-container matColumnDef="updatedAt">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Updated</th>
-                <td mat-cell *matCellDef="let course" class="cell-muted">
-                  {{ getCourseUpdatedAt(course) }}
-                </td>
-              </ng-container>
+            <!-- Updated Date Column -->
+            <ng-container matColumnDef="updatedAt">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Updated</th>
+              <td mat-cell *matCellDef="let course" class="cell-muted">
+                {{ getCourseUpdatedAt(course) }}
+              </td>
+            </ng-container>
 
-              <!-- Actions Column -->
-              <ng-container matColumnDef="actions">
-                <th mat-header-cell *matHeaderCellDef></th>
-                <td mat-cell *matCellDef="let course">
-                  <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Course actions">
-                    <mat-icon>more_vert</mat-icon>
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef></th>
+              <td mat-cell *matCellDef="let course">
+                <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Course actions">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button mat-menu-item [routerLink]="['/courses', course.id]">
+                    <mat-icon>visibility</mat-icon>
+                    <span>View</span>
                   </button>
-                  <mat-menu #menu="matMenu">
-                    <button mat-menu-item [routerLink]="['/courses', course.id]">
-                      <mat-icon>visibility</mat-icon>
-                      <span>View</span>
-                    </button>
-                    <button mat-menu-item (click)="editCourse(course)">
-                      <mat-icon>edit</mat-icon>
-                      <span>Edit</span>
-                    </button>
-                    <button mat-menu-item (click)="deleteCourse(course)" class="danger-item">
-                      <mat-icon>delete</mat-icon>
-                      <span>Delete</span>
-                    </button>
-                  </mat-menu>
-                </td>
-              </ng-container>
+                  <button mat-menu-item (click)="editCourse(course)">
+                    <mat-icon>edit</mat-icon>
+                    <span>Edit</span>
+                  </button>
+                  <button mat-menu-item (click)="deleteCourse(course)" class="danger-item">
+                    <mat-icon>delete</mat-icon>
+                    <span>Delete</span>
+                  </button>
+                </mat-menu>
+              </td>
+            </ng-container>
 
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-            </table>
-          </div>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+          </table>
+        </div>
         }
 
-        <mat-paginator
-          [length]="totalCount()"
-          [pageSize]="pageSize()"
-          [pageSizeOptions]="[10, 25, 50]"
-          [pageIndex]="pageIndex()"
-          showFirstLastButtons
-          (page)="onPageChange($event)"
-        ></mat-paginator>
+        <mat-paginator [length]="totalCount()" [pageSize]="pageSize()" [pageSizeOptions]="[10, 25, 50]"
+          [pageIndex]="pageIndex()" showFirstLastButtons (page)="onPageChange($event)"></mat-paginator>
       </div>
     </div>
   </div>

@@ -1,0 +1,390 @@
+/*
+  TMS Modern Angular Material Input Design System
+  ---------------------------------------------------------------------------
+  Elevated, SaaS-grade inputs, selects, textareas, and floating labels.
+  Consistent with Stripe, Linear, and Material 3 design tokens.
+*/
+
+/* ==========================================================================
+   1. Form Field Container & Geometry
+   ========================================================================== */
+
+.mat-mdc-form-field {
+  --mat-form-field-outlined-container-shape: var(--radius-md, 12px);
+  --mat-form-field-outlined-outline-width: 1.5px;
+  --mat-form-field-outlined-focus-outline-width: 1.5px;
+  --mat-form-field-outlined-outline-color: var(--color-border, #e3e6ef);
+  --mat-form-field-outlined-hover-outline-color: var(--color-gray-400, #a8b0c8);
+  --mat-form-field-outlined-focus-outline-color: var(--color-primary, #2d6bf0);
+  --mat-form-field-outlined-label-text-color: var(--color-text-secondary, #5e6a8a);
+  --mat-form-field-outlined-focus-label-text-color: var(--color-primary, #2d6bf0);
+  --mat-form-field-outlined-hover-label-text-color: var(--color-text-primary, #1a2140);
+  --mat-form-field-outlined-error-outline-color: var(--color-danger, #e74c3c);
+  --mat-form-field-outlined-error-focus-outline-color: var(--color-danger, #e74c3c);
+  --mat-form-field-outlined-error-label-text-color: var(--color-danger, #e74c3c);
+  --mat-form-field-outlined-input-text-color: var(--color-text-primary, #1a2140);
+  --mat-form-field-outlined-input-text-placeholder-color: var(--color-text-placeholder, #a8b0c8);
+  --mat-form-field-leading-icon-color: var(--color-text-tertiary, #7e88a8);
+  --mat-form-field-trailing-icon-color: var(--color-text-tertiary, #7e88a8);
+
+  font-family: var(--font-family-base);
+  width: 100%;
+}
+
+/* Appearance Outline Enhancements */
+.mat-mdc-form-field-appearance-outline {
+  .mat-mdc-text-field-wrapper {
+    background-color: var(--color-surface, #ffffff);
+    border-radius: var(--radius-md, 12px);
+    transition: background-color var(--duration-fast, 150ms) var(--ease-standard, ease),
+                box-shadow var(--duration-fast, 150ms) var(--ease-standard, ease),
+                border-color var(--duration-fast, 150ms) var(--ease-standard, ease);
+    box-sizing: border-box;
+  }
+
+  /* Hover Elevation & Border Softening */
+  &:not(.mat-focused):not(.mat-form-field-disabled):hover {
+    .mat-mdc-text-field-wrapper {
+      box-shadow: 0 2px 6px -1px rgba(10, 14, 26, 0.05);
+    }
+
+    .mdc-notched-outline .mat-mdc-notch-piece {
+      border-color: var(--color-gray-400, #a8b0c8);
+    }
+  }
+
+  /* Focus Halo (Luminescent Glow Ring) */
+  &.mat-focused {
+    .mat-mdc-text-field-wrapper {
+      background-color: var(--color-surface, #ffffff);
+      box-shadow: 0 0 0 3.5px var(--color-focus-ring, rgba(45, 107, 240, 0.15));
+    }
+
+    .mdc-notched-outline .mat-mdc-notch-piece {
+      border-color: var(--color-primary, #2d6bf0) !important;
+      border-width: 1.5px !important;
+    }
+  }
+
+  /* Disabled State */
+  &.mat-form-field-disabled {
+    .mat-mdc-text-field-wrapper {
+      background-color: var(--color-gray-50, #f9fafc);
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .mdc-notched-outline .mat-mdc-notch-piece {
+      border-color: var(--color-gray-200, #e3e6ef);
+    }
+
+    .mat-mdc-input-element {
+      color: var(--color-text-tertiary, #7e88a8);
+      cursor: not-allowed;
+    }
+  }
+
+  /* Invalid / Error State */
+  &.mat-form-field-invalid {
+    .mdc-notched-outline .mat-mdc-notch-piece {
+      border-color: var(--color-danger, #e74c3c) !important;
+    }
+
+    &.mat-focused .mat-mdc-text-field-wrapper {
+      box-shadow: 0 0 0 3.5px rgba(231, 76, 60, 0.16) !important;
+    }
+  }
+}
+
+/* ==========================================================================
+   2. Input Element Typography & Caret
+   ========================================================================== */
+
+.mat-mdc-input-element {
+  font-family: var(--font-family-base) !important;
+  font-size: var(--font-size-base, 14px) !important;
+  font-weight: var(--font-weight-regular, 400);
+  color: var(--color-text-primary, #1a2140) !important;
+  caret-color: var(--color-primary, #2d6bf0);
+  letter-spacing: -0.01em;
+
+  &::placeholder {
+    color: var(--color-text-placeholder, #a8b0c8) !important;
+    font-size: var(--font-size-sm, 13px);
+    opacity: 1;
+  }
+
+  /* Clean up webkit autofill styling */
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--color-text-primary, #1a2140);
+    -webkit-box-shadow: 0 0 0px 1000px var(--color-surface, #ffffff) inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+}
+
+/* Textarea specific polish */
+textarea.mat-mdc-input-element {
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+  line-height: var(--line-height-relaxed, 1.6) !important;
+  min-height: 80px;
+  resize: vertical;
+}
+
+/* ==========================================================================
+   3. Floating Label Typography & Notches
+   ========================================================================== */
+
+.mat-mdc-floating-label,
+.mdc-floating-label {
+  font-family: var(--font-family-base) !important;
+  font-size: var(--font-size-base, 14px) !important;
+  font-weight: var(--font-weight-medium, 500) !important;
+  color: var(--color-text-secondary, #5e6a8a);
+  letter-spacing: 0.01em;
+  transition: color var(--duration-fast, 150ms) var(--ease-standard, ease),
+              transform var(--duration-fast, 150ms) var(--ease-standard, ease) !important;
+
+  &--float-above {
+    font-size: var(--font-size-xs, 11px) !important;
+    font-weight: var(--font-weight-semibold, 600) !important;
+    letter-spacing: 0.02em;
+  }
+}
+
+.mat-mdc-form-field.mat-focused .mat-mdc-floating-label {
+  color: var(--color-primary, #2d6bf0) !important;
+}
+
+.mat-mdc-form-field.mat-form-field-invalid .mat-mdc-floating-label {
+  color: var(--color-danger, #e74c3c) !important;
+}
+
+/* Required marker asterisk */
+.mat-mdc-form-field-required-marker {
+  color: var(--color-danger, #e74c3c) !important;
+  font-weight: var(--font-weight-bold, 700);
+  margin-left: 2px;
+}
+
+/* ==========================================================================
+   4. Prefix & Suffix Affixes / Buttons
+   ========================================================================== */
+
+.mat-mdc-form-field-icon-prefix,
+.mat-mdc-form-field-icon-suffix {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-tertiary, #7e88a8);
+  transition: color var(--duration-fast, 150ms) var(--ease-standard, ease);
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.mat-mdc-form-field.mat-focused .mat-mdc-form-field-icon-prefix mat-icon {
+  color: var(--color-primary, #2d6bf0);
+}
+
+/* Password Toggle & Action Buttons inside inputs */
+.mat-mdc-form-field button[matSuffix],
+.mat-mdc-form-field button[matPrefix] {
+  width: 32px !important;
+  height: 32px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: var(--radius-full, 999px) !important;
+  color: var(--color-text-tertiary, #7e88a8) !important;
+  transition: background-color var(--duration-fast, 150ms) var(--ease-standard, ease),
+              color var(--duration-fast, 150ms) var(--ease-standard, ease) !important;
+
+  mat-icon {
+    font-size: 18px !important;
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  &:hover {
+    background-color: var(--color-primary-subtle, #f0f5ff) !important;
+    color: var(--color-primary, #2d6bf0) !important;
+  }
+}
+
+/* ==========================================================================
+   5. Errors, Hints, and Subscripts
+   ========================================================================== */
+
+.mat-mdc-form-field-subscript-wrapper {
+  padding: 0 var(--space-3, 12px) !important;
+  box-sizing: border-box;
+}
+
+@keyframes inputErrorSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mat-mdc-form-field-error {
+  display: flex !important;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-family-base) !important;
+  font-size: var(--font-size-xs, 11.5px) !important;
+  font-weight: var(--font-weight-medium, 500) !important;
+  color: var(--color-danger, #e74c3c) !important;
+  line-height: 1.4 !important;
+  padding-top: 4px !important;
+  letter-spacing: 0.01em;
+  animation: inputErrorSlideIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.mat-mdc-form-field-hint {
+  font-family: var(--font-family-base) !important;
+  font-size: var(--font-size-xs, 11px) !important;
+  color: var(--color-text-tertiary, #7e88a8) !important;
+  padding-top: 4px !important;
+}
+
+/* ==========================================================================
+   6. Select Dropdowns (mat-select & mat-option)
+   ========================================================================== */
+
+.mat-mdc-select-value {
+  font-family: var(--font-family-base) !important;
+  font-size: var(--font-size-base, 14px) !important;
+  font-weight: var(--font-weight-medium, 500) !important;
+  color: var(--color-text-primary, #1a2140) !important;
+}
+
+.mat-mdc-select-placeholder {
+  color: var(--color-text-placeholder, #a8b0c8) !important;
+  font-size: var(--font-size-sm, 13px) !important;
+}
+
+/* Arrow Chevron */
+.mat-mdc-select-arrow {
+  color: var(--color-text-tertiary, #7e88a8) !important;
+  transition: transform var(--duration-fast, 150ms) var(--ease-standard, ease),
+              color var(--duration-fast, 150ms) var(--ease-standard, ease) !important;
+
+  svg {
+    fill: currentColor !important;
+  }
+}
+
+.mat-mdc-form-field.mat-focused .mat-mdc-select-arrow {
+  color: var(--color-primary, #2d6bf0) !important;
+}
+
+.mat-mdc-select[aria-expanded='true'] .mat-mdc-select-arrow {
+  transform: rotate(180deg);
+}
+
+/* Dropdown Panel Overlay */
+.mat-mdc-select-panel {
+  background: var(--color-surface, #ffffff) !important;
+  border-radius: var(--radius-lg, 16px) !important;
+  border: 1px solid var(--color-border, #e3e6ef) !important;
+  box-shadow: 0 16px 40px -6px rgba(10, 14, 26, 0.16),
+              0 6px 16px -4px rgba(10, 14, 26, 0.08) !important;
+  padding: 6px !important;
+  box-sizing: border-box !important;
+  max-height: 280px !important;
+}
+
+/* Options */
+.mat-mdc-option {
+  height: 40px !important;
+  min-height: 40px !important;
+  border-radius: var(--radius-sm, 8px) !important;
+  margin: 2px 0 !important;
+  padding: 0 12px !important;
+  font-family: var(--font-family-base) !important;
+  font-size: var(--font-size-sm, 13px) !important;
+  font-weight: var(--font-weight-medium, 500) !important;
+  color: var(--color-text-primary, #1a2140) !important;
+  transition: background-color var(--duration-fast, 150ms) var(--ease-standard, ease),
+              color var(--duration-fast, 150ms) var(--ease-standard, ease) !important;
+
+  &:hover:not(.mdc-list-item--disabled) {
+    background-color: var(--color-gray-100, #f1f3f8) !important;
+    color: var(--color-text-primary, #1a2140) !important;
+  }
+
+  &.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+    background-color: var(--color-primary-subtle, #f0f5ff) !important;
+    color: var(--color-primary, #2d6bf0) !important;
+    font-weight: var(--font-weight-semibold, 600) !important;
+
+    .mat-pseudo-checkbox {
+      color: var(--color-primary, #2d6bf0) !important;
+    }
+  }
+
+  .mdc-list-item__primary-text {
+    font-family: var(--font-family-base) !important;
+    font-size: var(--font-size-sm, 13px) !important;
+    letter-spacing: normal !important;
+  }
+}
+
+/* ==========================================================================
+   7. Compact / Dense Variant (Ideal for Toolbars & Filter Bars)
+   ========================================================================== */
+
+.filter-select,
+.mat-form-field-dense {
+  width: auto;
+  min-width: 140px;
+
+  .mat-mdc-text-field-wrapper {
+    height: 42px !important;
+    padding: 0 12px !important;
+    display: flex;
+    align-items: center;
+  }
+
+  .mat-mdc-form-field-flex {
+    height: 42px !important;
+    align-items: center !important;
+  }
+
+  .mat-mdc-form-field-infix {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    min-height: 0 !important;
+  }
+
+  .mat-mdc-floating-label {
+    top: 21px !important;
+    font-size: var(--font-size-sm, 12.5px) !important;
+
+    &--float-above {
+      top: 24px !important;
+      font-size: 10px !important;
+    }
+  }
+
+  .mat-mdc-select-value {
+    font-size: var(--font-size-sm, 12.5px) !important;
+  }
+
+  /* No subscript gap in filter toolbar */
+  .mat-mdc-form-field-subscript-wrapper {
+    display: none !important;
+  }
+}

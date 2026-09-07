@@ -1,8 +1,8 @@
-<div style="height: 100px;" class="dashboard-header">
+<div style="height: 100px;" class="dashboard-header animate-in">
   <h1>Instructor Command Center</h1>
   <p>Pending: {{ store.pendingCount() }}</p>
 </div>
-<div class="chart-section">
+<div class="chart-section animate-in delay-1">
   @defer (on viewport; prefetch on idle(500)) {
     <tms-analytics-chart [data]="store.entities()" />
   } @placeholder {
