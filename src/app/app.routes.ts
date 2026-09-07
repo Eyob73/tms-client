@@ -38,7 +38,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/course/course').then((m) => m.CourseComponent),
       },
-
+      {
+        path: 'courses/new',
+        loadComponent: () =>
+          import('./features/course/add-course/add-course.component').then(
+            (m) => m.AddCourseComponent,
+          ),
+      },
       {
         path: 'courses/:id',
         loadComponent: () =>

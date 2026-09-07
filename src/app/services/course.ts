@@ -31,6 +31,10 @@ export class CourseService {
     return this.http.put<Course>(`${this.baseUrl}/${id}`, payload);
   }
 
+  patch(id: number, payload: Partial<Course>) {
+    return this.http.patch<Course>(`${this.baseUrl}/${id}`, payload);
+  }
+
   delete(id: number) {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }

@@ -1,0 +1,244 @@
+<div class="course-page">
+  <div class="dashboard-content">
+    <div class="page-header">
+      <div class="page-header__text">
+        <h1>{{ isEditMode() ? 'Edit Course' : 'Add Course' }}</h1>
+        <p class="page-subtitle">
+          {{
+            isEditMode()
+              ? 'Update the selected course details in the training management system.'
+              : 'Create a new course for the training management system.'
+          }}
+        </p>
+      </div>
+
+      <div class="page-header__actions">
+        <button class="plain-back-btn" type="button" (click)="cancel()">
+          <mat-icon>arrow_back</mat-icon>
+          <span>Back to Courses</span>
+        </button>
+      </div>
+    </div>
+
+    @if (statusMessage()) {
+      <div
+        class="status-banner"
+        [class.status-banner--success]="statusType() === 'success'"
+        [class.status-banner--error]="statusType() === 'error'"
+      >
+        <mat-icon>{{ statusType() === 'success' ? 'check_circle' : 'error_outline' }}</mat-icon>
+        <span>{{ statusMessage() }}</span>
+      </div>
+    }
+
+    <div class="card form-card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Course Details</div>
+          <div class="card-subtitle">Complete the information below to save the course.</div>
+        </div>
+      </div>
+
+      <div class="card-body">
+        @if (isLoading()) {
+          <div class="loading-state">
+            <mat-spinner diameter="36"></mat-spinner>
+            <span>Loading course details...</span>
+          </div>
+        } @else {
+          <form [formGroup]="form" (ngSubmit)="submit()" class="course-form" novalidate>
+            <section class="form-section">
+              <div class="section-heading">
+                <h3>Basic Course Information</h3>
+              </div>
+
+              <div class="form-grid">
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Course Code</mat-label>
+                  <input matInput formControlName="courseCode" placeholder="CS101" />
+                  @if (
+                    form.get('courseCode')?.invalid &&
+                    (form.get('courseCode')?.dirty || form.get('courseCode')?.touched)
+                  ) {
+                    <mat-error>Course code is required.</mat-error>
+                  }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Course Name</mat-label>
+                  <input
+                    matInput
+                    formControlName="courseName"
+                    placeholder="Introduction to Programming"
+                  />
+                  @if (
+                    form.get('courseName')?.invalid &&
+                    (form.get('courseName')?.dirty || form.get('courseName')?.touched)
+                  ) {
+                    <mat-error>Course name is required.</mat-error>
+                  }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="form-field full-width">
+                  <mat-label>Description</mat-label>
+                  <textarea
+                    matInput
+                    formControlName="description"
+                    rows="4"
+                    placeholder="Describe the course objectives and outcomes..."
+                  ></textarea>
+                  @if (
+                    form.get('description')?.invalid &&
+                    (form.get('description')?.dirty || form.get('description')?.touched)
+                  ) {
+                    <mat-error>Description cannot exceed 500 characters.</mat-error>
+                  }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Credits</mat-label>
+                  <input matInput type="number" min="1" formControlName="credits" />
+                  @if (
+                    form.get('credits')?.invalid &&
+                    (form.get('credits')?.dirty || form.get('credits')?.touched)
+                  ) {
+                    <mat-error>Credits must be greater than 0.</mat-error>
+                  }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Course Type</mat-label>
+                  <mat-select formControlName="courseType">
+                    @for (type of courseTypeOptions; track type) {
+                      <mat-option [value]="type">{{ type }}</mat-option>
+                    }
+                  </mat-select>
+                  @if (
+                    form.get('courseType')?.invalid &&
+                    (form.get('courseType')?.dirty || form.get('courseType')?.touched)
+                  ) {
+                    <mat-error>Course type is required.</mat-error>
+                  }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Level</mat-label>
+                  <mat-select formControlName="level">
+                    @for (level of levelOptions; track level) {
+                      <mat-option [value]="level">{{ level }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </section>
+
+            <section class="form-section">
+              <div class="section-heading">
+                <h3>Academic Information</h3>
+              </div>
+
+              <div class="form-grid">
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Department</mat-label>
+                  <mat-select formControlName="departmentId">
+                    @for (department of departmentOptions(); track department.id) {
+                      <mat-option [value]="department.id">{{ department.label }}</mat-option>
+                    }
+                  </mat-select>
+                  @if (
+                    form.get('departmentId')?.invalid &&
+                    (form.get('departmentId')?.dirty || form.get('departmentId')?.touched)
+                  ) {
+                    <mat-error>Department is required.</mat-error>
+                  }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Program</mat-label>
+                  <mat-select formControlName="programId">
+                    <mat-option value="">Select a program</mat-option>
+                    @for (program of filteredPrograms(); track program.id) {
+                      <mat-option [value]="program.id">{{ program.label }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Prerequisite Course</mat-label>
+                  <mat-select formControlName="prerequisiteCourseId">
+                    <mat-option value="">None</mat-option>
+                    @for (course of availablePrerequisites(); track course.id) {
+                      <mat-option [value]="course.id"
+                        >{{ course.courseName }} ({{ course.courseCode }})</mat-option
+                      >
+                    }
+                  </mat-select>
+                  @if (form.get('prerequisiteCourseId')?.hasError('selfPrerequisite')) {
+                    <mat-error>A course cannot be a prerequisite of itself.</mat-error>
+                  }
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Duration (Hours)</mat-label>
+                  <input matInput type="number" min="0" formControlName="durationHours" />
+                  @if (
+                    form.get('durationHours')?.invalid &&
+                    (form.get('durationHours')?.dirty || form.get('durationHours')?.touched)
+                  ) {
+                    <mat-error>Duration must be 0 or greater.</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+            </section>
+
+            <section class="form-section">
+              <div class="section-heading">
+                <h3>Course Status</h3>
+              </div>
+
+              <div class="status-row">
+                <mat-form-field appearance="outline" class="form-field status-field">
+                  <mat-label>Status</mat-label>
+                  <mat-select formControlName="status">
+                    @for (status of statusOptions; track status) {
+                      <mat-option [value]="status">{{ status }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+
+                <div class="published-toggle">
+                  <span class="toggle-label">Published</span>
+                  <mat-slide-toggle
+                    formControlName="isPublished"
+                    color="primary"
+                  ></mat-slide-toggle>
+                </div>
+              </div>
+            </section>
+
+            <div class="form-actions">
+              <button type="button" class="btn btn--ghost" (click)="cancel()">
+                <mat-icon>close</mat-icon>
+                <span>Cancel</span>
+              </button>
+
+              <button
+                type="submit"
+                class="btn btn--primary"
+                [disabled]="isSubmitting() || isLoading()"
+              >
+                @if (isSubmitting()) {
+                  <mat-spinner diameter="18"></mat-spinner>
+                  <span>Saving...</span>
+                } @else {
+                  <mat-icon>save</mat-icon>
+                  <span>{{ isEditMode() ? 'Save Changes' : 'Create Course' }}</span>
+                }
+              </button>
+            </div>
+          </form>
+        }
+      </div>
+    </div>
+  </div>
+</div>

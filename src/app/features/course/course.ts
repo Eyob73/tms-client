@@ -1,8 +1,9 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -13,8 +14,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { Course } from '../../models/course.model';
-import { CourseStore } from '../../store/course.store';
 import { AuthService } from '../../services/auth.service';
+import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
+import { CourseStore } from '../../store/course.store';
 
 @Component({
   selector: 'app-admin-course-list',
@@ -40,6 +42,8 @@ import { AuthService } from '../../services/auth.service';
 export class CourseComponent {
   private readonly store = inject(CourseStore);
   private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+  private readonly dialog = inject(MatDialog);
 
   readonly displayedColumns = [
     'courseName',
@@ -265,18 +269,43 @@ export class CourseComponent {
   editCourse(course: Course): void {
     const courseName = this.getCourseName(course);
     this.successMessage.set(`Editing ${courseName}.`);
-    // Optionally navigate to edit page
+    void this.router.navigate(['/courses/new'], {
+      queryParams: { editId: course.id },
+    });
   }
 
   deleteCourse(course: Course): void {
     const courseName = this.getCourseName(course);
-    const confirmed = window.confirm(`Delete ${courseName}? This action cannot be undone.`);
-    if (!confirmed) {
-      return;
-    }
-    this.store.deleteCourse(course.id);
-    this.successMessage.set(`${courseName} was deleted.`);
-    setTimeout(() => this.loadCourses(), 100);
+
+    this.dialog
+      .open(ConfirmDialogComponent, {
+        width: 'min(100vw - 24px, 420px)',
+        maxWidth: '420px',
+        panelClass: 'logout-dialog-panel',
+        disableClose: false,
+        autoFocus: true,
+        restoreFocus: true,
+        hasBackdrop: true,
+        data: {
+          title: 'Delete course?',
+          description: `This will permanently remove ${courseName} from the system.`,
+          warningText: 'Deleting a course may affect related course records and enrollments.',
+          confirmText: 'Delete',
+          cancelText: 'Cancel',
+          confirmTone: 'danger',
+          icon: 'delete_outline',
+        },
+      })
+      .afterClosed()
+      .subscribe((confirmed: boolean) => {
+        if (!confirmed) {
+          return;
+        }
+
+        this.store.deleteCourse(course.id);
+        this.successMessage.set(`${courseName} was deleted.`);
+        setTimeout(() => this.loadCourses(), 100);
+      });
   }
 
   isAdmin(): boolean {

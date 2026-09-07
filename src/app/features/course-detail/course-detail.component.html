@@ -1,4 +1,231 @@
-<h1>Course Detail</h1>
-<p>Course ID: {{ id() }}</p>
+<div class="course-detail-page">
+  <div class="dashboard-content">
+    @if (isLoading()) {
+      <div class="loading-state">
+        <mat-spinner diameter="38"></mat-spinner>
+        <span>Loading course details...</span>
+      </div>
+    } @else if (errorMessage()) {
+      <div class="error-state card">
+        <div class="error-state__icon">
+          <mat-icon>error_outline</mat-icon>
+        </div>
+        <h2>Unable to load course details.</h2>
+        <p>{{ errorMessage() }}</p>
+        <a class="plain-back-btn" routerLink="/courses">
+          <mat-icon>arrow_back</mat-icon>
+          <span>Back to Courses</span>
+        </a>
+      </div>
+    } @else if (course()) {
+      <div class="page-header">
+        <div class="page-header__left">
+          <a class="back-btn plain-back-btn" routerLink="/courses">
+            <mat-icon>arrow_back</mat-icon>
+            <span>Back to Courses</span>
+          </a>
+        </div>
+      </div>
 
-<a routerLink="/dashboard">Back to Dashboard</a>
+      <header class="hero card">
+        <div class="hero__content">
+          <div class="hero__eyebrow">Course Profile</div>
+          <h1>{{ course()?.courseName || 'Untitled course' }}</h1>
+          <div class="hero__meta">
+            <span class="meta-code">{{ course()?.courseCode || '—' }}</span>
+            <span [class]="courseStatusClass">{{ course()?.status || 'Active' }}</span>
+          </div>
+          <p class="hero__description">{{ course()?.description || 'No description provided.' }}</p>
+        </div>
+
+        <div class="hero__actions">
+          <button mat-stroked-button color="primary" type="button" (click)="editCourse()">
+            <mat-icon>edit</mat-icon>
+            <span>Edit</span>
+          </button>
+          <button mat-flat-button color="warn" type="button" (click)="openDeleteDialog()">
+            <mat-icon>delete</mat-icon>
+            <span>Delete</span>
+          </button>
+        </div>
+      </header>
+
+      <section class="overview-grid">
+        @for (item of overviewCards(); track item.label) {
+          <div class="info-card card">
+            <div class="info-card__icon">
+              <mat-icon>{{ item.icon }}</mat-icon>
+            </div>
+            <div class="info-card__body">
+              <span>{{ item.label }}</span>
+              <strong>{{ item.value }}</strong>
+            </div>
+          </div>
+        }
+      </section>
+
+      <section class="detail-grid">
+        <mat-card class="detail-card card">
+          <mat-card-header>
+            <mat-card-title>Course Information</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="info-block">
+              <h3>Description</h3>
+              <p>{{ course()?.description || 'No description provided for this course.' }}</p>
+            </div>
+
+            <mat-divider></mat-divider>
+
+            <div class="info-block">
+              <h3>Academic Information</h3>
+              <div class="detail-list">
+                <div class="detail-row">
+                  <span class="label">Department</span>
+                  <span class="value">{{ departmentName() }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="label">Program</span>
+                  <span class="value">{{ programName() }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="label">Course Type</span>
+                  <span class="value">{{ course()?.courseType || '—' }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="label">Level</span>
+                  <span class="value">{{ course()?.level || '—' }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="label">Prerequisite</span>
+                  <span class="value">{{
+                    hasPrerequisite ? 'Available' : 'No prerequisite courses'
+                  }}</span>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="detail-card card">
+          <mat-card-header>
+            <mat-card-title>Course Status</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="status-list">
+              <div class="status-row">
+                <span class="label">Status</span>
+                <span [class]="courseStatusClass">{{ course()?.status || 'Active' }}</span>
+              </div>
+              <div class="status-row">
+                <span class="label">Published</span>
+                <span class="status-bullet status-bullet--success">
+                  {{ course()?.isPublished ? 'Yes' : 'No' }}
+                </span>
+              </div>
+              <div class="status-row">
+                <span class="label">Created</span>
+                <span>{{ formatDate(course()?.createdAt) }}</span>
+              </div>
+              <div class="status-row">
+                <span class="label">Updated</span>
+                <span>{{ formatDate(course()?.updatedAt) }}</span>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </section>
+
+      <section class="section-card card">
+        <div class="section-header">
+          <div>
+            <h3>Course Offerings</h3>
+            <p>Scheduled delivery information for this course.</p>
+          </div>
+        </div>
+
+        @if (courseOfferings().length) {
+          <div class="table-wrap">
+            <table mat-table [dataSource]="courseOfferings()" class="offerings-table">
+              <ng-container matColumnDef="academicYear">
+                <th mat-header-cell *matHeaderCellDef>Academic Year</th>
+                <td mat-cell *matCellDef="let row">{{ row.academicYear }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="semester">
+                <th mat-header-cell *matHeaderCellDef>Semester</th>
+                <td mat-cell *matCellDef="let row">{{ row.semester }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="teacher">
+                <th mat-header-cell *matHeaderCellDef>Teacher</th>
+                <td mat-cell *matCellDef="let row">{{ row.teacher }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="startDate">
+                <th mat-header-cell *matHeaderCellDef>Start Date</th>
+                <td mat-cell *matCellDef="let row">{{ row.startDate }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="endDate">
+                <th mat-header-cell *matHeaderCellDef>End Date</th>
+                <td mat-cell *matCellDef="let row">{{ row.endDate }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="capacity">
+                <th mat-header-cell *matHeaderCellDef>Capacity</th>
+                <td mat-cell *matCellDef="let row">{{ row.capacity }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="enrolled">
+                <th mat-header-cell *matHeaderCellDef>Enrolled</th>
+                <td mat-cell *matCellDef="let row">{{ row.enrolled }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>Status</th>
+                <td mat-cell *matCellDef="let row">
+                  <span
+                    class="status-badge"
+                    [class.status-badge--active]="row.status === 'Active'"
+                    >{{ row.status }}</span
+                  >
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="offeringColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: offeringColumns"></tr>
+            </table>
+          </div>
+        } @else {
+          <div class="empty-state">
+            <mat-icon>info</mat-icon>
+            <span>Course offerings are not available yet for this course.</span>
+          </div>
+        }
+      </section>
+
+      <section class="section-card card">
+        <div class="section-header">
+          <div>
+            <h3>Prerequisites</h3>
+          </div>
+        </div>
+
+        @if (hasPrerequisite) {
+          <div class="prerequisite-list">
+            <div class="prereq-item">
+              <span class="prereq-label">Course</span>
+              <strong>{{ course()?.prerequisiteCourseId || 'Not specified' }}</strong>
+            </div>
+          </div>
+        } @else {
+          <div class="empty-state">
+            <mat-icon>check_circle</mat-icon>
+            <span>No prerequisite courses</span>
+          </div>
+        }
+      </section>
+    }
+  </div>
+</div>

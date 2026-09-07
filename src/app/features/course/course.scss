@@ -584,9 +584,15 @@
 
   th.mat-column-actions,
   td.mat-column-actions {
-    width: 64px;
-    min-width: 64px;
+    width: 110px;
+    min-width: 110px;
     text-align: center;
+    overflow: visible;
+    white-space: nowrap;
+  }
+
+  td.mat-column-actions {
+    position: relative;
   }
 }
 

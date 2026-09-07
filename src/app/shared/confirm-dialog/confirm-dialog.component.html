@@ -1,0 +1,44 @@
+<div class="modal-backdrop" role="presentation" (click)="onBackdropClick($event)">
+  <div
+    class="confirm-modal"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-labelledby]="'confirm-dialog-title'"
+    [attr.aria-describedby]="'confirm-dialog-description'"
+  >
+    <div class="confirm-icon-wrapper">
+      <div class="confirm-icon" [ngClass]="data.confirmTone === 'danger' || data.confirmTone === 'warn' ? 'confirm-icon--danger' : 'confirm-icon--primary'">
+        <mat-icon>{{ data.icon || 'warning' }}</mat-icon>
+      </div>
+    </div>
+
+    <div class="modal-content">
+      <h2 id="confirm-dialog-title">{{ data.title }}</h2>
+      <p id="confirm-dialog-description">{{ data.description }}</p>
+
+      @if (data.warningText) {
+        <p class="confirm-warning">{{ data.warningText }}</p>
+      }
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" class="cancel-button" [disabled]="isSubmitting" (click)="cancel()">
+        {{ data.cancelText || 'Cancel' }}
+      </button>
+
+      <button
+        type="button"
+        [class]="confirmButtonClass"
+        [disabled]="isSubmitting"
+        (click)="confirm()"
+      >
+        @if (isSubmitting) {
+          <span class="spinner"></span>
+          <span>{{ data.confirmText || 'Confirming...' }}</span>
+        } @else {
+          <span>{{ data.confirmText || 'Confirm' }}</span>
+        }
+      </button>
+    </div>
+  </div>
+</div>

@@ -13,10 +13,95 @@ body {
 
 /* Global Angular Material input styling */
 
+/* ============================================================
+   Global Angular Material Input Styling — Modern Pro Edition
+   ============================================================ */
+
+/* ---------- Design Tokens (customize these) ---------- */
+:root {
+  /* Primary & semantic colors */
+  --color-primary: #4f46e5;          /* indigo-600 */
+  --color-primary-hover: #4338ca;
+  --color-primary-subtle: rgba(79, 70, 229, 0.12);
+  --color-primary-glow: rgba(79, 70, 229, 0.35);
+
+  --color-danger: #ef4444;
+  --color-danger-subtle: rgba(239, 68, 68, 0.10);
+
+  /* Surfaces */
+  --color-surface: #ffffff;
+  --color-surface-sunken: #f8fafc;
+  --color-surface-elevated: #ffffff;
+
+  /* Borders */
+  --color-border: #e2e8f0;
+  --color-border-strong: #94a3b8;
+  --color-border-focus: var(--color-primary);
+
+  /* Text */
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-tertiary: #94a3b8;
+
+  /* Typography */
+  --font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-size-sm: 0.875rem;          /* 14px */
+  --font-size-xs: 0.75rem;           /* 12px */
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+
+  /* Spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+
+  /* Radius */
+  --radius-sm: 0.375rem;             /* 6px */
+  --radius-md: 0.5rem;               /* 8px */
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-focus: 0 0 0 3px var(--color-primary-glow);
+
+  /* Motion */
+  --duration-fast: 180ms;
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ---------- Dark Mode ---------- */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-surface: #1e293b;
+    --color-surface-sunken: #0f172a;
+    --color-surface-elevated: #334155;
+
+    --color-border: #334155;
+    --color-border-strong: #64748b;
+
+    --color-text-primary: #f1f5f9;
+    --color-text-secondary: #cbd5e1;
+    --color-text-tertiary: #94a3b8;
+
+    --color-primary: #818cf8;          /* lighter indigo for contrast */
+    --color-primary-hover: #a5b4fc;
+    --color-primary-subtle: rgba(129, 140, 248, 0.18);
+    --color-primary-glow: rgba(129, 140, 248, 0.30);
+
+    --color-danger: #f87171;
+    --color-danger-subtle: rgba(248, 113, 113, 0.12);
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* ---------- Global Field Container ---------- */
 .mat-mdc-form-field {
   width: 100%;
 }
 
+/* ---------- The Input Field (base) ---------- */
 .mdc-text-field,
 .mdc-text-field--outlined,
 .mdc-text-field--filled {
@@ -25,31 +110,38 @@ body {
   border: 1px solid var(--color-border) !important;
   box-shadow: var(--shadow-sm) !important;
   transition: border-color var(--duration-fast) var(--ease-standard),
-    box-shadow var(--duration-fast) var(--ease-standard),
-    background var(--duration-fast) var(--ease-standard);
+              box-shadow var(--duration-fast) var(--ease-standard),
+              background var(--duration-fast) var(--ease-standard),
+              transform var(--duration-fast) var(--ease-standard);
 }
 
+/* Hover – subtle lift */
 .mdc-text-field:hover {
   border-color: var(--color-border-strong) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04) !important;
 }
 
+/* Focus – glow + crisp border */
 .mdc-text-field--focused,
 .mdc-text-field--focused.mdc-text-field--outlined,
 .mdc-text-field--focused.mdc-text-field--filled {
-  border-color: var(--color-primary) !important;
+  border-color: var(--color-border-focus) !important;
   background: var(--color-surface) !important;
-  box-shadow: 0 0 0 3px var(--color-primary-subtle), var(--shadow-sm) !important;
+  box-shadow: var(--shadow-focus), var(--shadow-sm) !important;
 }
 
+/* Disabled */
 .mdc-text-field--disabled,
 .mdc-text-field--disabled.mdc-text-field--outlined,
 .mdc-text-field--disabled.mdc-text-field--filled {
   background: var(--color-surface-sunken) !important;
   border-color: var(--color-border) !important;
   box-shadow: none !important;
-  opacity: 0.7;
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
+/* ---------- Remove default Material outlines (we use our border) ---------- */
 .mdc-text-field--outlined .mdc-notched-outline__leading,
 .mdc-text-field--outlined .mdc-notched-outline__notch,
 .mdc-text-field--outlined .mdc-notched-outline__trailing,
@@ -63,14 +155,16 @@ body {
 
 .mdc-text-field--outlined .mdc-notched-outline__leading,
 .mdc-text-field--outlined .mdc-notched-outline__trailing {
-  border-width: 1px !important;
+  border-width: 0 !important; /* we rely on the container border */
 }
 
+/* ---------- Floating Label ---------- */
 .mdc-floating-label,
 .mdc-floating-label--float-above {
   color: var(--color-text-secondary) !important;
   font-weight: var(--font-weight-medium);
-  transition: color var(--duration-fast) var(--ease-standard);
+  transition: color var(--duration-fast) var(--ease-standard),
+              transform var(--duration-fast) var(--ease-standard);
 }
 
 .mdc-text-field--focused .mdc-floating-label,
@@ -78,6 +172,7 @@ body {
   color: var(--color-primary) !important;
 }
 
+/* ---------- Input Text ---------- */
 .mat-mdc-input-element,
 .mat-mdc-select-value,
 .mat-mdc-select-placeholder,
@@ -85,19 +180,25 @@ body {
   color: var(--color-text-primary) !important;
   font-size: var(--font-size-sm);
   font-family: var(--font-family-base);
-  letter-spacing: 0.005em;
+  letter-spacing: 0.01em;
+  font-weight: 400;
 }
 
+/* Textarea */
 .mat-mdc-textarea .mat-mdc-input-element {
   resize: vertical;
-  min-height: 72px;
+  min-height: 80px; /* comfortable default */
 }
 
+/* Placeholder */
 .mat-mdc-input-element::placeholder,
 .mat-mdc-select-placeholder {
   color: var(--color-text-tertiary) !important;
+  font-weight: 400;
+  letter-spacing: 0.01em;
 }
 
+/* ---------- Subscript (hint/error) ---------- */
 .mat-mdc-form-field-subscript-wrapper {
   margin-top: var(--space-1);
 }
@@ -112,31 +213,35 @@ body {
   color: var(--color-text-tertiary);
 }
 
+/* ---------- Invalid State ---------- */
 .mat-mdc-form-field-invalid .mdc-text-field,
 .mat-mdc-form-field-invalid .mdc-text-field--outlined,
 .mat-mdc-form-field-invalid .mdc-text-field--filled {
   border-color: var(--color-danger) !important;
   background: var(--color-danger-subtle) !important;
-  box-shadow: 0 0 0 3px var(--color-danger-subtle) !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.20), var(--shadow-sm) !important;
 }
 
 .mat-mdc-form-field-invalid .mdc-floating-label {
   color: var(--color-danger) !important;
 }
 
+/* ---------- Dropdown Panels (select / autocomplete) ---------- */
 .mat-mdc-select-panel,
 .mat-mdc-autocomplete-panel {
   border-radius: var(--radius-md) !important;
   box-shadow: var(--shadow-md) !important;
   border: 1px solid var(--color-border) !important;
   overflow: hidden;
-  animation: mat-panel-in 120ms var(--ease-standard);
+  margin-top: 4px;
+  background: var(--color-surface-elevated) !important;
+  animation: mat-panel-in 150ms var(--ease-standard);
 }
 
 @keyframes mat-panel-in {
   from {
     opacity: 0;
-    transform: translateY(-4px) scale(0.98);
+    transform: translateY(-6px) scale(0.98);
   }
   to {
     opacity: 1;
@@ -151,13 +256,16 @@ body {
   }
 }
 
+/* ---------- Options ---------- */
 .mat-mdc-option {
   min-height: 40px !important;
   border-radius: var(--radius-sm);
   margin: 2px 6px;
   font-size: var(--font-size-sm);
+  font-weight: 400;
   transition: background var(--duration-fast) var(--ease-standard),
-    color var(--duration-fast) var(--ease-standard);
+              color var(--duration-fast) var(--ease-standard);
+  padding: 0 12px !important; /* better internal spacing */
 }
 
 .mat-mdc-option:hover:not(.mdc-list-item--disabled) {
@@ -170,33 +278,39 @@ body {
   font-weight: var(--font-weight-semibold);
 }
 
+/* Checkbox inside multi-select */
 .mat-mdc-option .mat-pseudo-checkbox {
   color: var(--color-border-strong);
+  transition: color var(--duration-fast) var(--ease-standard);
 }
 
 .mat-mdc-option.mdc-list-item--selected .mat-pseudo-checkbox {
   color: var(--color-primary);
 }
 
+/* ---------- Chips ---------- */
 .mat-mdc-chip-set .mat-mdc-standard-chip {
   border-radius: var(--radius-full);
   transition: background var(--duration-fast) var(--ease-standard);
+  background: var(--color-surface-sunken);
+  border: 1px solid var(--color-border);
 }
 
-.mat-form-field-appearance-outline .mat-form-field-outline,
-.mat-form-field-appearance-outline .mat-form-field-outline-thick {
-  color: transparent;
+.mat-mdc-chip-set .mat-mdc-standard-chip:hover {
+  background: var(--color-border);
 }
 
+/* ---------- Other Form Controls (checkbox, radio, toggle) ---------- */
 .mat-mdc-checkbox,
 .mat-mdc-radio-button,
 .mat-mdc-slide-toggle {
   --mdc-checkbox-selected-focus-icon-color: var(--color-primary);
-  --mdc-checkbox-selected-hover-icon-color: var(--color-primary);
+  --mdc-checkbox-selected-hover-icon-color: var(--color-primary-hover);
   --mdc-radio-selected-focus-icon-color: var(--color-primary);
-  --mdc-radio-selected-hover-icon-color: var(--color-primary);
+  --mdc-radio-selected-hover-icon-color: var(--color-primary-hover);
 }
 
+/* ---------- Responsive (mobile) ---------- */
 @media (max-width: 640px) {
   .mdc-text-field,
   .mdc-text-field--outlined,

@@ -9,12 +9,12 @@ export interface Course {
   courseName: string;
   description?: string;
   credits: number;
-  departmentId: string;
-  programId?: string;
+  departmentId?: string | null;
+  programId?: string | null;
   level?: string;
   semester?: string;
   courseType: string;
-  prerequisiteCourseId?: string;
+  prerequisiteCourseId?: string | null;
   durationHours?: number;
   status: string;
   isPublished: boolean;
