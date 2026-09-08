@@ -19,53 +19,55 @@
         }
 
         <!-- Email Field -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Email Address</mat-label>
-
-          <input
-            matInput
-            id="email"
-            name="email"
-            type="email"
-            placeholder="name@organization.com"
-            [(ngModel)]="email"
-            required
-            autocomplete="email"
-            #emailInput="ngModel"
-          />
-          <mat-error *ngIf="emailInput.invalid && emailInput.touched">
-            Please enter a valid email address
-          </mat-error>
-        </mat-form-field>
+        <div class="field-group">
+          <label for="email" class="input-label">Email Address</label>
+          <mat-form-field appearance="outline" class="full-width">
+            <input
+              matInput
+              id="email"
+              name="email"
+              type="email"
+              placeholder="name@organization.com"
+              [(ngModel)]="email"
+              required
+              autocomplete="email"
+              #emailInput="ngModel"
+            />
+            <mat-error *ngIf="emailInput.invalid && emailInput.touched">
+              Please enter a valid email address
+            </mat-error>
+          </mat-form-field>
+        </div>
 
         <!-- Password Field -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Password</mat-label>
-
-          <input
-            matInput
-            id="password"
-            name="password"
-            [type]="showPassword ? 'text' : 'password'"
-            placeholder="Enter your password"
-            [(ngModel)]="password"
-            required
-            autocomplete="current-password"
-            #passwordInput="ngModel"
-          />
-          <button
-            type="button"
-            mat-icon-button
-            matSuffix
-            (click)="togglePasswordVisibility()"
-            [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
-          >
-            <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-          </button>
-          <mat-error *ngIf="passwordInput.invalid && passwordInput.touched">
-            Password is required
-          </mat-error>
-        </mat-form-field>
+        <div class="field-group">
+          <label for="password" class="input-label">Password</label>
+          <mat-form-field appearance="outline" class="full-width">
+            <input
+              matInput
+              id="password"
+              name="password"
+              [type]="showPassword ? 'text' : 'password'"
+              placeholder="Enter your password"
+              [(ngModel)]="password"
+              required
+              autocomplete="current-password"
+              #passwordInput="ngModel"
+            />
+            <button
+              type="button"
+              mat-icon-button
+              matSuffix
+              (click)="togglePasswordVisibility()"
+              [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+            >
+              <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            <mat-error *ngIf="passwordInput.invalid && passwordInput.touched">
+              Password is required
+            </mat-error>
+          </mat-form-field>
+        </div>
 
         <!-- Form Options Row -->
         <div class="form-options">

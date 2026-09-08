@@ -102,8 +102,23 @@
   width: 100%;
 }
 
-mat-form-field {
+.field-group {
+  display: flex;
+  flex-direction: column;
   margin-bottom: var(--space-2);
+}
+
+.input-label {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+
+mat-form-field {
+  margin-bottom: 0;
 }
 
 .form-options {
