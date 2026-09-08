@@ -1,0 +1,248 @@
+<div class="wrap">
+  <header>
+    <div class="header-text">
+      <h1>Enrollment Management</h1>
+      <p>Review student applications, manage seat approvals, and process enrollment requests.</p>
+    </div>
+    <a class="add-user-btn" routerLink="/enrollments/available">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+      Course Catalog
+    </a>
+  </header>
+
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-icon" style="background:var(--line-soft);color:var(--ink-soft)">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      </div>
+      <div>
+        <div class="stat-label">Total requests</div>
+        <div class="stat-value">{{ stats().total }}</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background:var(--amber-tint);color:var(--amber)">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      </div>
+      <div>
+        <div class="stat-label">Pending</div>
+        <div class="stat-value">{{ stats().pending }}</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background:var(--green-tint);color:var(--green)">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <div>
+        <div class="stat-label">Approved</div>
+        <div class="stat-value">{{ stats().approved }}</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background:var(--rose-tint);color:var(--rose)">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+      </div>
+      <div>
+        <div class="stat-label">Rejected</div>
+        <div class="stat-value">{{ stats().rejected }}</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background:var(--navy-tint);color:var(--navy)">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <div>
+        <div class="stat-label">Completed</div>
+        <div class="stat-value">{{ stats().completed }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="search-field">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" placeholder="Search student, course name or code..." autocomplete="off"
+             [value]="searchQuery()" (input)="onSearch($any($event.target).value)">
+      @if (searchQuery().trim()) {
+        <button class="clear-btn" (click)="clearSearch()" aria-label="Clear search">
+          <mat-icon style="font-size:18px; width:18px; height:18px;">close</mat-icon>
+        </button>
+      }
+    </div>
+
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="mat-filter">
+      <mat-select [value]="statusFilter()" (selectionChange)="onStatusChange($event.value)" placeholder="Status">
+        <mat-option value="all">All Statuses</mat-option>
+        <mat-option value="Pending">Pending Review</mat-option>
+        <mat-option value="Approved">Approved / Enrolled</mat-option>
+        <mat-option value="Rejected">Rejected</mat-option>
+        <mat-option value="Completed">Completed</mat-option>
+        <mat-option value="Cancelled">Cancelled</mat-option>
+        <mat-option value="Archived">Archived</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div style="display:flex;align-items:center;">
+      <mat-checkbox
+        [checked]="includeArchived()"
+        (change)="onIncludeArchivedChange($event.checked)"
+        color="primary"
+        class="archive-checkbox"
+      >
+        Include Archived
+      </mat-checkbox>
+    </div>
+
+    <div class="result-count">{{ enrollments().length }} shown</div>
+  </div>
+
+    <!-- Status Messages -->
+    @if (error()) {
+    <div class="status-banner status-banner--error animate-in">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ error() }}</span>
+      <button class="btn btn--ghost btn--sm" (click)="loadEnrollments()">Retry</button>
+    </div>
+    }
+
+  <div class="panel">
+    <div class="panel-head">
+      <h2>Enrollment Requests</h2>
+      <p>Manage lifecycle transitions and seat reservations</p>
+    </div>
+
+    <div style="overflow-x:auto;">
+      <table mat-table [dataSource]="enrollments()" matSort (matSortChange)="onSortChange($event)" class="users-table">
+        <!-- Student Column -->
+        <ng-container matColumnDef="student">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="studentName">Student</th>
+          <td mat-cell *matCellDef="let row">
+            <div class="user-cell">
+              <div class="avatar">{{ (row.studentName || row.studentId).charAt(0).toUpperCase() }}</div>
+              <div>
+                <div class="user-name">{{ row.studentName || 'Student #' + row.studentId }}</div>
+                <div class="email-cell">ID: {{ row.studentId }}</div>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Course Column -->
+        <ng-container matColumnDef="course">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="courseName">Course</th>
+          <td mat-cell *matCellDef="let row">
+            <div style="display:flex;flex-direction:column;gap:2px;">
+              <span style="font-weight:500;color:var(--ink);">{{ row.courseName }}</span>
+              @if (row.courseCode) {
+                <span style="font-family:var(--font-family-mono);font-size:11px;color:var(--ink-soft);">{{ row.courseCode }}</span>
+              }
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="status">Status</th>
+          <td mat-cell *matCellDef="let row">
+            <span class="badge" [ngClass]="getStatusBadgeClass(row.status)">
+              <mat-icon style="font-size:14px;width:14px;height:14px;margin-right:4px;">{{ getStatusIcon(row.status) }}</mat-icon>
+              {{ row.status }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Requested Date Column -->
+        <ng-container matColumnDef="enrollmentDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header="enrollmentDate">Requested</th>
+          <td mat-cell *matCellDef="let row" style="color:var(--ink-faint);">
+            {{ (row.enrollmentDate || row.enrolledAt) | date:'mediumDate' }}
+          </td>
+        </ng-container>
+
+        <!-- Review Details Column -->
+        <ng-container matColumnDef="reviewedBy">
+          <th mat-header-cell *matHeaderCellDef>Review Details</th>
+          <td mat-cell *matCellDef="let row" style="color:var(--ink-faint);">
+            @if (row.approvedBy) {
+              <span style="color:var(--green);" title="Approved on {{ row.approvedDate | date:'medium' }}">
+                Approved by {{ row.approvedBy }}
+              </span>
+            } @else if (row.rejectedBy) {
+              <span style="color:var(--rose);" title="{{ row.rejectionReason || 'Rejected' }}">
+                Rejected by {{ row.rejectedBy }}
+              </span>
+            } @else if (row.cancelledBy) {
+              <span>Cancelled by {{ row.cancelledBy }}</span>
+            } @else {
+              <span>—</span>
+            }
+          </td>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let row" style="position:relative;text-align:right;padding-right:16px;">
+            <div style="display:flex;align-items:center;justify-content:flex-end;gap:4px;">
+              <!-- Fast action buttons for pending requests -->
+              @if (row.status === 'Pending') {
+              <button mat-icon-button title="Approve Enrollment" [disabled]="processingId() === row.id" (click)="approve(row)" style="color:var(--green);">
+                <mat-icon>check</mat-icon>
+              </button>
+              <button mat-icon-button title="Reject Enrollment" [disabled]="processingId() === row.id" (click)="reject(row)" style="color:var(--rose);">
+                <mat-icon>close</mat-icon>
+              </button>
+              }
+
+              <!-- Menu for full actions & details -->
+              <button [matMenuTriggerFor]="actionMenu" class="kebab">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+              </button>
+              <mat-menu #actionMenu="matMenu" xPosition="before" class="user-actions-menu">
+                <button mat-menu-item (click)="openDetails(row)">
+                  View Details
+                </button>
+                @if (row.status === 'Pending') {
+                <button mat-menu-item (click)="approve(row)">
+                  Approve Request
+                </button>
+                <button mat-menu-item (click)="reject(row)">
+                  Reject Request
+                </button>
+                }
+                @if (!row.isArchived && row.status !== 'Pending') {
+                <button mat-menu-item (click)="archive(row)">
+                  Archive Record
+                </button>
+                }
+              </mat-menu>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns" [class.row-pending]="row.status === 'Pending'"></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="6">
+            @if (isLoading()) {
+              <div class="empty-state"><strong>Loading enrollments...</strong>Please wait.</div>
+            } @else {
+              <div class="empty-state"><strong>No enrollment requests found</strong>Try adjusting your query.</div>
+            }
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <mat-paginator
+      [length]="totalCount()"
+      [pageSize]="pageSize()"
+      [pageSizeOptions]="[10, 25, 50]"
+      [pageIndex]="pageIndex()"
+      showFirstLastButtons
+      (page)="onPageChange($event)"
+      class="users-paginator"
+    ></mat-paginator>
+  </div>
+</div>

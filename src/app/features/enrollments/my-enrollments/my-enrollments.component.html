@@ -1,0 +1,199 @@
+<div class="wrap">
+  <header>
+    <div class="header-text">
+      <h1>My Enrollments</h1>
+      <p>Track the status of your course enrollment requests, active classes, and completion records.</p>
+    </div>
+    <a class="add-user-btn" routerLink="/enrollments/available">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+      Enroll in a Course
+    </a>
+  </header>
+
+  <div class="stat-grid">
+    <div class="stat-card" (click)="statusFilter.set('all')" [style.cursor]="'pointer'">
+      <div class="stat-icon" style="background:var(--line-soft);color:var(--ink-soft)">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      </div>
+      <div>
+        <div class="stat-label">Total requests</div>
+        <div class="stat-value">{{ counts().all }}</div>
+      </div>
+    </div>
+    <div class="stat-card" (click)="statusFilter.set('Pending')" [style.cursor]="'pointer'">
+      <div class="stat-icon" style="background:var(--amber-tint);color:var(--amber)">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      </div>
+      <div>
+        <div class="stat-label">Pending</div>
+        <div class="stat-value">{{ counts().pending }}</div>
+      </div>
+    </div>
+    <div class="stat-card" (click)="statusFilter.set('Approved')" [style.cursor]="'pointer'">
+      <div class="stat-icon" style="background:var(--green-tint);color:var(--green)">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <div>
+        <div class="stat-label">Active</div>
+        <div class="stat-value">{{ counts().approved }}</div>
+      </div>
+    </div>
+    <div class="stat-card" (click)="statusFilter.set('Completed')" [style.cursor]="'pointer'">
+      <div class="stat-icon" style="background:var(--navy-tint);color:var(--navy)">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <div>
+        <div class="stat-label">Completed</div>
+        <div class="stat-value">{{ counts().completed }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="search-field">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" placeholder="Search by course code or title..." autocomplete="off"
+             [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)">
+      @if (searchQuery().trim()) {
+        <button class="clear-btn" (click)="searchQuery.set('')" aria-label="Clear search">
+          <mat-icon style="font-size:18px; width:18px; height:18px;">close</mat-icon>
+        </button>
+      }
+    </div>
+
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="mat-filter">
+      <mat-select [value]="statusFilter()" (selectionChange)="statusFilter.set($event.value)" placeholder="Status">
+        <mat-option value="all">All ({{ counts().all }})</mat-option>
+        <mat-option value="Pending">Pending ({{ counts().pending }})</mat-option>
+        <mat-option value="Approved">Approved ({{ counts().approved }})</mat-option>
+        <mat-option value="Completed">Completed ({{ counts().completed }})</mat-option>
+        <mat-option value="Rejected">Rejected ({{ counts().rejected }})</mat-option>
+        <mat-option value="Cancelled">Cancelled ({{ counts().cancelled }})</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div class="result-count">{{ filteredEnrollments().length }} shown</div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <h2>My Enrollments</h2>
+      <p>Your current requests and registered courses.</p>
+    </div>
+
+    <!-- Error Banner -->
+    @if (error()) {
+    <div class="status-banner status-banner--error animate-in">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ error() }}</span>
+      <button class="btn btn--ghost btn--sm" (click)="loadEnrollments()">Try Again</button>
+    </div>
+    }
+
+    <!-- Loading State -->
+    @if (isLoading()) {
+    <div class="loading-state animate-in delay-3">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Loading your enrollments...</p>
+    </div>
+    } @else if (filteredEnrollments().length === 0) {
+    <!-- Empty State -->
+    <div class="empty-state animate-in delay-3">
+      <strong>No enrollments found</strong>
+      <p>
+        @if (searchQuery() || statusFilter() !== 'all') {
+        No enrollment records match your current filters.
+        } @else {
+        You haven't requested enrollment in any courses yet. Browse our catalog to get started!
+        }
+      </p>
+      @if (searchQuery() || statusFilter() !== 'all') {
+      <button class="btn btn--secondary btn--sm" (click)="searchQuery.set(''); statusFilter.set('all')">
+        Reset Filters
+      </button>
+      } @else {
+      <a class="btn btn--primary" routerLink="/enrollments/available">
+        <mat-icon>school</mat-icon>
+        <span>Browse Available Courses</span>
+      </a>
+      }
+    </div>
+    } @else {
+    <!-- Enrollments List -->
+    <div class="enrollments-list animate-in delay-3" style="padding:0 24px 24px;">
+      @for (enrollment of filteredEnrollments(); track enrollment.id) {
+      <div class="enrollment-item-card" [class.enrollment-item-card--rejected]="enrollment.status === 'Rejected'">
+        <div class="item-main">
+          <div class="item-header">
+            <div class="item-title-group">
+              <span class="badge" [ngClass]="getStatusBadgeClass(enrollment.status)">
+                <mat-icon class="badge-icon">{{ getStatusIcon(enrollment.status) }}</mat-icon>
+                {{ enrollment.status }}
+              </span>
+              @if (enrollment.courseCode) {
+              <span class="course-code-badge">{{ enrollment.courseCode }}</span>
+              }
+            </div>
+            <h3 class="course-name">{{ enrollment.courseName }}</h3>
+          </div>
+
+          <div class="item-details">
+            <div class="detail-tag">
+              <mat-icon>event</mat-icon>
+              <span>Requested: {{ (enrollment.enrollmentDate || enrollment.enrolledAt) | date:'mediumDate' }}</span>
+            </div>
+            @if (enrollment.approvedDate) {
+            <div class="detail-tag">
+              <mat-icon>verified</mat-icon>
+              <span>Approved: {{ enrollment.approvedDate | date:'mediumDate' }}</span>
+            </div>
+            }
+            @if (enrollment.completionDate) {
+            <div class="detail-tag">
+              <mat-icon>stars</mat-icon>
+              <span>Completed: {{ enrollment.completionDate | date:'mediumDate' }}</span>
+            </div>
+            }
+            @if (enrollment.grade != null) {
+            <div class="detail-tag detail-tag--grade">
+              <mat-icon>grade</mat-icon>
+              <span>Grade: {{ enrollment.grade }}%</span>
+            </div>
+            }
+          </div>
+
+          <!-- Rejection Banner if applicable -->
+          @if (enrollment.status === 'Rejected') {
+          <div class="rejection-box">
+            <mat-icon>info</mat-icon>
+            <div class="rejection-content">
+              <strong>Application Rejected</strong>
+              <p>{{ enrollment.rejectionReason || 'No specific reason was provided by the administrator.' }}</p>
+            </div>
+          </div>
+          }
+        </div>
+
+        <div class="item-actions">
+          @if (canCancel(enrollment.status)) {
+          <button
+            class="btn btn--secondary btn--sm btn--cancel"
+            (click)="cancelEnrollment(enrollment)"
+            [disabled]="cancellingId() === enrollment.id"
+          >
+            @if (cancellingId() === enrollment.id) {
+            <mat-spinner diameter="16"></mat-spinner>
+            <span>Cancelling...</span>
+            } @else {
+            <mat-icon>close</mat-icon>
+            <span>Cancel Request</span>
+            }
+          </button>
+          }
+        </div>
+      </div>
+      }
+    </div>
+    }
+  </div>
+</div>

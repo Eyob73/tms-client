@@ -1,45 +1,79 @@
 import { isPlatformBrowser } from '@angular/common';
-import { Service, PLATFORM_ID, signal, inject } from '@angular/core';
+import { Injectable, PLATFORM_ID, signal, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { environment } from '../../environments/environment';
+import { EnrollmentStatus } from '../models/enrollment.model';
 
 export interface EnrollmentStatusEvent {
   id: string;
-  status: 'Pending' | 'Approved' | 'Rejected';
+  status: EnrollmentStatus;
+  studentId?: number;
+  courseId?: number;
+  reason?: string;
 }
-@Service()
+
+@Injectable({ providedIn: 'root' })
 export class LiveSyncService {
-  private platformId = inject(PLATFORM_ID);
+  private readonly platformId = inject(PLATFORM_ID);
   private connection: HubConnection | null = null;
-  private eventsSubject = new Subject<EnrollmentStatusEvent>();
-  // Expose events as an observable — the store will subscribe to this
-  events$ = this.eventsSubject.asObservable();
+  private readonly eventsSubject = new Subject<EnrollmentStatusEvent>();
+
+  // Expose events as an observable
+  readonly events$ = this.eventsSubject.asObservable();
+
   // Connection state signal for UI status feedback
-  connectionState = signal<'connected' | 'reconnecting' | 'disconnected'>('disconnected');
-  connect() {
-    // Guard against duplicate connections if called more than once
+  readonly connectionState = signal<'connected' | 'reconnecting' | 'disconnected'>('disconnected');
+
+  connect(): void {
     if (this.connection) return;
-    // SignalR uses WebSocket which only exists in browsers, not on theNode.js server.
-    // If SSR is enabled (Extension 1), this method runs during server render — skip it.
     if (!isPlatformBrowser(this.platformId)) return;
-    // Use the actual backend SignalR endpoint instead of the Angular dev-server origin.
-    // The browser was negotiating against http://localhost:4200/hubs/tms, which caused the 404.
+
     this.connection = new HubConnectionBuilder()
       .withUrl(environment.signalrUrl)
       .withAutomaticReconnect([0, 2000, 10000, 30000])
       .build();
-    // The event name matches the ITmsHubClient method you just addedon the backend.
-    // SignalR strongly-typed hubs send the method name as the eventname automatically.
+
+    // Event 1: Status updated
     this.connection.on(
       'ReceiveEnrollmentStatusUpdated',
-      (enrollmentId: string, status: 'Pending' | 'Approved' | 'Rejected') => {
-        this.eventsSubject.next({ id: enrollmentId, status });
+      (enrollmentId: string | number, status: EnrollmentStatus) => {
+        this.eventsSubject.next({ id: enrollmentId.toString(), status });
       },
     );
+
+    // Event 2: Enrollment created
+    this.connection.on(
+      'ReceiveEnrollmentCreated',
+      (enrollmentId: number, studentId: number, courseId: number, status: EnrollmentStatus) => {
+        this.eventsSubject.next({
+          id: enrollmentId.toString(),
+          status: status || 'Pending',
+          studentId,
+          courseId,
+        });
+      },
+    );
+
+    // Event 3: Enrollment approved
+    this.connection.on('ReceiveEnrollmentApproved', (enrollmentId: number) => {
+      this.eventsSubject.next({ id: enrollmentId.toString(), status: 'Approved' });
+    });
+
+    // Event 4: Enrollment rejected
+    this.connection.on('ReceiveEnrollmentRejected', (enrollmentId: number, reason?: string) => {
+      this.eventsSubject.next({ id: enrollmentId.toString(), status: 'Rejected', reason });
+    });
+
+    // Event 5: Enrollment cancelled
+    this.connection.on('ReceiveEnrollmentCancelled', (enrollmentId: number) => {
+      this.eventsSubject.next({ id: enrollmentId.toString(), status: 'Cancelled' });
+    });
+
     this.connection.onreconnecting(() => this.connectionState.set('reconnecting'));
     this.connection.onreconnected(() => this.connectionState.set('connected'));
     this.connection.onclose(() => this.connectionState.set('disconnected'));
+
     this.connection
       .start()
       .then(() => this.connectionState.set('connected'))

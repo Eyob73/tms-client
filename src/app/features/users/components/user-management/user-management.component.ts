@@ -140,6 +140,14 @@ export class UserManagementComponent implements OnInit {
     return full || user.userName;
   }
 
+  getRoleClass(role: string): string {
+    const r = role.toLowerCase();
+    if (r === 'student') return 'role-student';
+    if (r === 'instructor') return 'role-instructor';
+    if (r === 'admin' || r === 'super admin') return 'role-admin';
+    return '';
+  }
+
   onSearchChange(term: string): void {
     this.searchInput.set(term);
     this.store.loadUsers({
@@ -187,6 +195,42 @@ export class UserManagementComponent implements OnInit {
     this.store.loadUsers({
       pageIndex: event.pageIndex,
       pageSize: event.pageSize,
+      search: this.searchInput(),
+      role: this.selectedRole(),
+      status: this.selectedStatus(),
+    });
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.totalCount() / this.pageSize()) || 1;
+  }
+
+  get startIndex(): number {
+    if (this.totalCount() === 0) return 0;
+    return this.pageIndex() * this.pageSize() + 1;
+  }
+
+  get endIndex(): number {
+    return Math.min((this.pageIndex() + 1) * this.pageSize(), this.totalCount());
+  }
+
+  goToPage(index: number): void {
+    if (index >= 0 && index < this.totalPages) {
+      this.store.loadUsers({
+        pageIndex: index,
+        pageSize: this.pageSize(),
+        search: this.searchInput(),
+        role: this.selectedRole(),
+        status: this.selectedStatus(),
+      });
+    }
+  }
+
+  changePageSize(event: Event): void {
+    const size = parseInt((event.target as HTMLSelectElement).value, 10);
+    this.store.loadUsers({
+      pageIndex: 0,
+      pageSize: size,
       search: this.searchInput(),
       role: this.selectedRole(),
       status: this.selectedStatus(),

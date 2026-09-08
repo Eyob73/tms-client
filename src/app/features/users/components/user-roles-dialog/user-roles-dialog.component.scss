@@ -3,7 +3,7 @@
   flex-direction: column;
   padding: var(--space-6, 24px);
   max-width: 520px;
-  background: var(--color-surface, #ffffff);
+  background: var(--color-surface, var(--paper-raised));
   border-radius: var(--radius-xl, 24px);
 }
 
@@ -33,17 +33,19 @@
 
   &__text {
     h2 {
+  font-family: 'Fraunces', serif;
+  font-optical-sizing: auto;
       margin: 0 0 var(--space-1, 4px) 0;
       font-size: var(--font-size-lg, 19px);
       font-weight: var(--font-weight-semibold, 600);
-      color: var(--color-text-primary, #1a2140);
+      color: var(--color-text-primary, var(--ink));
       line-height: var(--line-height-snug, 1.35);
     }
 
     .dialog-subtitle {
       margin: 0;
       font-size: var(--font-size-sm, 12.5px);
-      color: var(--color-text-secondary, #5e6a8a);
+      color: var(--color-text-secondary, var(--ink-soft));
       line-height: var(--line-height-normal, 1.5);
     }
   }
@@ -63,7 +65,7 @@
   justify-content: center;
   gap: var(--space-3, 12px);
   padding: var(--space-8, 32px) 0;
-  color: var(--color-text-tertiary, #7e88a8);
+  color: var(--color-text-tertiary, var(--ink-faint));
   font-size: var(--font-size-sm, 12.5px);
 }
 
@@ -109,7 +111,7 @@
   padding: var(--space-4, 16px);
   border-radius: var(--radius-lg, 16px);
   border: 1.5px solid var(--color-border, #e3e6ef);
-  background: var(--color-surface, #ffffff);
+  background: var(--color-surface, var(--paper-raised));
   cursor: pointer;
   transition: border-color var(--duration-fast, 150ms) var(--ease-standard, ease),
               background var(--duration-fast, 150ms) var(--ease-standard, ease),
@@ -147,14 +149,14 @@
     .role-name {
       font-size: var(--font-size-base, 14px);
       font-weight: var(--font-weight-semibold, 600);
-      color: var(--color-text-primary, #1a2140);
+      color: var(--color-text-primary, var(--ink));
     }
   }
 
   &__desc {
     margin: 0;
     font-size: var(--font-size-xs, 11px);
-    color: var(--color-text-secondary, #5e6a8a);
+    color: var(--color-text-secondary, var(--ink-soft));
     line-height: var(--line-height-normal, 1.5);
   }
 }

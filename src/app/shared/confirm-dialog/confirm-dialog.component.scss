@@ -19,12 +19,10 @@
 .confirm-modal {
   width: min(100%, 420px);
   padding: 32px;
-  background: var(--surface-color, #ffffff);
-  border: 1px solid var(--border-color, #e5e7eb);
-  border-radius: 20px;
-  box-shadow:
-    0 20px 50px rgba(15, 23, 42, 0.18),
-    0 8px 20px rgba(15, 23, 42, 0.08);
+  background: var(--surface-color, var(--paper-raised));
+  border: 1px solid var(--border-color, var(--line));
+  border-radius: var(--radius-m, 8px);
+  box-shadow: 0 4px 12px rgba(22,35,61,0.06);
   text-align: center;
   animation: modalIn 220ms cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -61,8 +59,10 @@
 }
 
 .modal-content h2 {
+  font-family: 'Fraunces', serif;
+  font-optical-sizing: auto;
   margin: 0 0 8px;
-  color: var(--text-primary, #111827);
+  color: var(--text-primary, var(--ink));
   font-size: 22px;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -71,7 +71,7 @@
 .modal-content p {
   max-width: 320px;
   margin: 0 auto;
-  color: var(--text-secondary, #6b7280);
+  color: var(--text-secondary, var(--ink-soft));
   font-size: 14px;
   line-height: 1.6;
 }
@@ -91,7 +91,7 @@
   flex: 1;
   height: 44px;
   border: 0;
-  border-radius: 10px;
+  border-radius: var(--radius-s, 4px);
   font: inherit;
   font-size: 14px;
   font-weight: 600;
@@ -117,12 +117,12 @@
 }
 
 .cancel-button {
-  color: var(--text-primary, #374151);
-  background: var(--surface-secondary, #f3f4f6);
+  color: var(--text-primary, var(--ink-soft));
+  background: var(--surface-secondary, var(--line-soft));
 }
 
 .cancel-button:hover:not(:disabled) {
-  background: var(--surface-hover, #e5e7eb);
+  background: var(--surface-hover, var(--line));
 }
 
 .confirm-button {
@@ -130,7 +130,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  color: #ffffff;
+  color: var(--paper-raised);
 }
 
 .confirm-button--primary {
@@ -139,7 +139,7 @@
 
 .confirm-button--primary:hover:not(:disabled) {
   background: var(--primary-hover, #4338ca);
-  box-shadow: 0 5px 14px rgba(79, 70, 229, 0.25);
+  box-shadow: 0 4px 12px rgba(22,35,61,0.06);
 }
 
 .confirm-button--danger {
@@ -148,7 +148,7 @@
 
 .confirm-button--danger:hover:not(:disabled) {
   background: #b91c1c;
-  box-shadow: 0 5px 14px rgba(220, 38, 38, 0.25);
+  box-shadow: 0 4px 12px rgba(22,35,61,0.06);
 }
 
 .cancel-button:disabled,
@@ -161,7 +161,7 @@
   width: 16px;
   height: 16px;
   border: 2px solid rgba(255, 255, 255, 0.35);
-  border-top-color: #ffffff;
+  border-top-color: var(--paper-raised);
   border-radius: 50%;
   animation: spin 700ms linear infinite;
 }

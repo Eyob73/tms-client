@@ -11,6 +11,8 @@ interface NavItem {
   icon: string;
   route: string;
   tooltip?: string;
+  exact?: boolean;
+  adminOnly?: boolean;
 }
 
 interface NavGroup {
@@ -38,7 +40,11 @@ export class ShellComponent {
   }
 
   get userRole(): string {
-    return this.currentUser()?.role || 'Administrator';
+    return this.currentUser()?.role || '';
+  }
+
+  get isAdmin(): boolean {
+    return this.userRole === 'Admin' || this.authService.hasRole('Admin');
   }
 
   get userInitials(): string {
@@ -65,13 +71,16 @@ export class ShellComponent {
     Users: 'manage_accounts',
     Settings: 'settings',
     'Help & Support': 'help_outline',
+    'Available Courses': 'school',
+    'My Enrollments': 'assignment',
+    Enrollments: 'how_to_reg',
   };
 
   navGroups: NavGroup[] = [
     {
       title: 'Main',
       items: [
-        { label: 'Dashboard', icon: 'fas fa-th-large', route: '/dashboard', tooltip: 'Dashboard' },
+        { label: 'Dashboard', icon: 'fas fa-th-large', route: '/dashboard', tooltip: 'Dashboard', exact: true },
         {
           label: 'Training Programs',
           icon: 'fas fa-layer-group',
@@ -83,6 +92,21 @@ export class ShellComponent {
           icon: 'fas fa-book-open',
           route: '/courses',
           tooltip: 'Course Management',
+          adminOnly: true,
+        },
+        {
+          label: 'Available Courses',
+          icon: 'fas fa-graduation-cap',
+          route: '/enrollments/available',
+          tooltip: 'Course Registration',
+          exact: true,
+        },
+        {
+          label: 'My Enrollments',
+          icon: 'fas fa-id-card',
+          route: '/enrollments/my',
+          tooltip: 'My Enrollment Records',
+          exact: true,
         },
         {
           label: 'Schedule',
@@ -100,6 +124,7 @@ export class ShellComponent {
           icon: 'fas fa-user-shield',
           route: '/users',
           tooltip: 'User Management',
+          adminOnly: true,
         },
         {
           label: 'Instructors',
@@ -107,7 +132,14 @@ export class ShellComponent {
           route: '/instructor',
           tooltip: 'Instructors',
         },
-        { label: 'Trainees', icon: 'fas fa-users', route: '/enrollments', tooltip: 'Trainees' },
+        {
+          label: 'Enrollments',
+          icon: 'fas fa-user-check',
+          route: '/enrollments',
+          tooltip: 'Enrollment Requests & Review',
+          exact: true,
+          adminOnly: true,
+        },
         {
           label: 'Assessments',
           icon: 'fas fa-clipboard-check',

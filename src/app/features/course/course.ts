@@ -74,6 +74,17 @@ export class CourseComponent {
 
   readonly courses = this.store.courses;
   readonly totalCount = this.store.totalCourses;
+  
+  readonly stats = computed(() => {
+    const list = this.courses();
+    return {
+      totalCourses: this.store.totalCourses(),
+      openCourses: this.store.openCourses(),
+      fullCourses: this.store.fullCourses(),
+      publishedCourses: list.filter(c => c.isPublished).length,
+      draftCourses: list.filter(c => !c.isPublished).length
+    }
+  });
 
   readonly departmentOptions = computed(() => {
     const values = new Set<string>();

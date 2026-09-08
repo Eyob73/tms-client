@@ -31,15 +31,17 @@ export const routes: Routes = [
           import('./features/instructor-dashboard/instructor-dashboard').then(
             (m) => m.InstructorDashboard,
           ),
-        canActivate: [roleGuard],
+        canActivate: [roleGuard('Instructor')],
       },
       {
         path: 'courses',
+        canActivate: [adminGuard],
         loadComponent: () =>
           import('./features/course/course').then((m) => m.CourseComponent),
       },
       {
         path: 'courses/new',
+        canActivate: [adminGuard],
         loadComponent: () =>
           import('./features/course/add-course/add-course.component').then(
             (m) => m.AddCourseComponent,
@@ -47,6 +49,7 @@ export const routes: Routes = [
       },
       {
         path: 'courses/:id',
+        canActivate: [adminGuard],
         loadComponent: () =>
           import('./features/course-detail/course-detail.component').then(
             (m) => m.CourseDetailComponent,
@@ -85,18 +88,39 @@ export const routes: Routes = [
           ),
       },
       {
-        path: 'enroll',
+        path: 'enrollments/available',
         loadComponent: () =>
-          import('./features/enrollment-form/enrollment-form').then(
-            (m) => m.EnrollmentFormComponent,
-          ),
+          import(
+            './features/enrollments/available-courses/available-courses.component'
+          ).then((m) => m.AvailableCoursesComponent),
+      },
+      {
+        path: 'enrollments/my',
+        loadComponent: () =>
+          import(
+            './features/enrollments/my-enrollments/my-enrollments.component'
+          ).then((m) => m.MyEnrollmentsComponent),
       },
       {
         path: 'enrollments',
+        canActivate: [adminGuard],
         loadComponent: () =>
-          import('./features/enrollment-list/enrollment-list').then(
-            (m) => m.EnrollmentListComponent,
-          ),
+          import(
+            './features/enrollments/admin-enrollments/admin-enrollments.component'
+          ).then((m) => m.AdminEnrollmentsComponent),
+      },
+      {
+        path: 'admin/enrollments',
+        canActivate: [adminGuard],
+        loadComponent: () =>
+          import(
+            './features/enrollments/admin-enrollments/admin-enrollments.component'
+          ).then((m) => m.AdminEnrollmentsComponent),
+      },
+      {
+        path: 'enroll',
+        redirectTo: 'enrollments/available',
+        pathMatch: 'full',
       },
       {
         path: 'instructor',

@@ -1,6 +1,6 @@
 import { computed, inject } from '@angular/core';
 import { signalStore, withComputed, withMethods, patchState, withState } from '@ngrx/signals';
-import { withEntities, setAllEntities, updateEntity } from '@ngrx/signals/entities';
+import { withEntities, setAllEntities, updateEntity, addEntity } from '@ngrx/signals/entities';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { pipe, concatMap, tap, catchError, EMPTY, switchMap } from 'rxjs';
 import { EnrollmentService } from '../services/enrollment';
@@ -9,34 +9,33 @@ import { LiveSyncService } from '../services/live-sync.service';
 
 export const EnrollmentStore = signalStore(
   { providedIn: 'root' },
-  // withState adds simple properties alongside the entity collection
   withState({ isLoading: false, error: null as string | null }),
-  // withEntities creates an O(1) ID-indexed dictionary for the enrollment collection.
-  // Internally, it stores { ids: string[], entityMap: Record<string, Enrollment> }
-  // so lookups and updates by ID are instant — no array scanning.
   withEntities<Enrollment>(),
-  // withComputed creates read-only derived signals that update automatically.
-  // pendingCount recalculates every time the entity collection changes.
   withComputed((store) => ({
     pendingCount: computed(() => store.entities().filter((e) => e.status === 'Pending').length),
+    approvedCount: computed(() => store.entities().filter((e) => e.status === 'Approved').length),
+    rejectedCount: computed(() => store.entities().filter((e) => e.status === 'Rejected').length),
   })),
   withMethods((store, api = inject(EnrollmentService), sync = inject(LiveSyncService)) => ({
-    // Listens to SignalR live sync stream and updates store stateautomatically
     listenForLiveUpdates: rxMethod<void>(
       pipe(
         tap(() => sync.connect()),
         switchMap(() => sync.events$),
         tap((event) => {
-          patchState(store, updateEntity({ id: event.id, changes: { status: event.status } }));
+          const existing = store.entityMap()[event.id];
+          if (existing) {
+            patchState(store, updateEntity({
+              id: event.id,
+              changes: {
+                status: event.status,
+                rejectionReason: event.reason ?? existing.rejectionReason,
+              },
+            }));
+          }
         }),
       ),
     ),
-    // Loading Data
-    // Why concatMap here? Because concatMap processes one emission ata time
-    // in strict order. If something triggers loadEnrollments() twice quickly,
-    // concatMap waits for the first HTTP response before starting thesecond.
-    // switchMap would cancel the first request (data loss risk).
-    // mergeMap would run both in parallel (race condition risk).
+
     loadEnrollments: rxMethod<void>(
       pipe(
         tap(() => patchState(store, { isLoading: true, error: null })),
@@ -45,30 +44,61 @@ export const EnrollmentStore = signalStore(
             tap((rows) => patchState(store, setAllEntities(rows), { isLoading: false })),
             catchError((err) => {
               patchState(store, { isLoading: false, error: err.message });
-              return EMPTY; // EMPTY completes silently so the rxMethodpipeline survives
+              return EMPTY;
             }),
           ),
         ),
       ),
     ),
-    // Optimistic Approve
-    // Step 1: Instantly flip the status to "Approved" in the store.
-    // Every component reading from the store sees the change immediately.
-    // Step 2: Send the approval to the server.
-    // Step 3: If the server rejects it, roll back the status to "Pending."
+
     approveEnrollment: rxMethod<string>(
       pipe(
         tap((id) => {
-          // Optimistic update — the UI reacts before the network round-trip completes
           patchState(store, updateEntity({ id, changes: { status: 'Approved' } }));
         }),
         concatMap((id) =>
-          api.approve(id).pipe(
+          api.approveEnrollment(id).pipe(
             catchError((err) => {
-              // Server said no — restore the previous state
               patchState(store, updateEntity({ id, changes: { status: 'Pending' } }));
               patchState(store, {
-                error: 'Server rejected the approval.Check enrollment constraints.',
+                error: err.error?.detail || 'Server rejected the approval. Check enrollment constraints.',
+              });
+              return EMPTY;
+            }),
+          ),
+        ),
+      ),
+    ),
+
+    rejectEnrollment: rxMethod<{ id: string; reason?: string }>(
+      pipe(
+        tap(({ id, reason }) => {
+          patchState(store, updateEntity({ id, changes: { status: 'Rejected', rejectionReason: reason } }));
+        }),
+        concatMap(({ id, reason }) =>
+          api.rejectEnrollment(id, reason).pipe(
+            catchError((err) => {
+              patchState(store, updateEntity({ id, changes: { status: 'Pending' } }));
+              patchState(store, {
+                error: err.error?.detail || 'Server rejected the operation.',
+              });
+              return EMPTY;
+            }),
+          ),
+        ),
+      ),
+    ),
+
+    archiveEnrollment: rxMethod<string>(
+      pipe(
+        tap((id) => {
+          patchState(store, updateEntity({ id, changes: { status: 'Archived', isArchived: true } }));
+        }),
+        concatMap((id) =>
+          api.archiveEnrollment(id).pipe(
+            catchError((err) => {
+              patchState(store, {
+                error: err.error?.detail || 'Failed to archive enrollment.',
               });
               return EMPTY;
             }),

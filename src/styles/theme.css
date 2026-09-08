@@ -7,100 +7,96 @@
 
 :root {
   /* ---------------------------------------------------------------------
-     Color — brand (warmer, more vibrant blue)
+     New Design System Variables
      --------------------------------------------------------------------- */
-  --color-primary-50:  #f0f5ff;
-  --color-primary-100: #e0ebff;
-  --color-primary-200: #b6d0ff;
-  --color-primary-300: #7aa9ff;
-  --color-primary-400: #4d85f5;
-  --color-primary-500: #2d6bf0;   /* primary brand blue, slightly warmer */
-  --color-primary-600: #1f57d9;
-  --color-primary-700: #1845b3;
-  --color-primary-800: #12348c;
-  --color-primary-900: #0d266b;
+  --ink: #16233D;
+  --ink-soft: #5B6577;
+  --ink-faint: #8A93A3;
+  --paper: #F2F3EF;
+  --paper-raised: #FFFFFF;
+  --line: #DBDED6;
+  --line-soft: #E7E9E2;
+  --green: #1F6B4E;
+  --green-tint: #E4EFE9;
+  --amber: #A8722A;
+  --amber-tint: #F3E9DA;
+  --navy: #233A63;
+  --navy-tint: #E8ECF3;
+  --gold: #9C7326;
+  --gold-tint: #F1EADA;
+  --table-header-bg: #FAFAF8; /* lighter bg color for table headers */
+  --radius-s: 4px;
+  --radius-m: 8px;
+
+  /* ---------------------------------------------------------------------
+     Aliased to existing tokens for backwards compatibility
+     --------------------------------------------------------------------- */
+  --color-primary-50:  var(--navy-tint);
+  --color-primary-100: var(--navy-tint);
+  --color-primary-200: var(--navy-tint);
+  --color-primary-300: var(--navy);
+  --color-primary-400: var(--navy);
+  --color-primary-500: var(--navy);
+  --color-primary-600: var(--ink);
+  --color-primary-700: var(--ink);
+  --color-primary-800: var(--ink);
+  --color-primary-900: var(--ink);
 
   --color-primary: var(--color-primary-500);
   --color-primary-hover: var(--color-primary-600);
   --color-primary-active: var(--color-primary-700);
   --color-primary-subtle: var(--color-primary-50);
 
-  /* ---------------------------------------------------------------------
-     Color — neutrals (softer, with subtle warmth)
-     --------------------------------------------------------------------- */
   --color-white: #ffffff;
-  --color-gray-50:  #f9fafc;
-  --color-gray-100: #f1f3f8;
-  --color-gray-200: #e3e6ef;
-  --color-gray-300: #cdd2e0;
-  --color-gray-400: #a8b0c8;
-  --color-gray-500: #7e88a8;
-  --color-gray-600: #5e6a8a;
-  --color-gray-700: #414b6b;
-  --color-gray-800: #2c3452;
-  --color-gray-900: #1a2140;
+  --color-gray-50:  var(--paper);
+  --color-gray-100: var(--line-soft);
+  --color-gray-200: var(--line);
+  --color-gray-300: var(--line);
+  --color-gray-400: var(--ink-faint);
+  --color-gray-500: var(--ink-faint);
+  --color-gray-600: var(--ink-soft);
+  --color-gray-700: var(--ink-soft);
+  --color-gray-800: var(--ink);
+  --color-gray-900: var(--ink);
 
-  /* ---------------------------------------------------------------------
-     Color — dark surfaces (richer, less flat)
-     --------------------------------------------------------------------- */
-  --color-ink-900: #0c0f1a;
-  --color-ink-800: #141a2e;
-  --color-ink-700: #1b223a;
-  --color-ink-600: #232b45;
-  --color-ink-500: #5c6787;
-  --color-ink-400: #7a87ad;
-  --color-ink-300: #9aa6c4;
-  --color-ink-100: #eaeef7;
-  --color-ink-50:  #f4f6fc;
-
-  /* ---------------------------------------------------------------------
-     Color — semantic (more vibrant, clearer intent)
-     --------------------------------------------------------------------- */
-  --color-success: #0f9d58;
-  --color-success-subtle: #e6f9ee;
-  --color-warning: #f5a623;
-  --color-warning-subtle: #fef5e5;
+  --color-success: var(--green);
+  --color-success-subtle: var(--green-tint);
+  --color-warning: var(--amber);
+  --color-warning-subtle: var(--amber-tint);
   --color-danger: #e74c3c;
   --color-danger-subtle: #fdedeb;
-  --color-info: var(--color-primary-500);
-  --color-info-subtle: var(--color-primary-50);
+  --color-info: var(--navy);
+  --color-info-subtle: var(--navy-tint);
 
-  /* ---------------------------------------------------------------------
-     Color — semantic aliases (components use these)
-     --------------------------------------------------------------------- */
-  --color-bg: #f2f4f9;                        /* app background */
-  --color-surface: var(--color-white);
-  --color-surface-sunken: var(--color-gray-50);
+  --color-bg: var(--paper);
+  --color-surface: var(--paper-raised);
+  --color-surface-sunken: var(--paper);
 
-  --color-text-primary: var(--color-gray-900);
-  --color-text-secondary: var(--color-gray-600);
-  --color-text-tertiary: var(--color-gray-500);
-  --color-text-placeholder: var(--color-gray-400);
+  --color-text-primary: var(--ink);
+  --color-text-secondary: var(--ink-soft);
+  --color-text-tertiary: var(--ink-faint);
+  --color-text-placeholder: var(--ink-faint);
   --color-text-on-primary: var(--color-white);
 
-  --color-text-primary-inverse: var(--color-ink-50);
-  --color-text-secondary-inverse: var(--color-ink-300);
-  --color-text-tertiary-inverse: var(--color-ink-500);
-
-  --color-border: var(--color-gray-200);
-  --color-border-strong: var(--color-gray-300);
-  --color-border-inverse: var(--color-ink-700);
-
-  --color-focus-ring: rgba(45, 107, 240, 0.2);
+  --color-border: var(--line);
+  --color-border-strong: var(--line-soft);
+  --color-focus-ring: rgba(22, 35, 61, 0.2); /* ink with opacity */
 
   /* ---------------------------------------------------------------------
-     Typography — slightly adjusted for better readability
+     Typography — updated to new design fonts
      --------------------------------------------------------------------- */
-  --font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-family-base: 'IBM Plex Sans', sans-serif;
+  --font-family-heading: 'Fraunces', serif;
+  --font-family-mono: 'IBM Plex Mono', monospace;
 
-  --font-size-xs:   11px;
-  --font-size-sm:   12.5px;
+  --font-size-xs:   12px;
+  --font-size-sm:   13.5px;
   --font-size-base: 14px;
   --font-size-md:   16px;
-  --font-size-lg:   19px;
+  --font-size-lg:   20px;
   --font-size-xl:   24px;
   --font-size-2xl:  28px;
-  --font-size-3xl:  34px;
+  --font-size-3xl:  32px;
   --font-size-4xl:  44px;
 
   --font-weight-regular:  400;
@@ -113,11 +109,11 @@
   --line-height-normal:  1.5;
   --line-height-relaxed: 1.65;
 
-  --letter-spacing-tight: -0.02em;
+  --letter-spacing-tight: -0.01em;
   --letter-spacing-wide:  0.02em;
 
   /* ---------------------------------------------------------------------
-     Spacing (4px base scale, slightly expanded)
+     Spacing (4px base scale)
      --------------------------------------------------------------------- */
   --space-1:  4px;
   --space-2:  8px;
@@ -133,24 +129,24 @@
   --space-24: 96px;
 
   /* ---------------------------------------------------------------------
-     Radius — larger, more pleasant curves
+     Radius
      --------------------------------------------------------------------- */
-  --radius-sm:   8px;
-  --radius-md:   12px;
-  --radius-lg:   16px;
-  --radius-xl:   24px;
+  --radius-sm:   var(--radius-s);
+  --radius-md:   var(--radius-m);
+  --radius-lg:   12px;
+  --radius-xl:   16px;
   --radius-full: 999px;
 
   /* ---------------------------------------------------------------------
-     Elevation — deeper, more layered shadows
+     Elevation
      --------------------------------------------------------------------- */
-  --shadow-sm: 0 1px 3px rgba(10, 14, 26, 0.06), 0 1px 2px rgba(10, 14, 26, 0.04);
-  --shadow-md: 0 8px 30px -8px rgba(10, 14, 26, 0.12), 0 4px 12px -6px rgba(10, 14, 26, 0.05);
-  --shadow-lg: 0 30px 70px -16px rgba(10, 14, 26, 0.2), 0 10px 30px -12px rgba(10, 14, 26, 0.08);
-  --shadow-glow: 0 0 0 1px rgba(45, 107, 240, 0.2), 0 8px 24px -6px rgba(45, 107, 240, 0.2);
+  --shadow-sm: 0 1px 2px rgba(22, 35, 61, 0.08);
+  --shadow-md: 0 4px 12px rgba(22, 35, 61, 0.08);
+  --shadow-lg: 0 12px 24px rgba(22, 35, 61, 0.12);
+  --shadow-glow: 0 0 0 1px rgba(22, 35, 61, 0.1), 0 4px 12px rgba(22, 35, 61, 0.1);
 
   /* ---------------------------------------------------------------------
-     Motion — slightly slowed for a smoother feel
+     Motion
      --------------------------------------------------------------------- */
   --ease-standard: cubic-bezier(0.25, 0.1, 0.25, 1);
   --duration-fast: 150ms;
@@ -386,15 +382,16 @@ textarea.input {
 /* Typography helpers -------------------------------------------------------- */
 
 .text-display {
+  font-family: var(--font-family-heading);
   font-size: var(--font-size-4xl);
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-tight);
   letter-spacing: var(--letter-spacing-tight);
   color: var(--color-text-primary);
 }
-.text-h1 { font-size: var(--font-size-3xl); font-weight: var(--font-weight-bold); line-height: var(--line-height-tight); color: var(--color-text-primary); }
-.text-h2 { font-size: var(--font-size-2xl); font-weight: var(--font-weight-bold); line-height: var(--line-height-snug); color: var(--color-text-primary); }
-.text-h3 { font-size: var(--font-size-xl); font-weight: var(--font-weight-semibold); line-height: var(--line-height-snug); color: var(--color-text-primary); }
+.text-h1 { font-family: var(--font-family-heading); font-size: var(--font-size-3xl); font-weight: var(--font-weight-bold); line-height: var(--line-height-tight); color: var(--color-text-primary); }
+.text-h2 { font-family: var(--font-family-heading); font-size: var(--font-size-2xl); font-weight: var(--font-weight-bold); line-height: var(--line-height-snug); color: var(--color-text-primary); }
+.text-h3 { font-family: var(--font-family-heading); font-size: var(--font-size-xl); font-weight: var(--font-weight-semibold); line-height: var(--line-height-snug); color: var(--color-text-primary); }
 .text-body { font-size: var(--font-size-base); font-weight: var(--font-weight-regular); line-height: var(--line-height-normal); color: var(--color-text-primary); }
 .text-muted { color: var(--color-text-secondary); }
 .text-caption { font-size: var(--font-size-xs); color: var(--color-text-tertiary); letter-spacing: var(--letter-spacing-wide); }

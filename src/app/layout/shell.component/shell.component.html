@@ -14,17 +14,20 @@
       <div class="nav-section" *ngFor="let group of navGroups">
         <div class="nav-section-title">{{ group.title }}</div>
 
-        <a
-          *ngFor="let item of group.items"
-          class="nav-item"
-          [routerLink]="item.route"
-          routerLinkActive="active"
-          [routerLinkActiveOptions]="{ exact: item.route === '/dashboard' }"
-          [attr.data-tooltip]="item.tooltip || item.label"
-        >
-          <mat-icon class="nav-icon">{{ iconMap[item.label] || 'dashboard' }}</mat-icon>
-          <span class="nav-item-text">{{ item.label }}</span>
-        </a>
+        <ng-container *ngFor="let item of group.items">
+          @if (!item.adminOnly || userRole === 'Admin') {
+          <a
+            class="nav-item"
+            [routerLink]="item.route"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: item.exact ?? (item.route === '/dashboard' || item.route === '/enrollments') }"
+            [attr.data-tooltip]="item.tooltip || item.label"
+          >
+            <mat-icon class="nav-icon">{{ iconMap[item.label] || 'dashboard' }}</mat-icon>
+            <span class="nav-item-text">{{ item.label }}</span>
+          </a>
+          }
+        </ng-container>
       </div>
     </nav>
 

@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { CanActivateFn, Router } from '@angular/router';
 
-export const roleGuard = (requiredRole: string): CanActivateFn => {
+export const roleGuard = (requiredRole: string = 'Admin'): CanActivateFn => {
   return () => {
     const auth = inject(AuthService);
     const router = inject(Router);

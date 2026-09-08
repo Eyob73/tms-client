@@ -36,12 +36,11 @@ body {
   // user's system settings.
   color-scheme: light;
 
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
-  font: var(--mat-sys-body-medium);
+  // Set a default background, font and text colors for the application
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
 
   // Reset the user agent margin.
   margin: 0;
@@ -85,3 +84,16 @@ app-root > *:not(router-outlet):not(.app-shell) {
   animation: appPageFadeInUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
   will-change: opacity, transform;
 }
+
+/* Global table header theme override */
+.mat-mdc-table .mat-mdc-header-cell {
+  background-color: var(--table-header-bg) !important;
+}
+table th {
+  background-color: var(--table-header-bg);
+}
+
+/* Paper/Ink Dialog Overrides */
+.mat-mdc-dialog-surface { background-color: var(--paper-raised) !important; border: 1px solid var(--line); border-radius: var(--radius-m, 8px) !important; box-shadow: 0 10px 30px rgba(22,35,61,0.12) !important; }
+.mat-mdc-dialog-title { font-family: 'Fraunces', serif !important; font-optical-sizing: auto; color: var(--ink) !important; }
+.mat-mdc-dialog-content { font-family: 'IBM Plex Sans', sans-serif !important; color: var(--ink-soft) !important; }

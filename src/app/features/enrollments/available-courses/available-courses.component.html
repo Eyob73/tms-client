@@ -1,0 +1,138 @@
+<div class="wrap">
+  <header>
+    <div class="header-text">
+      <div class="term-badge"><span class="dot"></span>FALL 2026 &nbsp;·&nbsp; ENROLLMENT WINDOW OPEN</div>
+      <h1>Course Catalog</h1>
+      <p>Browse what's open this term, check live seat counts, and send your enrollment requests to the registrar.</p>
+    </div>
+
+    <!-- <svg class="header-graphic" width="120" height="90" viewBox="0 0 120 90" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <rect x="8" y="46" width="70" height="10" rx="2" fill="#233A63"/>
+      <rect x="8" y="34" width="88" height="10" rx="2" fill="#1F6B4E"/>
+      <rect x="8" y="22" width="55" height="10" rx="2" fill="#9C7326"/>
+      <line x1="8" y1="66" x2="112" y2="66" stroke="#DBDED6" stroke-width="1.5"/>
+      <circle cx="103" cy="27" r="4" fill="#1F6B4E"/>
+    </svg> -->
+  </header>
+
+  <div class="controls">
+    <div class="search-field">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" placeholder="Search by course code, title, or department" autocomplete="off" [(ngModel)]="searchQuery">
+      @if (searchQuery.trim()) {
+        <button class="clear-btn" (click)="searchQuery = ''" aria-label="Clear search">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button [class.active]="selectedFilter === 'all'" (click)="selectedFilter = 'all'">All courses</button>
+      <button [class.active]="selectedFilter === 'available'" (click)="selectedFilter = 'available'">Open to enroll</button>
+      <button [class.active]="selectedFilter === 'enrolled'" (click)="selectedFilter = 'enrolled'">My requests</button>
+    </div>
+
+    <div class="result-count" id="resultCount">{{ filteredCourses.length }} of {{ courses().length }} courses</div>
+  </div>
+
+  @if (error()) {
+    <div class="empty-state" style="color: #b3261e;">
+      <strong>Error loading courses</strong>
+      {{ error() }}
+      <button class="enroll-btn" (click)="loadCourses()" style="margin-top: 16px; width: auto; display: inline-flex; margin-left: auto; margin-right: auto;">Try Again</button>
+    </div>
+  } @else if (isLoading()) {
+    <div class="loading-state">
+      <mat-spinner diameter="40"></mat-spinner>
+      <span>Loading course offerings...</span>
+    </div>
+  } @else if (filteredCourses.length === 0) {
+    <div class="empty-state">
+      <strong>No courses match</strong>
+      Try a different search term or filter.
+    </div>
+  } @else {
+    <div class="catalog">
+      @for (course of filteredCourses; track course.id) {
+        <div class="course-row" [style.--dept-color]="getDeptColor(course.departmentName)">
+          <div class="course-main">
+            <div class="row-top">
+              <span class="status-chip" [ngClass]="getBadgeClass(course)">
+                {{ getBadgeText(course) }}
+              </span>
+              @if (course.departmentName) {
+                <span class="dept-label">{{ course.departmentName }}</span>
+              }
+            </div>
+            <h2 class="course-title">{{ course.courseName }}</h2>
+            @if (course.description) {
+              <p class="course-desc">{{ course.description }}</p>
+            }
+            <div class="meta-row">
+              <span class="course-code">{{ course.courseCode }}</span>
+              <span class="meta-item">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                {{ course.credits }} Credits
+              </span>
+              @if (course.courseType) {
+                <span class="meta-item">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                  {{ course.courseType }}
+                </span>
+              }
+              @if (course.durationHours) {
+                <span class="meta-item">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  {{ course.durationHours }} hrs
+                </span>
+              }
+            </div>
+          </div>
+
+          <div class="course-side">
+            <div class="seat-block">
+              <div class="seat-numbers">
+                @if (course.maxCapacity) {
+                  <span><span class="filled">{{ course.enrolledCount }}</span> / {{ course.maxCapacity }} filled</span>
+                  <span class="left" [class.danger]="course.availabilityStatus === 'Full' || course.availabilityStatus === 'Almost Full'">{{ course.availableSeats ?? 0 }} left</span>
+                } @else {
+                  <span><span class="filled">{{ course.enrolledCount }}</span> filled</span>
+                  <span class="left">Unlimited</span>
+                }
+              </div>
+              @if (course.maxCapacity) {
+                <div class="seat-track">
+                  <div class="seat-fill" [style.width.%]="(course.enrolledCount / course.maxCapacity) * 100"></div>
+                </div>
+              }
+            </div>
+            
+            @if (course.studentEnrollmentStatus === 'Approved') {
+              <button class="enroll-btn requested" disabled>✓ Enrolled</button>
+            } @else if (course.studentEnrollmentStatus === 'Pending') {
+              <button class="enroll-btn pending" disabled>⧗ Pending Review</button>
+            } @else if (course.studentEnrollmentStatus === 'Completed') {
+              <button class="enroll-btn" disabled>★ Completed</button>
+            } @else if (course.canEnroll) {
+              <button class="enroll-btn" (click)="requestEnrollment(course)" [disabled]="enrollingCourseId() === course.id">
+                @if (enrollingCourseId() === course.id) {
+                  <mat-spinner diameter="16"></mat-spinner> Requesting...
+                } @else {
+                  Request enrollment
+                }
+              </button>
+            } @else {
+              <button class="enroll-btn" disabled>
+                @if (course.availabilityStatus === 'Full') {
+                  Course Full
+                } @else {
+                  Enrollment Closed
+                }
+              </button>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
