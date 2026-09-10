@@ -21,3 +21,12 @@ export const adminGuard: CanActivateFn = () => {
   }
   return router.createUrlTree(['/dashboard']);
 };
+
+export const studentGuard: CanActivateFn = () => {
+  const auth = inject(AuthService);
+  const router = inject(Router);
+  if (auth.currentUser()?.role === 'Student') {
+    return true;
+  }
+  return router.createUrlTree(['/dashboard']);
+};
