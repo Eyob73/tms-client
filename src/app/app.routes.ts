@@ -89,6 +89,7 @@ export const routes: Routes = [
       },
       {
         path: 'enrollments/available',
+        canActivate: [roleGuard('Student')],
         loadComponent: () =>
           import(
             './features/enrollments/available-courses/available-courses.component'
@@ -96,6 +97,7 @@ export const routes: Routes = [
       },
       {
         path: 'enrollments/my',
+        canActivate: [roleGuard('Student')],
         loadComponent: () =>
           import(
             './features/enrollments/my-enrollments/my-enrollments.component'

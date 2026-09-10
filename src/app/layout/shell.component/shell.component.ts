@@ -13,6 +13,7 @@ interface NavItem {
   tooltip?: string;
   exact?: boolean;
   adminOnly?: boolean;
+  studentOnly?: boolean;
 }
 
 interface NavGroup {
@@ -45,6 +46,10 @@ export class ShellComponent {
 
   get isAdmin(): boolean {
     return this.userRole === 'Admin' || this.authService.hasRole('Admin');
+  }
+
+  get isStudent(): boolean {
+    return this.userRole === 'Student' || this.authService.hasRole('Student');
   }
 
   get userInitials(): string {
@@ -100,6 +105,7 @@ export class ShellComponent {
           route: '/enrollments/available',
           tooltip: 'Course Registration',
           exact: true,
+          studentOnly: true,
         },
         {
           label: 'My Enrollments',
@@ -107,6 +113,7 @@ export class ShellComponent {
           route: '/enrollments/my',
           tooltip: 'My Enrollment Records',
           exact: true,
+          studentOnly: true,
         },
         {
           label: 'Schedule',
