@@ -24,6 +24,8 @@ export interface Course {
   updatedBy?: string;
   isDeleted: boolean;
   deletedAt?: string;
+  instructorId?: string;
+  instructorName?: string;
   // Legacy fields for backward compatibility
   code?: string;
   title?: string;

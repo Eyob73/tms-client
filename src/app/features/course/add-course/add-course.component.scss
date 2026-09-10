@@ -38,8 +38,6 @@
   min-width: 0;
 
   h1 {
-  font-family: 'Fraunces', serif;
-  font-optical-sizing: auto;
     margin: 0;
     font-size: clamp(1.6rem, 2vw, 2.2rem);
     font-weight: var(--font-weight-bold);
@@ -117,8 +115,6 @@
 
 .section-heading {
   h3 {
-  font-family: 'Fraunces', serif;
-  font-optical-sizing: auto;
     margin: 0;
     font-size: var(--font-size-md);
     font-weight: var(--font-weight-semibold);

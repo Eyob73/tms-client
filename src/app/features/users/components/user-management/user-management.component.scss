@@ -21,7 +21,7 @@ header {
 }
 .header-text p { margin: 0; color: var(--ink-soft); font-size: 14.5px; }
 
-.add-user-btn {
+.add-user-btn, .btn-primary {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -38,8 +38,8 @@ header {
   transition: background .15s ease, transform .1s ease;
   text-decoration: none;
 }
-.add-user-btn:hover { background: #0F1A2E; }
-.add-user-btn:active { transform: scale(0.98); }
+.add-user-btn:hover, .btn-primary:hover { background: #0F1A2E; }
+.add-user-btn:active, .btn-primary:active { transform: scale(0.98); }
 
 /* ---------- Stat cards ---------- */
 .stat-grid {

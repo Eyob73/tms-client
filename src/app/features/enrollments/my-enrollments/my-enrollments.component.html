@@ -92,10 +92,10 @@
 
     <!-- Loading State -->
     @if (isLoading()) {
-    <div class="loading-state animate-in delay-3">
-      <mat-spinner diameter="40"></mat-spinner>
-      <p>Loading your enrollments...</p>
-    </div>
+      <div class="loading-state animate-in delay-3" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 50vh; width: 100%; text-align: center; gap: 16px; padding: 48px 0;">
+        <mat-spinner diameter="40"></mat-spinner>
+        <p style="margin: 0; color: var(--ink-soft);">Loading your enrollments...</p>
+      </div>
     } @else if (filteredEnrollments().length === 0) {
     <!-- Empty State -->
     <div class="empty-state animate-in delay-3">

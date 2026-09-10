@@ -159,7 +159,8 @@ export class AdminEnrollmentsComponent implements OnInit {
 
   openDetails(enrollment: Enrollment): void {
     this.dialog.open(EnrollmentDetailsDialogComponent, {
-      width: '600px',
+      width: 'min(90vw, 750px)',
+      maxWidth: '750px',
       data: {
         enrollmentId: enrollment.id,
       } as EnrollmentDetailsDialogData,

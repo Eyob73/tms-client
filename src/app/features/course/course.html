@@ -63,8 +63,8 @@
   <div class="controls">
     <div class="search-field">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input type="text" placeholder="Search by name, code, or department" autocomplete="off"
-             [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event); loadCourses()">
+      <input id="search" type="text" placeholder="Search by name, code, or department" autocomplete="off"
+             [ngModel]="searchTerm()" (ngModelChange)="onSearchChange($event)">
       @if (searchTerm().trim()) {
         <button class="clear-btn" (click)="clearSearch()" aria-label="Clear search">
           <mat-icon style="font-size:18px; width:18px; height:18px;">close</mat-icon>
@@ -190,6 +190,14 @@
               [class.badge--neutral]="course.status === 'Archived'">
               {{ getStatusLabel(course) }}
             </span>
+          </td>
+        </ng-container>
+
+        <!-- Instructor Name Column -->
+        <ng-container matColumnDef="instructorName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Instructor</th>
+          <td mat-cell *matCellDef="let course">
+            {{ course.instructorName || 'Not Assigned' }}
           </td>
         </ng-container>
 

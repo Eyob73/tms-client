@@ -94,8 +94,6 @@
     }
 
     h1 {
-  font-family: 'Fraunces', serif;
-  font-optical-sizing: auto;
       margin: 0 0 var(--space-2, 8px) 0;
       font-size: var(--font-size-2xl, 28px);
       font-weight: var(--font-weight-bold, 700);
@@ -291,7 +289,7 @@
 
     .status-dot {
       background: var(--color-success, #0f9d58);
-      box-shadow: 0 4px 12px rgba(22,35,61,0.06);
+      box-shadow: 0 0 0 2px rgba(15, 157, 88, 0.2);
     }
   }
 

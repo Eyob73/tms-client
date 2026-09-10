@@ -130,6 +130,24 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'teaching/:id',
+        loadComponent: () =>
+          import('./features/course-teaching/course-teaching.component').then(
+            (m) => m.CourseTeachingComponent,
+          ),
+        canActivate: [roleGuard('Instructor')],
+      },
+      {
+        path: 'assessments',
+        loadComponent: () => import('./features/assessments/assessments.component').then(m => m.AssessmentsComponent),
+        canActivate: [roleGuard('Instructor')]
+      },
+      {
+        path: 'assessments/:id',
+        loadComponent: () => import('./features/assessments/assessment-detail.component').then(m => m.AssessmentDetailComponent),
+        canActivate: [roleGuard('Instructor')]
+      },
+      {
         path: 'grade-submission',
         loadComponent: () =>
           import('./features/grade-submission/grade-submission.component').then(

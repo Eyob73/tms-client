@@ -25,7 +25,7 @@ export interface EnrollmentDetailsDialogData {
     <div class="details-dialog">
       <div class="dialog-header">
         <div>
-          <h2 mat-dialog-title>Enrollment Details</h2>
+          <h2 class="dialog-title">Enrollment Details</h2>
           <p class="subtitle">Complete record and lifecycle history for request #{{ data.enrollmentId }}</p>
         </div>
         <button mat-icon-button (click)="close()" class="close-btn">
@@ -188,14 +188,14 @@ export interface EnrollmentDetailsDialogData {
       </mat-dialog-content>
 
       <mat-dialog-actions align="end" class="dialog-actions">
-        <button mat-flat-button color="primary" (click)="close()">Close</button>
+        <button class="btn btn--secondary" (click)="close()">Close</button>
       </mat-dialog-actions>
     </div>
   `,
   styles: [`
     .details-dialog {
-      padding: 6px 2px;
-      min-width: min(90vw, 560px);
+      padding: 24px;
+      min-width: min(90vw, 700px);
     }
     .dialog-header {
       display: flex;
@@ -203,10 +203,7 @@ export interface EnrollmentDetailsDialogData {
       justify-content: space-between;
       margin-bottom: 16px;
     }
-    .dialog-header h2 {
-      font-family: 'Fraunces', serif;
-      font-optical-sizing: auto;
-
+    .dialog-title {
       margin: 0;
       font-size: 20px;
       font-weight: 700;
@@ -219,6 +216,8 @@ export interface EnrollmentDetailsDialogData {
     }
     .close-btn {
       color: var(--color-text-tertiary, var(--ink-faint));
+      margin-top: -8px;
+      margin-right: -8px;
     }
     .dialog-content {
       padding: 0 !important;
@@ -254,7 +253,7 @@ export interface EnrollmentDetailsDialogData {
       font-weight: 600;
 
       &.status--pending {
-        background: var(--paper-raised)8e6;
+        background: var(--color-warning-subtle, #fef3c7);
         color: #b45309;
         border: 1px solid #fef3c7;
         .status-dot { background: #f59e0b; }
@@ -352,8 +351,6 @@ export interface EnrollmentDetailsDialogData {
         height: 20px;
       }
       h3 {
-        font-family: 'Fraunces', serif;
-        font-optical-sizing: auto;
 
         margin: 0;
         font-size: 14px;
@@ -378,6 +375,7 @@ export interface EnrollmentDetailsDialogData {
         color: var(--color-text-primary, var(--ink));
         font-weight: 600;
         flex: 1;
+        word-break: break-word;
       }
     }
     .timeline {
@@ -418,7 +416,7 @@ export interface EnrollmentDetailsDialogData {
       color: var(--color-text-tertiary, var(--ink-faint));
     }
     .dialog-actions {
-      padding: 16px 0 0 0;
+      padding: 16px 0 0 0 !important;
     }
   `],
 })

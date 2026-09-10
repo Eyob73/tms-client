@@ -34,9 +34,9 @@ export class ConfirmDialogComponent {
     switch (this.data?.confirmTone) {
       case 'warn':
       case 'danger':
-        return 'confirm-button confirm-button--danger';
+        return 'btn btn--danger';
       default:
-        return 'confirm-button confirm-button--primary';
+        return 'btn btn--primary';
     }
   }
 
@@ -62,9 +62,5 @@ export class ConfirmDialogComponent {
     }
   }
 
-  onBackdropClick(event: MouseEvent): void {
-    if (event.target === event.currentTarget && !this.isSubmitting) {
-      this.cancel();
-    }
-  }
+
 }

@@ -372,7 +372,6 @@ export class UserManagementComponent implements OnInit {
         data: {
           title: 'Delete User?',
           description: `Are you sure you want to delete ${this.getUserFullName(user)} (${user.userName})? This action will disable the user account and terminate active sessions.`,
-          warningText: 'This user will be soft-deleted and removed from the active directory.',
           confirmText: 'Delete User',
           confirmTone: 'danger',
           icon: 'delete',

@@ -1,15 +1,59 @@
-<div style="height: 100px;" class="dashboard-header animate-in">
-  <h1>Instructor Command Center</h1>
-  <p>Pending: {{ store.pendingCount() }}</p>
-</div>
-<div class="chart-section animate-in delay-1">
-  @defer (on viewport; prefetch on idle(500)) {
-    <tms-analytics-chart [data]="store.entities()" />
-  } @placeholder {
-    <div class="skeleton-chart">Scroll down to view analytics...</div>
-  } @loading (minimum 500ms) {
-    <div class="spinner">Downloading chart engine...</div>
-  } @error {
-    <p>Failed to load chart. Check your connection.</p>
-  }
+<div class="wrap">
+  <div class="dashboard-header animate-in">
+    <h1>Instructor Command Center</h1>
+    <p>Manage your assigned courses and grade students.</p>
+  </div>
+
+  <div class="section-container animate-in delay-1">
+    <div class="section-header">
+      <h2>My Assigned Courses</h2>
+    </div>
+
+    @if (isLoading()) {
+      <div class="loading-state">
+        <mat-spinner diameter="38"></mat-spinner>
+        <span>Loading courses...</span>
+      </div>
+    } @else if (errorMessage()) {
+      <div class="error-state">
+        <mat-icon color="warn">error_outline</mat-icon>
+        <p>{{ errorMessage() }}</p>
+        <button mat-button (click)="loadMyCourses()">Retry</button>
+      </div>
+    } @else if (myCourses().length === 0) {
+      <div class="empty-state card">
+        <mat-icon>info</mat-icon>
+        <p>You have not been assigned to any courses yet.</p>
+      </div>
+    } @else {
+      <div class="course-grid">
+        @for (course of myCourses(); track course.id) {
+          <mat-card class="course-card">
+            <mat-card-header>
+              <mat-card-title>{{ course.courseName }}</mat-card-title>
+              <mat-card-subtitle>{{ course.courseCode }}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <p class="description">{{ course.description || 'No description available.' }}</p>
+              <div class="meta-info">
+                <span class="meta-item">
+                  <mat-icon>stars</mat-icon> {{ course.credits }} Credits
+                </span>
+                @if (course.courseType) {
+                  <span class="meta-item">
+                    <mat-icon>category</mat-icon> {{ course.courseType }}
+                  </span>
+                }
+              </div>
+            </mat-card-content>
+            <mat-card-actions align="end">
+              <a mat-button color="primary" [routerLink]="['/teaching', course.id]">
+                Go to Teaching Workspace
+              </a>
+            </mat-card-actions>
+          </mat-card>
+        }
+      </div>
+    }
+  </div>
 </div>

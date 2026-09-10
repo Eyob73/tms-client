@@ -96,8 +96,6 @@ export interface RejectEnrollmentDialogData {
       }
     }
     .header-text h2 {
-      font-family: 'Fraunces', serif;
-      font-optical-sizing: auto;
 
       margin: 0;
       font-size: 18px;

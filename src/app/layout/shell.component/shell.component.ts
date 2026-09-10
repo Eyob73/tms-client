@@ -141,12 +141,6 @@ export class ShellComponent {
           adminOnly: true,
         },
         {
-          label: 'Assessments',
-          icon: 'fas fa-clipboard-check',
-          route: '/grade-submission',
-          tooltip: 'Assessments',
-        },
-        {
           label: 'Certifications',
           icon: 'fas fa-certificate',
           route: '#',

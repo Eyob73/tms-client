@@ -18,10 +18,10 @@
   <div class="controls">
     <div class="search-field">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input type="text" placeholder="Search by course code, title, or department" autocomplete="off" [(ngModel)]="searchQuery">
+      <input id="search" type="text" placeholder="Search by course code, title, or department" autocomplete="off" [(ngModel)]="searchQuery">
       @if (searchQuery.trim()) {
         <button class="clear-btn" (click)="searchQuery = ''" aria-label="Clear search">
-          <mat-icon>close</mat-icon>
+          <mat-icon style="font-size:18px; width:18px; height:18px;">close</mat-icon>
         </button>
       }
     </div>

@@ -216,7 +216,6 @@ export class UserDetailComponent implements OnInit {
         data: {
           title: 'Delete User?',
           description: `Are you sure you want to delete ${this.getUserFullName()} (${u.userName})?`,
-          warningText: 'This user will be soft-deleted and removed from active user listings.',
           confirmText: 'Delete User',
           confirmTone: 'danger',
           icon: 'delete',

@@ -55,6 +55,7 @@ export class CourseComponent {
     'prerequisiteCourseId',
     'durationHours',
     'status',
+    'instructorName',
     'isPublished',
     'createdAt',
     'updatedAt',
@@ -165,12 +166,13 @@ export class CourseComponent {
     this.store.loadCourses({
       pageIndex: this.pageIndex() + 1,
       pageSize: this.pageSize(),
-      search: this.searchTerm().trim() || undefined,
+      search: this.searchTerm().trim(),
     });
   }
 
   clearSearch(): void {
     this.searchTerm.set('');
+    this.pageIndex.set(0);
     this.loadCourses();
   }
 
@@ -182,9 +184,10 @@ export class CourseComponent {
     this.loadCourses();
   }
 
-  onSearchInput(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    this.searchTerm.set(target.value);
+  onSearchChange(term: string): void {
+    this.searchTerm.set(term);
+    this.pageIndex.set(0);
+    this.loadCourses();
   }
 
   onPageChange(event: PageEvent): void {
@@ -231,6 +234,8 @@ export class CourseComponent {
         return course.durationHours || 0;
       case 'status':
         return (course.status || '').toLowerCase();
+      case 'instructorName':
+        return (course.instructorName || '').toLowerCase();
       case 'isPublished':
         return course.isPublished ? 1 : 0;
       case 'createdAt':

@@ -38,4 +38,20 @@ export class CourseService {
   delete(id: number) {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
+
+  getMyCourses() {
+    return this.http.get<Course[]>(`${this.baseUrl}/me`);
+  }
+
+  assignInstructor(id: number, instructorId: string) {
+    return this.http.put<void>(`${this.baseUrl}/${id}/instructor`, { instructorId });
+  }
+
+  removeInstructor(id: number) {
+    return this.http.delete<void>(`${this.baseUrl}/${id}/instructor`);
+  }
+
+  getCourseEnrollments(id: number) {
+    return this.http.get<any[]>(`${this.baseUrl}/${id}/enrollments`);
+  }
 }
