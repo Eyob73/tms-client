@@ -34,6 +34,12 @@ export const routes: Routes = [
         canActivate: [instructorGuard],
       },
       {
+        path: 'programs',
+        canActivate: [adminGuard],
+        loadComponent: () =>
+          import('./features/programs/programs.component').then((m) => m.ProgramsComponent),
+      },
+      {
         path: 'courses',
         canActivate: [adminGuard],
         loadComponent: () =>

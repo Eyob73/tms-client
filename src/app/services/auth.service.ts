@@ -15,7 +15,6 @@ export interface LoginRequest {
 }
 export interface AuthResponse {
   accessToken: string;
-  refreshToken: string;
 }
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -146,6 +145,28 @@ export class AuthService {
     }
 
     throw lastError ?? new Error('Login endpoint not found');
+  }
+
+  async refresh(): Promise<string> {
+    const root = environment.apiUrl.replace(/\/$/, '');
+    const url = `${root}/Auth/refresh`;
+    const res = await firstValueFrom(this.http.post<AuthResponse>(url, {}, { withCredentials: true }));
+    const currentUser = this.currentUser();
+    if (currentUser) {
+      this.persistSession(res.accessToken, currentUser);
+    }
+    return res.accessToken;
+  }
+
+  async serverLogout(): Promise<void> {
+    const root = environment.apiUrl.replace(/\/$/, '');
+    const url = `${root}/Auth/logout`;
+    try {
+      await firstValueFrom(this.http.post(url, {}, { withCredentials: true }));
+    } catch {
+      // Ignore errors during logout
+    }
+    this.logout();
   }
 
   logout(): void {

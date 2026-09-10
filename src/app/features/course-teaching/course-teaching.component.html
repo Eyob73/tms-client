@@ -23,9 +23,9 @@
     <header class="hero card animate-in delay-1">
       <div class="hero__content">
         <div class="hero__eyebrow">Teaching Workspace</div>
-        <h1>{{ course()?.courseName || 'Untitled course' }}</h1>
+        <h1>{{ course()?.courseName || course()?.title || 'Untitled course' }}</h1>
         <div class="hero__meta">
-          <span class="meta-code">{{ course()?.courseCode || '—' }}</span>
+          <span class="meta-code">{{ course()?.courseCode || course()?.code || '—' }}</span>
         </div>
       </div>
     </header>

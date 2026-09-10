@@ -104,8 +104,9 @@ export class ShellComponent {
         {
           label: 'Training Programs',
           icon: 'fas fa-layer-group',
-          route: '#',
+          route: '/programs',
           tooltip: 'Training Programs',
+          adminOnly: true,
         },
         {
           label: 'Courses',

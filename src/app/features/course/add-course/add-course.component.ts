@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import {
   AbstractControl,
   FormBuilder,
@@ -82,9 +83,6 @@ export class AddCourseComponent {
   readonly courseTypeOptions = ['Core', 'Elective', 'Practical', 'Training'];
   readonly levelOptions = ['Beginner', 'Intermediate', 'Advanced'];
   readonly statusOptions = ['Active', 'Inactive', 'Archived'];
-  readonly programOptionsByDepartment = signal<
-    Record<string, Array<{ id: string; label: string }>>
-  >({});
 
   readonly form = this.fb.group({
     courseCode: [
@@ -104,9 +102,20 @@ export class AddCourseComponent {
     isPublished: [true],
   });
 
+  readonly selectedDepartmentId = toSignal(this.form.get('departmentId')!.valueChanges, {
+    initialValue: this.form.get('departmentId')!.value
+  });
+
   readonly filteredPrograms = computed(() => {
-    const departmentId = nonEmptyString(this.form.get('departmentId')?.value ?? '');
-    return this.programOptionsByDepartment()[departmentId] ?? [];
+    const departmentId = this.selectedDepartmentId();
+    if (!departmentId) return [];
+    
+    return this.programStore.entities()
+      .filter((program) => program.departmentId === departmentId)
+      .map((program) => ({
+        id: program.id,
+        label: program.name,
+      }));
   });
 
   readonly availablePrerequisites = computed(() => {
@@ -116,8 +125,8 @@ export class AddCourseComponent {
 
   constructor() {
     this.departmentStore.loadDepartments();
+    this.programStore.loadAllPrograms();
     this.loadCourses();
-    this.loadDepartments();
 
     this.route.paramMap.subscribe((params) => {
       const rawId = params.get('id');
@@ -153,12 +162,11 @@ export class AddCourseComponent {
         programControl?.reset(null);
         return;
       }
-
-      this.loadProgramsForDepartment(String(value));
-      const existingProgram = programControl?.value ?? '';
-      const options = this.programOptionsByDepartment()[String(value)] ?? [];
-      if (!options.some((program) => program.id === existingProgram)) {
-        programControl?.setValue(options[0]?.id ?? null);
+      const isValid = this.programStore.entities().some(
+        p => p.departmentId === value && p.id === programControl?.value
+      );
+      if (!isValid) {
+        programControl?.reset(null);
       }
     });
 
@@ -168,55 +176,6 @@ export class AddCourseComponent {
       control?.setValidators(selfPrerequisiteValidator(currentId));
       control?.updateValueAndValidity();
     });
-  }
-
-  private loadDepartments(): void {
-    const departments = this.departmentStore.entities();
-
-    if (departments.length > 0) {
-      const currentDepartmentId = this.form.get('departmentId')?.value;
-      const firstDepartmentId = departments[0].id;
-      if (!currentDepartmentId) {
-        this.form.get('departmentId')?.setValue(firstDepartmentId);
-      }
-      this.programStore.setDepartment(currentDepartmentId ?? firstDepartmentId);
-      this.loadProgramsForDepartment(currentDepartmentId ?? firstDepartmentId);
-    }
-  }
-
-  private loadProgramsForDepartment(departmentId: string): void {
-    const normalizedDepartmentId = departmentId?.trim();
-    if (!normalizedDepartmentId) {
-      this.form.get('programId')?.reset(null);
-      return;
-    }
-
-    const departments = this.departmentStore.entities();
-    const selectedDepartment = departments.find(
-      (department) => department.id === normalizedDepartmentId,
-    );
-    if (!selectedDepartment) {
-      this.form.get('programId')?.reset(null);
-      return;
-    }
-
-    const programs = this.programStore
-      .entities()
-      .filter((program) => program.departmentId === normalizedDepartmentId);
-    const options = programs.map((program) => ({
-      id: program.id,
-      label: program.name,
-    }));
-
-    this.programOptionsByDepartment.update((map) => ({
-      ...map,
-      [normalizedDepartmentId]: options,
-    }));
-
-    const currentProgramId = this.form.get('programId')?.value ?? '';
-    if (!options.some((program) => program.id === currentProgramId)) {
-      this.form.get('programId')?.setValue(options[0]?.id ?? null);
-    }
   }
 
   private loadCourses(): void {
@@ -266,9 +225,6 @@ export class AddCourseComponent {
     };
 
     this.form.patchValue(formValue);
-    if (course.departmentId) {
-      this.loadProgramsForDepartment(course.departmentId);
-    }
     this.form.get('prerequisiteCourseId')?.setValidators(selfPrerequisiteValidator(course.id));
     this.form.get('prerequisiteCourseId')?.updateValueAndValidity();
   }
