@@ -48,10 +48,6 @@ export class ShellComponent {
     return this.userRole === 'Admin' || this.authService.hasRole('Admin');
   }
 
-  get isStudent(): boolean {
-    return this.userRole === 'Student' || this.authService.hasRole('Student');
-  }
-
   get userInitials(): string {
     const name = this.userDisplayName.trim();
     if (!name) {
