@@ -41,12 +41,23 @@ export class ShellComponent {
   }
 
   get userRole(): string {
-    return this.currentUser()?.role || '';
+    const role = this.currentUser()?.role;
+    if (Array.isArray(role)) return role.join(', ');
+    return role || '';
   }
 
   get isAdmin(): boolean {
-    return this.userRole === 'Admin' || this.authService.hasRole('Admin');
+    return this.authService.hasRole('Admin');
   }
+
+  get isStudent(): boolean {
+    const role = this.currentUser()?.role;
+    if (!role) return false;
+    const roles = Array.isArray(role) ? role : role.split(',').map(r => r.trim());
+    return roles.includes('Student');
+  }
+
+
 
   get userInitials(): string {
     const name = this.userDisplayName.trim();

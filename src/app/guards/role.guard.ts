@@ -25,8 +25,19 @@ export const adminGuard: CanActivateFn = () => {
 export const studentGuard: CanActivateFn = () => {
   const auth = inject(AuthService);
   const router = inject(Router);
-  if (auth.currentUser()?.role === 'Student') {
-    return true;
+  const user = auth.currentUser();
+  
+  if (user && user.role) {
+    let roles: string[] = [];
+    if (Array.isArray(user.role)) {
+      roles = user.role;
+    } else {
+      roles = user.role.split(',').map((r: string) => r.trim());
+    }
+    
+    if (roles.includes('Student')) {
+      return true;
+    }
   }
   return router.createUrlTree(['/dashboard']);
 };

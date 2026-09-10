@@ -7,7 +7,7 @@ export interface TmsUser {
   id?: string;
   email: string;
   displayName: string;
-  role: string;
+  role: string | string[];
 }
 export interface LoginRequest {
   email: string;
@@ -45,7 +45,16 @@ export class AuthService {
 
   hasRole(role: string): boolean {
     const user = this.currentUser();
-    return user?.role === role || user?.role === 'Admin';
+    if (!user || !user.role) return false;
+    
+    let roles: string[] = [];
+    if (Array.isArray(user.role)) {
+      roles = user.role;
+    } else {
+      roles = user.role.split(',').map(r => r.trim());
+    }
+
+    return roles.includes(role) || roles.includes('Admin');
   }
 
   private readStoredToken(): string | null {
@@ -121,7 +130,7 @@ export class AuthService {
           id: idClaim,
           email: emailClaim || 'user@unknown.local',
           displayName,
-          role: Array.isArray(roleClaim) ? roleClaim[0] : roleClaim,
+          role: roleClaim,
         };
 
         this.persistSession(res.accessToken, user);
