@@ -103,22 +103,7 @@ export const routes: Routes = [
             './features/enrollments/my-enrollments/my-enrollments.component'
           ).then((m) => m.MyEnrollmentsComponent),
       },
-      {
-        path: 'instructor/dashboard',
-        canActivate: [instructorGuard],
-        loadComponent: () =>
-          import(
-            './features/instructor-dashboard/instructor-dashboard.component'
-          ).then((m) => m.InstructorDashboardComponent),
-      },
-      {
-        path: 'instructor/courses/:id/teaching',
-        canActivate: [instructorGuard],
-        loadComponent: () =>
-          import(
-            './features/instructor-dashboard/course-teaching/course-teaching.component'
-          ).then((m) => m.CourseTeachingComponent),
-      },
+
       {
         path: 'enrollments',
         canActivate: [adminGuard],

@@ -15,7 +15,6 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [
     CommonModule, 
     RouterLink, 
-    AnalyticsChart, 
     MatCardModule, 
     MatIconModule, 
     MatProgressSpinnerModule, 
