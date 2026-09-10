@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
 import { UserService } from '../../services/user.service';
 import { CourseService } from '../../services/course';
 import { User } from '../../models/user.model';
@@ -22,74 +23,179 @@ import { User } from '../../models/user.model';
     MatFormFieldModule,
     MatSelectModule,
     MatProgressSpinnerModule,
+    MatIconModule,
   ],
   template: `
-    <h2 mat-dialog-title>Assign Instructor</h2>
-    <mat-dialog-content class="mat-typography">
-      <p>Select an instructor to assign to <strong>{{ data.courseName }}</strong>.</p>
+    <div class="dialog-container">
+      <div class="dialog-header">
+        <div class="dialog-header__icon">
+          <mat-icon>person_add</mat-icon>
+        </div>
+        <div class="dialog-header__text">
+          <h2 mat-dialog-title>Assign Instructor</h2>
+          <p class="dialog-subtitle">
+            Select an instructor to assign to <strong>{{ data.courseName }}</strong>.
+          </p>
+        </div>
+      </div>
 
-      @if (isLoading()) {
-        <div class="loading-state">
-          <mat-spinner diameter="32"></mat-spinner>
-          <span>Loading instructors...</span>
-        </div>
-      } @else if (errorMessage()) {
-        <div class="error-message">
-          {{ errorMessage() }}
-        </div>
-      } @else {
-        <form [formGroup]="form">
-          <mat-form-field appearance="outline" class="w-full">
-            <mat-label>Instructor</mat-label>
-            <mat-select formControlName="instructorId">
-              <mat-option [value]="null">-- Unassign --</mat-option>
-              @for (instructor of instructors(); track instructor.id) {
-                <mat-option [value]="instructor.id">
-                  {{ instructor.firstName }} {{ instructor.lastName }} ({{ instructor.email }})
-                </mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-        </form>
-      }
-    </mat-dialog-content>
-    <mat-dialog-actions align="end">
-      <button mat-button mat-dialog-close [disabled]="isSaving()">Cancel</button>
-      <button
-        mat-flat-button
-        color="primary"
-        (click)="save()"
-        [disabled]="isLoading() || isSaving() || form.invalid"
-      >
-        @if (isSaving()) {
-          <mat-spinner diameter="20" class="spinner-btn"></mat-spinner>
+      <mat-dialog-content class="dialog-content">
+        @if (isLoading()) {
+          <div class="dialog-loading">
+            <mat-spinner diameter="32"></mat-spinner>
+            <span>Loading instructors...</span>
+          </div>
+        } @else if (errorMessage()) {
+          <div class="status-banner status-banner--error">
+            <mat-icon>error_outline</mat-icon>
+            <span>{{ errorMessage() }}</span>
+          </div>
         } @else {
-          Save
+          <form [formGroup]="form">
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Instructor</mat-label>
+              <mat-select formControlName="instructorId">
+                <mat-option [value]="null">-- Unassign --</mat-option>
+                @for (instructor of instructors(); track instructor.id) {
+                  <mat-option [value]="instructor.id">
+                    {{ instructor.firstName }} {{ instructor.lastName }} ({{ instructor.email }})
+                  </mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </form>
         }
-      </button>
-    </mat-dialog-actions>
+      </mat-dialog-content>
+
+      <mat-dialog-actions class="dialog-actions">
+        <button
+          class="btn btn--secondary"
+          type="button"
+          mat-dialog-close
+          [disabled]="isSaving()"
+        >
+          Cancel
+        </button>
+        <button
+          class="btn btn--primary"
+          type="button"
+          (click)="save()"
+          [disabled]="isLoading() || isSaving() || form.invalid"
+        >
+          @if (isSaving()) {
+            <mat-spinner diameter="18"></mat-spinner>
+            <span>Saving...</span>
+          } @else {
+            <mat-icon>check</mat-icon>
+            <span>Save</span>
+          }
+        </button>
+      </mat-dialog-actions>
+    </div>
   `,
   styles: [
     `
-      .loading-state {
+      .dialog-container {
+        display: flex;
+        flex-direction: column;
+        padding: var(--space-6, 24px);
+        max-width: 520px;
+        background: var(--color-surface, var(--paper-raised));
+        border-radius: var(--radius-xl, 24px);
+      }
+
+      .dialog-header {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--space-4, 16px);
+        margin-bottom: var(--space-5, 20px);
+      }
+
+      .dialog-header__icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        border-radius: var(--radius-lg, 16px);
+        background: var(--color-primary-subtle, #f0f5ff);
+        color: var(--color-primary, #2d6bf0);
+        flex-shrink: 0;
+      }
+
+      .dialog-header__icon mat-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+      }
+
+      .dialog-header__text h2 {
+        margin: 0 0 var(--space-1, 4px) 0;
+        font-size: var(--font-size-lg, 19px);
+        font-weight: var(--font-weight-semibold, 600);
+        color: var(--color-text-primary, var(--ink));
+        line-height: var(--line-height-snug, 1.35);
+      }
+
+      .dialog-subtitle {
+        margin: 0;
+        font-size: var(--font-size-sm, 12.5px);
+        color: var(--color-text-secondary, var(--ink-soft));
+        line-height: var(--line-height-normal, 1.5);
+      }
+
+      .dialog-content {
+        padding: 0 !important;
+        margin: 0 !important;
+        max-height: 65vh;
+        overflow-y: auto;
+      }
+
+      .dialog-loading {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        padding: 2rem 0;
-        gap: 1rem;
-        color: var(--mat-sys-on-surface-variant);
+        gap: var(--space-3, 12px);
+        padding: var(--space-8, 32px) 0;
+        color: var(--color-text-tertiary, var(--ink-faint));
+        font-size: var(--font-size-sm, 12.5px);
       }
+
+      .status-banner {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2, 8px);
+        padding: var(--space-3, 12px) var(--space-4, 16px);
+        border-radius: var(--radius-md, 12px);
+        font-size: var(--font-size-sm, 12.5px);
+        margin-bottom: var(--space-4, 16px);
+      }
+
+      .status-banner--error {
+        background: var(--color-danger-subtle, #fdedeb);
+        color: var(--color-danger, #e74c3c);
+        border: 1px solid rgba(231, 76, 60, 0.2);
+      }
+
+      .status-banner mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+      }
+
       .w-full {
         width: 100%;
-        margin-top: 1rem;
       }
-      .error-message {
-        color: var(--mat-sys-error);
-        margin-bottom: 1rem;
-      }
-      .spinner-btn {
-        margin: 0 auto;
+
+      .dialog-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: var(--space-3, 12px);
+        margin-top: var(--space-6, 24px);
+        padding: 0 !important;
       }
     `,
   ],
