@@ -1,25 +1,205 @@
-<div class="dashboard animate-in">
-  <h1>Welcome, {{ studentName() }}</h1>
-  <p>Credits Earned: {{ earnedCredits() }}</p>
-  <p>Graduation Status: {{ graduationStatus() }}</p>
-  <button (click)="registerForClass()">Register for a Class (+3 credits)</button>
-</div>
-
-<div class="catalog-section animate-in delay-1">
-  <h2>Course Catalog</h2>
-  @if (coursesResource.isLoading()) {
-    <div class="spinner">Fetching courses from the server...</div>
-  } @else if (coursesResource.error()) {
-    <div class="error">Could not load courses. Make sure your .NET API is running.</div>
-  } @else {
-    <div class="grid">
-      @for (course of coursesResource.value()!; track course.id) {
-        <tms-course-card [course]="course" (enrollClicked)="handleEnroll($event)" />
-      } @empty {
-        <p>No courses are available this term.</p>
-      }
+<!-- Main Content -->
+<div class="main-content">
+  <div class="dashboard-content">
+    <!-- Welcome Banner -->
+    <div class="welcome-banner animate-in">
+      <div class="welcome-text">
+        <h2>Welcome back, {{ studentName() }}!</h2>
+        <p>
+          Track your enrollments, monitor your progress, and discover new courses available for you.
+        </p>
+        <div class="welcome-actions">
+          <a class="welcome-btn welcome-btn-primary" routerLink="/enrollments/available">
+            <mat-icon style="font-size: 16px; width: 16px; height: 16px; vertical-align: middle; margin-right: 4px;">search</mat-icon>
+            Browse Courses
+          </a>
+          <a class="welcome-btn welcome-btn-secondary" routerLink="/enrollments/my">
+            <mat-icon style="font-size: 16px; width: 16px; height: 16px; vertical-align: middle; margin-right: 4px;">list_alt</mat-icon>
+            My Enrollments
+          </a>
+        </div>
+      </div>
+      <div class="welcome-illustration">
+        <mat-icon>school</mat-icon>
+      </div>
     </div>
-  }
 
-  <a routerLink="/enroll" class="enroll-link"> Go to Enrollment Form </a>
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card animate-in delay-1">
+        <div class="stat-card-header">
+          <div class="stat-icon blue">
+            <mat-icon>menu_book</mat-icon>
+          </div>
+        </div>
+        <div class="stat-value">{{ stats().enrolledCourses }}</div>
+        <div class="stat-label">Enrolled Courses</div>
+        <div class="stat-progress">
+          <div class="stat-progress-bar" style="width: 100%; background: var(--info)"></div>
+        </div>
+      </div>
+
+      <div class="stat-card animate-in delay-2">
+        <div class="stat-card-header">
+          <div class="stat-icon orange">
+            <mat-icon>hourglass_empty</mat-icon>
+          </div>
+        </div>
+        <div class="stat-value">{{ stats().pendingEnrollments }}</div>
+        <div class="stat-label">Pending Enrollments</div>
+        <div class="stat-progress">
+          <div class="stat-progress-bar" style="width: 100%; background: var(--warning)"></div>
+        </div>
+      </div>
+
+      <div class="stat-card animate-in delay-3">
+        <div class="stat-card-header">
+          <div class="stat-icon green">
+            <mat-icon>check_circle</mat-icon>
+          </div>
+        </div>
+        <div class="stat-value">{{ stats().completedCourses }}</div>
+        <div class="stat-label">Completed Courses</div>
+        <div class="stat-progress">
+          <div class="stat-progress-bar" style="width: 100%; background: var(--success)"></div>
+        </div>
+      </div>
+
+      <div class="stat-card animate-in delay-4">
+        <div class="stat-card-header">
+          <div class="stat-icon purple">
+            <mat-icon>explore</mat-icon>
+          </div>
+        </div>
+        <div class="stat-value">{{ stats().availableCourses }}</div>
+        <div class="stat-label">Available Courses</div>
+        <div class="stat-progress">
+          <div class="stat-progress-bar" style="width: 100%; background: #8b5cf6"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar animate-in delay-2">
+      <div class="filter-chip" [ngClass]="{ active: activeFilter === 'all' }" (click)="setFilter('all')">
+        All
+      </div>
+      <div class="filter-chip" [ngClass]="{ active: activeFilter === 'approved' }" (click)="setFilter('approved')">
+        Approved
+      </div>
+      <div class="filter-chip" [ngClass]="{ active: activeFilter === 'pending' }" (click)="setFilter('pending')">
+        Pending
+      </div>
+      <div class="filter-chip" [ngClass]="{ active: activeFilter === 'completed' }" (click)="setFilter('completed')">
+        Completed
+      </div>
+      <div class="filter-chip" [ngClass]="{ active: activeFilter === 'rejected' }" (click)="setFilter('rejected')">
+        Rejected
+      </div>
+    </div>
+
+    <!-- Enrollments Table & Available Courses -->
+    <div class="content-grid animate-in delay-3">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">My Enrollments</div>
+            <div class="card-subtitle">Your current and past course enrollments</div>
+          </div>
+          <a class="card-action" routerLink="/enrollments/my">View All →</a>
+        </div>
+
+        @if (enrollmentsResource.isLoading()) {
+          <div class="card-body" style="display: flex; align-items: center; justify-content: center; padding: 60px;">
+            <mat-spinner diameter="38"></mat-spinner>
+          </div>
+        } @else if (enrollmentsResource.error()) {
+          <div class="card-body" style="text-align: center; padding: 40px; color: var(--text-secondary);">
+            <mat-icon style="font-size: 48px; width: 48px; height: 48px; opacity: 0.4; color: var(--danger);">error_outline</mat-icon>
+            <p>Could not load your enrollments.</p>
+          </div>
+        } @else {
+          <div style="overflow-x: auto">
+            <table class="training-table">
+              <thead>
+                <tr>
+                  <th>Course</th>
+                  <th>Status</th>
+                  <th>Enrolled Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let enrollment of filteredEnrollments()">
+                  <td>
+                    <div class="course-info">
+                      <div class="course-icon" style="background: rgba(59,130,246,0.1)">
+                        <mat-icon style="color: #3b82f6">menu_book</mat-icon>
+                      </div>
+                      <div>
+                        <div class="course-name">{{ enrollment.courseName }}</div>
+                        <div class="course-category">{{ enrollment.courseCode }}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="status-badge" [ngClass]="'status-' + (enrollment.status?.toLowerCase() || 'pending')">{{
+                      enrollment.status
+                    }}</span>
+                  </td>
+                  <td>
+                    <span style="font-size: 13px">{{ (enrollment.enrollmentDate || enrollment.enrolledAt) | date }}</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div *ngIf="filteredEnrollments().length === 0"
+              style="padding: 40px; text-align: center; color: var(--text-secondary);">
+              No enrollments found.
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Available Courses Side Panel -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Available Courses</div>
+            <div class="card-subtitle">Courses open for enrollment</div>
+          </div>
+          <a class="card-action" routerLink="/enrollments/available">Browse →</a>
+        </div>
+        <div class="card-body recent-activity-scroll">
+          @if (coursesResource.isLoading()) {
+            <div style="display: flex; align-items: center; justify-content: center; padding: 40px;">
+              <mat-spinner diameter="32"></mat-spinner>
+            </div>
+          } @else if (coursesResource.error()) {
+            <div style="text-align: center; padding: 20px; color: var(--text-secondary);">
+              Could not load courses.
+            </div>
+          } @else if (coursesResource.value()!.length === 0) {
+            <div style="text-align: center; padding: 20px; color: var(--text-secondary);">
+              No courses available right now.
+            </div>
+          } @else {
+            @for (course of coursesResource.value()!; track course.id) {
+              <div class="activity-item">
+                <div class="activity-icon" style="background: rgba(139, 92, 246, 0.1)">
+                  <mat-icon style="color: #8b5cf6">auto_stories</mat-icon>
+                </div>
+                <div class="activity-content">
+                  <div class="activity-text"><strong>{{ course.courseName }}</strong></div>
+                  <div class="activity-time">{{ course.courseCode }} · {{ course.credits }} Credits · {{ course.courseType }}</div>
+                </div>
+                <span class="status-badge" [ngClass]="'status-' + course.availabilityStatus.toLowerCase().replace(' ', '')">
+                  {{ course.availabilityStatus }}
+                </span>
+              </div>
+            }
+          }
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

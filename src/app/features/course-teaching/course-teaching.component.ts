@@ -2,14 +2,12 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { EnrollmentService } from '../../services/enrollment';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CourseService } from '../../services/course';
 import { CourseDetail } from '../../models/course.model';
 import { MatTableModule } from '@angular/material/table';
-import { AssessmentsComponent } from '../assessments/assessments.component';
 
 @Component({
   selector: 'app-course-teaching',
@@ -17,12 +15,10 @@ import { AssessmentsComponent } from '../assessments/assessments.component';
   imports: [
     CommonModule,
     RouterLink,
-    MatTabsModule,
     MatIconModule,
     MatButtonModule,
     MatProgressSpinnerModule,
-    MatTableModule,
-    AssessmentsComponent
+    MatTableModule
   ],
   templateUrl: './course-teaching.component.html',
   styleUrls: ['./course-teaching.component.scss']

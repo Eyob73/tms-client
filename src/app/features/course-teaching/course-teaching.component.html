@@ -30,52 +30,46 @@
       </div>
     </header>
 
-    <div class="card tabs-card animate-in delay-2" style="margin-top: 24px; padding: 0;">
-      <mat-tab-group animationDuration="0ms">
-        <mat-tab label="Enrolled Students">
-          <div class="tab-content" style="padding: 24px;">
-            @if (students().length === 0) {
-              <div class="empty-state">
-                <mat-icon>people_outline</mat-icon>
-                <p>No students enrolled in this course yet.</p>
-              </div>
-            } @else {
-              <table mat-table [dataSource]="students()" class="users-table">
-                <ng-container matColumnDef="studentName">
-                  <th mat-header-cell *matHeaderCellDef>Student Name</th>
-                  <td mat-cell *matCellDef="let s">
-                    <strong>{{ s.studentName || s.studentEmail || 'Unknown' }}</strong>
-                  </td>
-                </ng-container>
+    <div class="card animate-in delay-2" style="margin-top: 24px;">
+      <div class="card-header" style="border-bottom: 1px solid var(--border-light); padding-bottom: 16px; margin-bottom: 16px;">
+        <h2 style="margin: 0; font-size: 1.1rem; font-weight: 600; color: var(--text-primary);">Enrolled Students</h2>
+        <p style="margin: 4px 0 0 0; font-size: 0.9rem; color: var(--text-secondary);">
+          View and manage the students currently approved and enrolled in this course.
+        </p>
+      </div>
 
-                <ng-container matColumnDef="enrollmentDate">
-                  <th mat-header-cell *matHeaderCellDef>Enrollment Date</th>
-                  <td mat-cell *matCellDef="let s">{{ (s.enrollmentDate | date) || '—' }}</td>
-                </ng-container>
-
-                <ng-container matColumnDef="status">
-                  <th mat-header-cell *matHeaderCellDef>Status</th>
-                  <td mat-cell *matCellDef="let s">
-                    <span class="badge badge--success">{{ s.status || 'Approved' }}</span>
-                  </td>
-                </ng-container>
-
-                <tr mat-header-row *matHeaderRowDef="studentColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: studentColumns;"></tr>
-              </table>
-            }
+      <div class="card-body">
+        @if (students().length === 0) {
+          <div class="empty-state">
+            <mat-icon>people_outline</mat-icon>
+            <p>No students enrolled in this course yet.</p>
           </div>
-        </mat-tab>
-        
-        <mat-tab label="Assessments">
-          <div class="tab-content" style="padding: 24px;">
-            <!-- Render the assessments component inline! -->
-            @if (course()) {
-              <app-assessments [courseId]="course()!.id"></app-assessments>
-            }
-          </div>
-        </mat-tab>
-      </mat-tab-group>
+        } @else {
+          <table mat-table [dataSource]="students()" class="users-table">
+            <ng-container matColumnDef="studentName">
+              <th mat-header-cell *matHeaderCellDef>Student Name</th>
+              <td mat-cell *matCellDef="let s">
+                <strong>{{ s.studentName || s.studentEmail || 'Unknown' }}</strong>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="enrollmentDate">
+              <th mat-header-cell *matHeaderCellDef>Enrollment Date</th>
+              <td mat-cell *matCellDef="let s">{{ (s.enrollmentDate | date) || '—' }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>Status</th>
+              <td mat-cell *matCellDef="let s">
+                <span class="badge badge--success">{{ s.status || 'Approved' }}</span>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="studentColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: studentColumns;"></tr>
+          </table>
+        }
+      </div>
     </div>
   }
 </div>

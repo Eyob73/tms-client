@@ -70,16 +70,83 @@
           <input type="text" placeholder="Search courses, trainees, schedules..." />
           <kbd class="search-shortcut">⌘K</kbd>
         </div>
-        <button class="header-btn" type="button" title="Notifications">
-          <mat-icon>notifications_none</mat-icon>
-          <span class="notification-dot"></span>
+        
+        <!-- Notifications Menu Trigger -->
+        <button class="header-btn" type="button" title="Notifications" [matMenuTriggerFor]="notificationsMenu">
+          <mat-icon [matBadge]="unreadNotificationsCount > 0 ? unreadNotificationsCount : null" matBadgeColor="warn" matBadgeSize="small">notifications_none</mat-icon>
         </button>
+        
+        <!-- Notifications Menu -->
+        <mat-menu #notificationsMenu="matMenu" class="notifications-menu" xPosition="before">
+          <div class="notifications-header" (click)="$event.stopPropagation()">
+            <h3>Notifications</h3>
+            @if (unreadNotificationsCount > 0) {
+              <button mat-button color="primary" class="mark-read-btn" (click)="markAllAsRead()">Mark all as read</button>
+            }
+          </div>
+          <mat-divider></mat-divider>
+          <div class="notifications-list">
+            @for (notification of notifications; track notification.id) {
+              <button mat-menu-item class="notification-item" [class.unread]="!notification.read">
+                <div class="notification-content">
+                  <div class="notification-title">
+                    {{ notification.title }}
+                    @if (!notification.read) {
+                      <span class="unread-dot"></span>
+                    }
+                  </div>
+                  <div class="notification-message">{{ notification.message }}</div>
+                  <div class="notification-time">{{ notification.time }}</div>
+                </div>
+              </button>
+            }
+            @if (notifications.length === 0) {
+              <div class="notifications-empty">
+                <mat-icon>notifications_paused</mat-icon>
+                <p>No new notifications.</p>
+              </div>
+            }
+          </div>
+          <mat-divider></mat-divider>
+          <button mat-menu-item class="view-all-btn">
+            <span>View all notifications</span>
+          </button>
+        </mat-menu>
+
+        <!-- Messages Trigger -->
         <button class="header-btn" type="button" title="Messages">
           <mat-icon>mail_outline</mat-icon>
         </button>
-        <div class="header-profile">
+
+        <!-- Profile Menu Trigger -->
+        <div class="header-profile" [matMenuTriggerFor]="profileMenu" role="button" tabindex="0">
           <div class="header-avatar" [attr.title]="userDisplayName">{{ userInitials }}</div>
         </div>
+
+        <!-- Profile Menu -->
+        <mat-menu #profileMenu="matMenu" class="profile-menu" xPosition="before">
+          <div class="profile-header">
+            <div class="profile-avatar">{{ userInitials }}</div>
+            <div class="profile-info">
+              <h4>{{ userDisplayName }}</h4>
+              <span>{{ userRole }}</span>
+            </div>
+          </div>
+          <mat-divider></mat-divider>
+          <button mat-menu-item routerLink="/profile">
+            <mat-icon>person</mat-icon>
+            <span>My Profile</span>
+          </button>
+          <button mat-menu-item>
+            <mat-icon>settings</mat-icon>
+            <span>Settings</span>
+          </button>
+          <mat-divider></mat-divider>
+          <button mat-menu-item (click)="logout()">
+            <mat-icon color="warn">logout</mat-icon>
+            <span style="color: var(--warn)">Sign out</span>
+          </button>
+        </mat-menu>
       </div>
     </header>
 

@@ -87,9 +87,9 @@ import { AssessmentDto, AssessmentResultDto, AssessmentStatisticsDto } from '../
                 <h2>Grades</h2>
                 <p>Enter marks for enrolled students.</p>
               </div>
-              <button mat-flat-button color="primary" (click)="saveMarks()" [disabled]="isSaving()">
+              <button class="btn btn--primary" (click)="saveMarks()" [disabled]="isSaving()">
                 @if (isSaving()) {
-                  <mat-spinner diameter="18" style="margin-right: 8px;"></mat-spinner>
+                  <mat-spinner diameter="18" style="margin-right: 8px;" color="accent"></mat-spinner>
                   <span>Saving...</span>
                 } @else {
                   <ng-container>

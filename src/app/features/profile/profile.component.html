@@ -1,0 +1,78 @@
+<div class="profile-container">
+  <div class="profile-header">
+    <div class="profile-avatar">
+      <div class="avatar-circle">
+        <span>{{ userInitials() }}</span>
+      </div>
+      <button class="avatar-edit-btn" mat-icon-button>
+        <mat-icon>photo_camera</mat-icon>
+      </button>
+    </div>
+    
+    <div class="profile-title">
+      <h1>{{ user()?.displayName || 'Unknown User' }}</h1>
+      <span class="role-badge">{{ userRoleDisplay() }}</span>
+    </div>
+  </div>
+
+  <div class="profile-content">
+    <div class="profile-cards">
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>person</mat-icon>
+          <mat-card-title>Personal Information</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-grid">
+            <div class="info-item">
+              <label>Full Name</label>
+              <div class="value">{{ user()?.displayName }}</div>
+            </div>
+            <div class="info-item">
+              <label>Email Address</label>
+              <div class="value">{{ user()?.email }}</div>
+            </div>
+            <div class="info-item">
+              <label>Role</label>
+              <div class="value">{{ userRoleDisplay() }}</div>
+            </div>
+            <div class="info-item">
+              <label>Account ID</label>
+              <div class="value">{{ user()?.id }}</div>
+            </div>
+          </div>
+        </mat-card-content>
+        <mat-divider></mat-divider>
+        <mat-card-actions align="end">
+          <button class="btn btn--outline">Edit Profile</button>
+        </mat-card-actions>
+      </mat-card>
+
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>security</mat-icon>
+          <mat-card-title>Security Settings</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="security-list">
+            <div class="security-item">
+              <div class="sec-info">
+                <h4>Password</h4>
+                <p>Last changed 3 months ago</p>
+              </div>
+              <button class="btn btn--outline">Change</button>
+            </div>
+            <mat-divider></mat-divider>
+            <div class="security-item">
+              <div class="sec-info">
+                <h4>Two-Factor Authentication</h4>
+                <p>Not enabled. Enhance your account security.</p>
+              </div>
+              <button class="btn btn--primary">Enable</button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

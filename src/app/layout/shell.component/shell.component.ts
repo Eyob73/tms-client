@@ -6,6 +6,11 @@ import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/rou
 import { AuthService } from '../../services/auth.service';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 
+import { MatMenuModule } from '@angular/material/menu';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatButtonModule } from '@angular/material/button';
+
 interface NavItem {
   label: string;
   icon: string;
@@ -25,7 +30,17 @@ interface NavGroup {
 @Component({
   selector: 'app-shell',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive, RouterOutlet, MatIconModule],
+  imports: [
+    CommonModule, 
+    RouterLink, 
+    RouterLinkActive, 
+    RouterOutlet, 
+    MatIconModule,
+    MatMenuModule,
+    MatBadgeModule,
+    MatDividerModule,
+    MatButtonModule
+  ],
   templateUrl: './shell.component.html',
   styleUrl: './shell.component.scss',
 })
@@ -100,7 +115,9 @@ export class ShellComponent {
     {
       title: 'Main',
       items: [
-        { label: 'Dashboard', icon: 'fas fa-th-large', route: '/dashboard', tooltip: 'Dashboard', exact: true },
+        { label: 'Dashboard', icon: 'fas fa-th-large', route: '/dashboard', tooltip: 'Dashboard', exact: true, adminOnly: true },
+        { label: 'Dashboard', icon: 'fas fa-th-large', route: '/command-center', tooltip: 'Dashboard', exact: true, instructorOnly: true },
+        { label: 'Dashboard', icon: 'fas fa-th-large', route: '/student-dashboard', tooltip: 'Dashboard', exact: true, studentOnly: true },
         {
           label: 'Training Programs',
           icon: 'fas fa-layer-group',
@@ -157,6 +174,13 @@ export class ShellComponent {
           instructorOnly: true,
         },
         {
+          label: 'Assessments',
+          icon: 'fas fa-tasks',
+          route: '/assessments',
+          tooltip: 'Assessments',
+          instructorOnly: true,
+        },
+        {
           label: 'Enrollments',
           icon: 'fas fa-user-check',
           route: '/enrollments',
@@ -200,6 +224,21 @@ export class ShellComponent {
 
   toggleSidebar(): void {
     this.isCollapsed = !this.isCollapsed;
+  }
+
+  // Mock Notifications Data
+  notifications = [
+    { id: 1, title: 'New Enrollment', message: 'John Doe enrolled in Advanced Web Dev', time: '5m ago', read: false },
+    { id: 2, title: 'System Update', message: 'TMS has been updated to v2.1.0', time: '1h ago', read: false },
+    { id: 3, title: 'Assignment Graded', message: 'Your assignment has been graded.', time: '2h ago', read: true }
+  ];
+
+  get unreadNotificationsCount(): number {
+    return this.notifications.filter(n => !n.read).length;
+  }
+
+  markAllAsRead(): void {
+    this.notifications.forEach(n => n.read = true);
   }
 
   logout(): void {

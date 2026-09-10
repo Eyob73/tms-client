@@ -58,7 +58,21 @@ export class LoginComponent {
         password: this.password,
       });
 
-      this.router.navigate(['/dashboard']);
+      const user = this.authService.currentUser();
+      let roles: string[] = [];
+      if (user && user.role) {
+        roles = Array.isArray(user.role) ? user.role : user.role.split(',').map(r => r.trim());
+      }
+
+      if (roles.includes('Admin')) {
+        this.router.navigate(['/dashboard']);
+      } else if (roles.includes('Instructor')) {
+        this.router.navigate(['/command-center']);
+      } else if (roles.includes('Student')) {
+        this.router.navigate(['/student-dashboard']);
+      } else {
+        this.router.navigate(['/dashboard']);
+      }
     } catch (error) {
       this.errorMessage = 'Invalid email or password. Please try again.';
     } finally {

@@ -13,6 +13,7 @@ export const routes: Routes = [
     children: [
       {
         path: 'dashboard',
+        canActivate: [adminGuard],
         loadComponent: () =>
           import('./features/tms-dashboard/tms-dashboard.component').then(
             (m) => m.TmsDashboardComponent,
@@ -20,16 +21,25 @@ export const routes: Routes = [
       },
       {
         path: 'tms-dashboard',
+        canActivate: [adminGuard],
         loadComponent: () =>
           import('./features/tms-dashboard/tms-dashboard.component').then(
             (m) => m.TmsDashboardComponent,
           ),
       },
       {
+        path: 'student-dashboard',
+        loadComponent: () =>
+          import('./features/student-dashboard/student-dashboard.component').then(
+            (m) => m.StudentDashboardComponent,
+          ),
+        canActivate: [studentGuard],
+      },
+      {
         path: 'command-center',
         loadComponent: () =>
-          import('./features/instructor-dashboard/instructor-dashboard').then(
-            (m) => m.InstructorDashboard,
+          import('./features/instructor-dashboard/instructor-dashboard.component').then(
+            (m) => m.InstructorDashboardComponent,
           ),
         canActivate: [instructorGuard],
       },
@@ -135,8 +145,8 @@ export const routes: Routes = [
         path: 'instructor',
         canActivate: [instructorGuard],
         loadComponent: () =>
-          import('./features/instructor-dashboard/instructor-dashboard').then(
-            (m) => m.InstructorDashboard,
+          import('./features/instructor-course/instructor-course').then(
+            (m) => m.InstructorCourseComponent,
           ),
       },
       {
@@ -162,6 +172,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/grade-submission/grade-submission.component').then(
             (m) => m.GradeSubmissionComponent,
+          ),
+      },
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import('./features/profile/profile.component').then(
+            (m) => m.ProfileComponent,
           ),
       },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },

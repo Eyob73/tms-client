@@ -10,7 +10,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
-  selector: 'app-instructor-dashboard',
+  selector: 'app-instructor-course',
   standalone: true,
   imports: [
     CommonModule, 
@@ -20,10 +20,10 @@ import { MatButtonModule } from '@angular/material/button';
     MatProgressSpinnerModule, 
     MatButtonModule
   ],
-  templateUrl: './instructor-dashboard.html',
-  styleUrls: ['./instructor-dashboard.scss'],
+  templateUrl: './instructor-course.html',
+  styleUrls: ['./instructor-course.scss'],
 })
-export class InstructorDashboard {
+export class InstructorCourseComponent {
   private readonly courseService = inject(CourseService);
   
   readonly myCourses = signal<Course[]>([]);
