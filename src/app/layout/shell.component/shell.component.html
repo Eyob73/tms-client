@@ -15,7 +15,7 @@
         <div class="nav-section-title">{{ group.title }}</div>
 
         <ng-container *ngFor="let item of group.items">
-          @if ((!item.adminOnly || isAdmin) && (!item.studentOnly || isStudent)) {
+          @if ((!item.adminOnly || isAdmin) && (!item.studentOnly || isStudent) && (!item.instructorOnly || isInstructor)) {
           <a
             class="nav-item"
             [routerLink]="item.route"

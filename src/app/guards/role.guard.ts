@@ -41,3 +41,23 @@ export const studentGuard: CanActivateFn = () => {
   }
   return router.createUrlTree(['/dashboard']);
 };
+
+export const instructorGuard: CanActivateFn = () => {
+  const auth = inject(AuthService);
+  const router = inject(Router);
+  const user = auth.currentUser();
+  
+  if (user && user.role) {
+    let roles: string[] = [];
+    if (Array.isArray(user.role)) {
+      roles = user.role;
+    } else {
+      roles = user.role.split(',').map((r: string) => r.trim());
+    }
+    
+    if (roles.includes('Instructor')) {
+      return true;
+    }
+  }
+  return router.createUrlTree(['/dashboard']);
+};

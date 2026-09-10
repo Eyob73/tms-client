@@ -14,6 +14,7 @@ interface NavItem {
   exact?: boolean;
   adminOnly?: boolean;
   studentOnly?: boolean;
+  instructorOnly?: boolean;
 }
 
 interface NavGroup {
@@ -55,6 +56,13 @@ export class ShellComponent {
     if (!role) return false;
     const roles = Array.isArray(role) ? role : role.split(',').map(r => r.trim());
     return roles.includes('Student');
+  }
+
+  get isInstructor(): boolean {
+    const role = this.currentUser()?.role;
+    if (!role) return false;
+    const roles = Array.isArray(role) ? role : role.split(',').map(r => r.trim());
+    return roles.includes('Instructor');
   }
 
 
@@ -145,6 +153,7 @@ export class ShellComponent {
           icon: 'fas fa-chalkboard-teacher',
           route: '/instructor',
           tooltip: 'Instructors',
+          instructorOnly: true,
         },
         {
           label: 'Enrollments',

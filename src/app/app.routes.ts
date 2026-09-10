@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { roleGuard, adminGuard, studentGuard } from './guards/role.guard';
+import { roleGuard, adminGuard, studentGuard, instructorGuard } from './guards/role.guard';
 import { ShellComponent } from './layout/shell.component/shell.component';
 
 export const routes: Routes = [
@@ -31,7 +31,7 @@ export const routes: Routes = [
           import('./features/instructor-dashboard/instructor-dashboard').then(
             (m) => m.InstructorDashboard,
           ),
-        canActivate: [roleGuard('Instructor')],
+        canActivate: [instructorGuard],
       },
       {
         path: 'courses',
@@ -104,6 +104,22 @@ export const routes: Routes = [
           ).then((m) => m.MyEnrollmentsComponent),
       },
       {
+        path: 'instructor/dashboard',
+        canActivate: [instructorGuard],
+        loadComponent: () =>
+          import(
+            './features/instructor-dashboard/instructor-dashboard.component'
+          ).then((m) => m.InstructorDashboardComponent),
+      },
+      {
+        path: 'instructor/courses/:id/teaching',
+        canActivate: [instructorGuard],
+        loadComponent: () =>
+          import(
+            './features/instructor-dashboard/course-teaching/course-teaching.component'
+          ).then((m) => m.CourseTeachingComponent),
+      },
+      {
         path: 'enrollments',
         canActivate: [adminGuard],
         loadComponent: () =>
@@ -126,6 +142,7 @@ export const routes: Routes = [
       },
       {
         path: 'instructor',
+        canActivate: [instructorGuard],
         loadComponent: () =>
           import('./features/instructor-dashboard/instructor-dashboard').then(
             (m) => m.InstructorDashboard,
@@ -137,17 +154,17 @@ export const routes: Routes = [
           import('./features/course-teaching/course-teaching.component').then(
             (m) => m.CourseTeachingComponent,
           ),
-        canActivate: [roleGuard('Instructor')],
+        canActivate: [instructorGuard],
       },
       {
         path: 'assessments',
         loadComponent: () => import('./features/assessments/assessments.component').then(m => m.AssessmentsComponent),
-        canActivate: [roleGuard('Instructor')]
+        canActivate: [instructorGuard]
       },
       {
         path: 'assessments/:id',
         loadComponent: () => import('./features/assessments/assessment-detail.component').then(m => m.AssessmentDetailComponent),
-        canActivate: [roleGuard('Instructor')]
+        canActivate: [instructorGuard]
       },
       {
         path: 'grade-submission',
