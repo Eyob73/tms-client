@@ -88,14 +88,17 @@ export class CourseComponent {
   });
 
   readonly departmentOptions = computed(() => {
-    const values = new Set<string>();
+    const map = new Map<string, string>();
     for (const course of this.courses()) {
-      const department = course.departmentId || course.department;
-      if (department) {
-        values.add(department);
+      const id = course.departmentId || course.department;
+      if (id) {
+        const name = course.departmentName || id;
+        map.set(id, name);
       }
     }
-    return Array.from(values).sort((a, b) => a.localeCompare(b));
+    return Array.from(map.entries())
+      .map(([id, name]) => ({ id, name }))
+      .sort((a, b) => a.name.localeCompare(b.name));
   });
 
   readonly hasActiveFilters = computed(

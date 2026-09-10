@@ -62,10 +62,8 @@ export interface RejectEnrollmentDialogData {
       </mat-dialog-content>
 
       <mat-dialog-actions align="end" class="dialog-actions">
-        <button mat-button type="button" (click)="cancel()">Cancel</button>
-        <button mat-flat-button color="warn" type="button" (click)="confirm()">
-          Reject Enrollment
-        </button>
+        <button class="btn btn--secondary" type="button" (click)="cancel()">Cancel</button>
+        <button class="btn btn--danger" type="button" (click)="confirm()">Reject Enrollment</button>
       </mat-dialog-actions>
     </div>
   `,

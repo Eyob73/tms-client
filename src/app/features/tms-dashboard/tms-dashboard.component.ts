@@ -13,6 +13,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -282,16 +283,10 @@ export class TmsDashboardComponent implements OnInit, AfterViewInit {
     this.activeFilter = filter;
   }
 
+  private readonly router = inject(Router);
+
   createTraining(): void {
-    this.showCreateDialog = true;
-  }
-
-  closeCreateDialog(): void {
-    this.showCreateDialog = false;
-  }
-
-  saveTraining(): void {
-    this.closeCreateDialog();
+    this.router.navigate(['/programs']);
   }
 
   showNotifications(): void {
@@ -460,3 +455,4 @@ export class TmsDashboardComponent implements OnInit, AfterViewInit {
     }
   }
 }
+

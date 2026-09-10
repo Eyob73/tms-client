@@ -11,10 +11,10 @@ describe('UserService', () => {
 
   const mockUser: User = {
     id: 'user-123',
-    userName: 'johndoe',
-    email: 'john@tms.local',
-    firstName: 'John',
-    lastName: 'Doe',
+    userName: 'Abebe',
+    email: 'abebe@tms.local',
+    firstName: 'Abebe',
+    lastName: 'Kebede',
     phoneNumber: '+1234567890',
     department: 'Computer Science',
     isActive: true,
@@ -51,7 +51,7 @@ describe('UserService', () => {
       service.getUsers({
         page: 1,
         pageSize: 10,
-        search: 'john',
+        search: 'Abebe',
         role: 'Instructor',
         isActive: true,
       })
@@ -61,14 +61,14 @@ describe('UserService', () => {
     expect(req.request.method).toBe('GET');
     expect(req.request.params.get('page')).toBe('1');
     expect(req.request.params.get('pageSize')).toBe('10');
-    expect(req.request.params.get('search')).toBe('john');
+    expect(req.request.params.get('search')).toBe('Abebe');
     expect(req.request.params.get('role')).toBe('Instructor');
     expect(req.request.params.get('isActive')).toBe('true');
 
     req.flush(mockPagedResponse);
     const result = await promise;
     expect(result.items.length).toBe(1);
-    expect(result.items[0].userName).toBe('johndoe');
+    expect(result.items[0].userName).toBe('Abebe');
   });
 
   it('getUserById() issues GET /api/users/{id}', async () => {
@@ -80,7 +80,7 @@ describe('UserService', () => {
 
     const user = await promise;
     expect(user.id).toBe('user-123');
-    expect(user.email).toBe('john@tms.local');
+    expect(user.email).toBe('Abebe@tms.local');
   });
 
   it('createUser() issues POST /api/users with payload', async () => {

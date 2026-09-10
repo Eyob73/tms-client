@@ -10,7 +10,9 @@ export interface Course {
   description?: string;
   credits: number;
   departmentId?: string | null;
+  departmentName?: string | null;
   programId?: string | null;
+  programName?: string | null;
   level?: string;
   semester?: string;
   courseType: string;

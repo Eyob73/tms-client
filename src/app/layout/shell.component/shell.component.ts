@@ -4,7 +4,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { LiveSyncService } from '../../services/live-sync.service';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
+import { NotificationStore } from '../../store/notification.store';
 
 import { MatMenuModule } from '@angular/material/menu';
 import { MatBadgeModule } from '@angular/material/badge';
@@ -48,9 +50,20 @@ export class ShellComponent {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly dialog = inject(MatDialog);
+  private readonly notificationStore = inject(NotificationStore);
+  private readonly liveSyncService = inject(LiveSyncService);
+
   isCollapsed = false;
 
   readonly currentUser = this.authService.currentUser;
+
+  // Real-time store signals
+  readonly notifications = this.notificationStore.notifications;
+  readonly unreadNotificationsCount = this.notificationStore.unreadCount;
+
+  ngOnInit() {
+    this.liveSyncService.connect();
+  }
 
   get userDisplayName(): string {
     return this.currentUser()?.displayName || 'Training User';
@@ -226,19 +239,12 @@ export class ShellComponent {
     this.isCollapsed = !this.isCollapsed;
   }
 
-  // Mock Notifications Data
-  notifications = [
-    { id: 1, title: 'New Enrollment', message: 'John Doe enrolled in Advanced Web Dev', time: '5m ago', read: false },
-    { id: 2, title: 'System Update', message: 'TMS has been updated to v2.1.0', time: '1h ago', read: false },
-    { id: 3, title: 'Assignment Graded', message: 'Your assignment has been graded.', time: '2h ago', read: true }
-  ];
-
-  get unreadNotificationsCount(): number {
-    return this.notifications.filter(n => !n.read).length;
+  markAllAsRead(): void {
+    this.notificationStore.markAllAsRead();
   }
 
-  markAllAsRead(): void {
-    this.notifications.forEach(n => n.read = true);
+  markAsRead(id: number): void {
+    this.notificationStore.markAsRead(id);
   }
 
   logout(): void {

@@ -1,0 +1,151 @@
+<div class="settings-page">
+  <div class="page-header">
+    <h1>Settings</h1>
+    <p>Manage your account preferences and system configurations.</p>
+  </div>
+
+  <mat-tab-group class="settings-tabs" animationDuration="0ms">
+    <!-- MY SETTINGS TAB -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">person</mat-icon>
+        My Settings
+      </ng-template>
+
+      <div class="tab-content">
+        <div class="settings-grid">
+          <!-- Appearance Card -->
+          <mat-card class="settings-card">
+            <mat-card-header>
+              <mat-icon mat-card-avatar>palette</mat-icon>
+              <mat-card-title>Appearance</mat-card-title>
+              <mat-card-subtitle>Customize your UI experience</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="setting-row">
+                <div class="setting-info">
+                  <span class="setting-label">Theme</span>
+                  <span class="setting-desc">Choose your preferred color theme.</span>
+                </div>
+                <div class="setting-control">
+                  <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                    <mat-select [ngModel]="themePref()" (ngModelChange)="themePref.set($event)">
+                      <mat-option value="light">Light Mode</mat-option>
+                      <mat-option value="dark">Dark Mode</mat-option>
+                      <mat-option value="system">System Default</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Preferences Card -->
+          <mat-card class="settings-card">
+            <mat-card-header>
+              <mat-icon mat-card-avatar>language</mat-icon>
+              <mat-card-title>Preferences</mat-card-title>
+              <mat-card-subtitle>Language and localization</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="setting-row">
+                <div class="setting-info">
+                  <span class="setting-label">Language</span>
+                  <span class="setting-desc">Display language for the application.</span>
+                </div>
+                <div class="setting-control">
+                  <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                    <mat-select [ngModel]="langPref()" (ngModelChange)="langPref.set($event)">
+                      <mat-option value="en">English (US)</mat-option>
+                      <mat-option value="es">Español</mat-option>
+                      <mat-option value="fr">Français</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Notifications Card -->
+          <mat-card class="settings-card">
+            <mat-card-header>
+              <mat-icon mat-card-avatar>notifications</mat-icon>
+              <mat-card-title>Notifications</mat-card-title>
+              <mat-card-subtitle>Manage your alerts</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="setting-row">
+                <div class="setting-info">
+                  <span class="setting-label">Email Notifications</span>
+                  <span class="setting-desc">Receive important updates via email.</span>
+                </div>
+                <div class="setting-control">
+                  <mat-slide-toggle [ngModel]="emailNotif()" (ngModelChange)="emailNotif.set($event)" color="primary"></mat-slide-toggle>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn btn--primary" [disabled]="isUserSaving()" (click)="saveUserSettings()">
+            <mat-icon>save</mat-icon>
+            {{ isUserSaving() ? 'Saving...' : 'Save My Settings' }}
+          </button>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- SYSTEM SETTINGS TAB (Admin Only) -->
+    <mat-tab *ngIf="isAdmin()">
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">admin_panel_settings</mat-icon>
+        System Settings
+      </ng-template>
+
+      <div class="tab-content">
+        <div class="settings-grid">
+          <!-- General System Settings Card -->
+          <mat-card class="settings-card">
+            <mat-card-header>
+              <mat-icon mat-card-avatar>settings_system_daydream</mat-icon>
+              <mat-card-title>Global Configuration</mat-card-title>
+              <mat-card-subtitle>Core settings for the TMS</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="setting-row">
+                <div class="setting-info">
+                  <span class="setting-label">System Name</span>
+                  <span class="setting-desc">The global branding name for the platform.</span>
+                </div>
+                <div class="setting-control">
+                  <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                    <input matInput [ngModel]="sysName()" (ngModelChange)="sysName.set($event)" placeholder="e.g. AAU TMS" />
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="setting-row">
+                <div class="setting-info">
+                  <span class="setting-label">Maintenance Mode</span>
+                  <span class="setting-desc">Restrict access for all non-admin users.</span>
+                </div>
+                <div class="setting-control">
+                  <mat-slide-toggle [ngModel]="sysMaintenance()" (ngModelChange)="sysMaintenance.set($event)" color="warn"></mat-slide-toggle>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn btn--primary" [disabled]="isSysSaving()" (click)="saveSystemSettings()">
+            <mat-icon>save</mat-icon>
+            {{ isSysSaving() ? 'Saving...' : 'Save System Settings' }}
+          </button>
+        </div>
+      </div>
+    </mat-tab>
+
+  </mat-tab-group>
+</div>

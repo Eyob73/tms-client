@@ -73,34 +73,34 @@
         
         <!-- Notifications Menu Trigger -->
         <button class="header-btn" type="button" title="Notifications" [matMenuTriggerFor]="notificationsMenu">
-          <mat-icon [matBadge]="unreadNotificationsCount > 0 ? unreadNotificationsCount : null" matBadgeColor="warn" matBadgeSize="small">notifications_none</mat-icon>
+          <mat-icon [matBadge]="unreadNotificationsCount() > 0 ? unreadNotificationsCount() : null" matBadgeColor="warn" matBadgeSize="small">notifications_none</mat-icon>
         </button>
         
         <!-- Notifications Menu -->
         <mat-menu #notificationsMenu="matMenu" class="notifications-menu" xPosition="before">
           <div class="notifications-header" (click)="$event.stopPropagation()">
             <h3>Notifications</h3>
-            @if (unreadNotificationsCount > 0) {
+            @if (unreadNotificationsCount() > 0) {
               <button mat-button color="primary" class="mark-read-btn" (click)="markAllAsRead()">Mark all as read</button>
             }
           </div>
           <mat-divider></mat-divider>
           <div class="notifications-list">
-            @for (notification of notifications; track notification.id) {
-              <button mat-menu-item class="notification-item" [class.unread]="!notification.read">
+            @for (notification of notifications(); track notification.id) {
+              <button mat-menu-item class="notification-item" [class.unread]="!notification.isRead" (click)="!notification.isRead && markAsRead(notification.id)">
                 <div class="notification-content">
                   <div class="notification-title">
                     {{ notification.title }}
-                    @if (!notification.read) {
+                    @if (!notification.isRead) {
                       <span class="unread-dot"></span>
                     }
                   </div>
                   <div class="notification-message">{{ notification.message }}</div>
-                  <div class="notification-time">{{ notification.time }}</div>
+                  <div class="notification-time">{{ notification.createdAt | date:'short' }}</div>
                 </div>
               </button>
             }
-            @if (notifications.length === 0) {
+            @if (notifications().length === 0) {
               <div class="notifications-empty">
                 <mat-icon>notifications_paused</mat-icon>
                 <p>No new notifications.</p>
@@ -137,7 +137,7 @@
             <mat-icon>person</mat-icon>
             <span>My Profile</span>
           </button>
-          <button mat-menu-item>
+          <button mat-menu-item routerLink="/settings">
             <mat-icon>settings</mat-icon>
             <span>Settings</span>
           </button>
