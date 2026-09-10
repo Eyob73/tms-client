@@ -1,0 +1,141 @@
+<div class="wrap">
+  <header>
+    <div class="header-text">
+      <h1>Assessments</h1>
+      <p>Manage course assessments, quizzes, and grade distribution.</p>
+    </div>
+    <button class="add-user-btn" (click)="openAddAssessment()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Add Assessment
+    </button>
+  </header>
+
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-icon" style="background:var(--blue-tint);color:var(--blue)">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16c0 1.1.9 2 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/><path d="M14 3v5h5M16 13H8M16 17H8M10 9H8"/></svg>
+      </div>
+      <div>
+        <div class="stat-label">Total Assessments</div>
+        <div class="stat-value">{{ assessments().length }}</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background:var(--green-tint);color:var(--green)">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
+      </div>
+      <div>
+        <div class="stat-label">Published</div>
+        <div class="stat-value">{{ publishedCount() }}</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background:var(--gold-tint);color:var(--gold)">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      </div>
+      <div>
+        <div class="stat-label">Drafts</div>
+        <div class="stat-value">{{ draftCount() }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="search-field">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="search" type="text" placeholder="Search by title or course..." autocomplete="off"
+             [ngModel]="searchInput()" (ngModelChange)="onSearchChange($event)">
+      @if (searchInput().trim()) {
+        <button class="clear-btn" (click)="onSearchChange('')" aria-label="Clear search">
+          <mat-icon style="font-size:18px; width:18px; height:18px;">close</mat-icon>
+        </button>
+      }
+    </div>
+
+    <div class="result-count">{{ filteredAssessments().length }} shown</div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <h2>Assessment directory</h2>
+      <p>Manage course quizzes, exams, and project marks.</p>
+    </div>
+
+    <div style="overflow-x:auto;">
+      <table mat-table [dataSource]="filteredAssessments()" matSort (matSortChange)="onSortChange($event)" class="users-table">
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Title</th>
+          <td mat-cell *matCellDef="let a">
+            <div style="font-weight: 600; color: var(--ink)">{{ a.title }}</div>
+            <div style="font-size: 12px; color: var(--ink-soft)">{{ a.assessmentType }}</div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="course">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Course</th>
+          <td mat-cell *matCellDef="let a">
+            <div>{{ a.courseCode }}</div>
+            <div style="font-size: 12px; color: var(--ink-soft)">{{ a.courseName }}</div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="marks">
+          <th mat-header-cell *matHeaderCellDef>Weight & Marks</th>
+          <td mat-cell *matCellDef="let a">
+            <div class="badge badge--neutral">{{ a.weightPercentage }}%</div>
+            <div style="font-size: 12px; color: var(--ink-soft); margin-top: 4px">Out of {{ a.totalMarks }}</div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
+          <td mat-cell *matCellDef="let a">
+            {{ a.assessmentDate | date: 'mediumDate' }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+          <td mat-cell *matCellDef="let a">
+            <span class="badge" [ngClass]="getStatusBadgeClass(a.isPublished)">
+              <mat-icon style="font-size:14px;width:14px;height:14px;margin-right:4px;vertical-align:bottom;">{{ getStatusIcon(a.isPublished) }}</mat-icon>
+              {{ a.isPublished ? 'Published' : 'Draft' }}
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let a" style="position:relative;text-align:right;padding-right:16px;">
+            <button [matMenuTriggerFor]="menu" class="kebab">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+            </button>
+
+            <mat-menu #menu="matMenu" xPosition="before" class="user-actions-menu">
+              <a mat-menu-item [routerLink]="['/assessments', a.id]">View details</a>
+              <button mat-menu-item (click)="togglePublish(a)">
+                {{ a.isPublished ? 'Unpublish' : 'Publish' }}
+              </button>
+              <button mat-menu-item (click)="deleteAssessment(a)" class="danger-item">
+                Delete
+              </button>
+            </mat-menu>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="6">
+            @if (isLoading()) {
+              <div class="empty-state"><strong>Loading...</strong></div>
+            } @else {
+              <div class="empty-state"><strong>No assessments found</strong></div>
+            }
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

@@ -12,7 +12,7 @@
         </div>
         <h2>Unable to load course details.</h2>
         <p>{{ errorMessage() }}</p>
-        <a class="plain-back-btn" routerLink="/courses">
+        <a class="btn btn--secondary btn--sm" routerLink="/courses">
           <mat-icon>arrow_back</mat-icon>
           <span>Back to Courses</span>
         </a>
@@ -20,10 +20,10 @@
     } @else if (course()) {
       <div class="page-header animate-in">
         <div class="page-header__left">
-          <a class="back-btn plain-back-btn" routerLink="/courses">
-            <mat-icon>arrow_back</mat-icon>
-            <span>Back to Courses</span>
-          </a>
+          <a class="back-link" routerLink="/courses">
+          <mat-icon>arrow_back</mat-icon>
+          <span>Back to Courses</span>
+        </a>
         </div>
       </div>
 
@@ -39,11 +39,15 @@
         </div>
 
         <div class="hero__actions">
-          <button mat-stroked-button color="primary" type="button" (click)="editCourse()">
+          <a class="btn btn--secondary" (click)="editCourse()">
             <mat-icon>edit</mat-icon>
             <span>Edit</span>
+          </a>
+          <button class="btn btn--secondary" type="button" (click)="openAssignInstructorDialog()">
+            <mat-icon>person_add</mat-icon>
+            <span>Assign Instructor</span>
           </button>
-          <button mat-flat-button color="warn" type="button" (click)="openDeleteDialog()">
+          <button class="btn btn--ghost btn--danger" type="button" (click)="openDeleteDialog()">
             <mat-icon>delete</mat-icon>
             <span>Delete</span>
           </button>
@@ -53,7 +57,7 @@
       <section class="overview-grid animate-in delay-2">
         @for (item of overviewCards(); track item.label) {
           <div class="info-card card">
-            <div class="info-card__icon">
+            <div class="info-card__icon info-card__icon--primary">
               <mat-icon>{{ item.icon }}</mat-icon>
             </div>
             <div class="info-card__body">
@@ -65,75 +69,91 @@
       </section>
 
       <section class="detail-grid animate-in delay-3">
-        <mat-card class="detail-card card">
-          <mat-card-header>
-            <mat-card-title>Course Information</mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
+        <div class="card detail-card">
+          <div class="card-header">
+            <div class="card-title">Course Information</div>
+          </div>
+          <div class="card-body">
             <div class="info-block">
-              <h3>Description</h3>
-              <p>{{ course()?.description || 'No description provided for this course.' }}</p>
+              <h3 style="margin: 0 0 10px; color: var(--ink); font-size: 1rem; font-weight: 700;">Description</h3>
+              <p style="margin: 0; color: var(--ink-soft); line-height: 1.7;">{{ course()?.description || 'No description provided for this course.' }}</p>
             </div>
 
-            <mat-divider></mat-divider>
+            <hr class="divider" style="margin: 16px 0; border: none; border-top: 1px solid var(--color-border);" />
 
             <div class="info-block">
-              <h3>Academic Information</h3>
+              <h3 style="margin: 0 0 10px; color: var(--ink); font-size: 1rem; font-weight: 700;">Academic Information</h3>
               <div class="detail-list">
                 <div class="detail-row">
-                  <span class="label">Department</span>
-                  <span class="value">{{ departmentName() }}</span>
+                  <span class="detail-label">Department</span>
+                  <span class="detail-value">{{ departmentName() }}</span>
                 </div>
                 <div class="detail-row">
-                  <span class="label">Program</span>
-                  <span class="value">{{ programName() }}</span>
+                  <span class="detail-label">Program</span>
+                  <span class="detail-value">{{ programName() }}</span>
                 </div>
                 <div class="detail-row">
-                  <span class="label">Course Type</span>
-                  <span class="value">{{ course()?.courseType || '—' }}</span>
+                  <span class="detail-label">Course Type</span>
+                  <span class="detail-value">{{ course()?.courseType || '—' }}</span>
                 </div>
                 <div class="detail-row">
-                  <span class="label">Level</span>
-                  <span class="value">{{ course()?.level || '—' }}</span>
+                  <span class="detail-label">Level</span>
+                  <span class="detail-value">{{ course()?.level || '—' }}</span>
                 </div>
                 <div class="detail-row">
-                  <span class="label">Prerequisite</span>
-                  <span class="value">{{
+                  <span class="detail-label">Prerequisite</span>
+                  <span class="detail-value">{{
                     hasPrerequisite ? 'Available' : 'No prerequisite courses'
                   }}</span>
                 </div>
               </div>
             </div>
-          </mat-card-content>
-        </mat-card>
+          </div>
+        </div>
 
-        <mat-card class="detail-card card">
-          <mat-card-header>
-            <mat-card-title>Course Status</mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
-            <div class="status-list">
-              <div class="status-row">
-                <span class="label">Status</span>
-                <span [class]="courseStatusClass">{{ course()?.status || 'Active' }}</span>
-              </div>
-              <div class="status-row">
-                <span class="label">Published</span>
-                <span class="status-bullet status-bullet--success">
-                  {{ course()?.isPublished ? 'Yes' : 'No' }}
+        <div class="card detail-card">
+          <div class="card-header">
+            <div class="card-title">Course Status</div>
+          </div>
+          <div class="card-body">
+            <div class="detail-list">
+              <div class="detail-row">
+                <span class="detail-label">Status</span>
+                <span class="detail-value">
+                  <span
+                    class="status-indicator"
+                    [class.status-indicator--active]="course()?.status === 'Active'"
+                    [class.status-indicator--inactive]="course()?.status !== 'Active'"
+                  >
+                    <span class="status-dot"></span>
+                    <span>{{ course()?.status || 'Active' }}</span>
+                  </span>
                 </span>
               </div>
-              <div class="status-row">
-                <span class="label">Created</span>
-                <span>{{ formatDate(course()?.createdAt) }}</span>
+              <div class="detail-row">
+                <span class="detail-label">Published</span>
+                <span class="detail-value">
+                  <span
+                    class="status-indicator"
+                    [class.status-indicator--active]="course()?.isPublished"
+                    [class.status-indicator--inactive]="!course()?.isPublished"
+                  >
+                    <span class="status-dot"></span>
+                    <span>{{ course()?.isPublished ? 'Yes' : 'No' }}</span>
+                  </span>
+                </span>
               </div>
-              <div class="status-row">
-                <span class="label">Updated</span>
-                <span>{{ formatDate(course()?.updatedAt) }}</span>
+              <div class="detail-row">
+                <span class="detail-label">Created</span>
+                <span class="detail-value">{{ formatDate(course()?.createdAt) }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Updated</span>
+                <span class="detail-value">{{ formatDate(course()?.updatedAt) }}</span>
               </div>
             </div>
-          </mat-card-content>
-        </mat-card>
+          </div>
+        </div>
       </section>
 
       <section class="section-card card animate-in delay-4">

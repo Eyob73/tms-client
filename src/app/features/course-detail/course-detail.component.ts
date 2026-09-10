@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, effect, inject, input, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
 import {
   MAT_DIALOG_DATA,
   MatDialog,
@@ -19,6 +18,7 @@ import { DepartmentService } from '../../services/department';
 import { ProgramService } from '../../services/program';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { CourseStore } from '../../store/course.store';
+import { AssignInstructorDialogComponent } from './assign-instructor-dialog.component';
 
 interface CourseOfferingRow {
   academicYear: string;
@@ -37,7 +37,6 @@ interface CourseOfferingRow {
   imports: [
     CommonModule,
     RouterLink,
-    MatCardModule,
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
@@ -99,6 +98,7 @@ export class CourseDetailComponent {
       { label: 'Course Type', value: course.courseType || '—', icon: 'category' },
       { label: 'Level', value: course.level || '—', icon: 'bar_chart' },
       { label: 'Status', value: course.status || 'Active', icon: 'toggle_on' },
+      { label: 'Instructor', value: course.instructorName || 'Not Assigned', icon: 'person' },
       { label: 'Duration', value: this.formatDuration(course.durationHours), icon: 'schedule' },
       { label: 'Published', value: course.isPublished ? 'Yes' : 'No', icon: 'visibility' },
     ];
@@ -226,6 +226,28 @@ export class CourseDetailComponent {
 
     void this.router.navigate(['/courses/new'], {
       queryParams: { editId: currentCourse.id },
+    });
+  }
+
+  openAssignInstructorDialog(): void {
+    const currentCourse = this.course();
+    if (!currentCourse) return;
+
+    const dialogRef = this.dialog.open(AssignInstructorDialogComponent, {
+      width: 'min(100vw - 24px, 420px)',
+      maxWidth: '420px',
+      data: {
+        courseId: currentCourse.id,
+        courseName: currentCourse.courseName,
+        currentInstructorId: currentCourse.instructorId,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        // Reload course details to reflect changes
+        this.courseStore.loadCourses({ pageIndex: 1, pageSize: 200 });
+      }
     });
   }
 
