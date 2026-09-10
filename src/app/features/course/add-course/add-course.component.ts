@@ -156,25 +156,11 @@ export class AddCourseComponent {
       });
     });
 
-    this.form.get('departmentId')?.valueChanges.subscribe((value) => {
-      const programControl = this.form.get('programId');
-      if (!value || !String(value).trim()) {
-        programControl?.reset(null);
-        return;
-      }
-      const isValid = this.programStore.entities().some(
-        p => p.departmentId === value && p.id === programControl?.value
-      );
-      if (!isValid) {
-        programControl?.reset(null);
-      }
-    });
-
     this.form.get('prerequisiteCourseId')?.valueChanges.subscribe((value) => {
       const currentId = this.courseId();
       const control = this.form.get('prerequisiteCourseId');
       control?.setValidators(selfPrerequisiteValidator(currentId));
-      control?.updateValueAndValidity();
+      control?.updateValueAndValidity({ emitEvent: false });
     });
   }
 
@@ -227,6 +213,10 @@ export class AddCourseComponent {
     this.form.patchValue(formValue);
     this.form.get('prerequisiteCourseId')?.setValidators(selfPrerequisiteValidator(course.id));
     this.form.get('prerequisiteCourseId')?.updateValueAndValidity();
+  }
+
+  onDepartmentChange(): void {
+    this.form.get('programId')?.setValue(null);
   }
 
   submit(): void {

@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { environment } from '../../environments/environment';
 import {
   Enrollment,
@@ -74,7 +74,9 @@ export class EnrollmentService {
 
   // Legacy backward compatibility methods
   getAll(): Observable<Enrollment[]> {
-    return this.http.get<Enrollment[]>(this.baseUrl);
+    return this.getEnrollments({ pageSize: 1000 }).pipe(
+      map(res => res.items)
+    );
   }
 
   approve(id: string): Observable<Enrollment> {

@@ -7,8 +7,7 @@
       <div class="welcome-text">
         <h2>Welcome back, {{ welcomeName }}!</h2>
         <p>
-          You have 5 training sessions scheduled this week. 12 employees are awaiting certification
-          renewals. Keep up the great work!
+          You have 5 training sessions scheduled this week.
         </p>
         <div class="welcome-actions">
           <button class="welcome-btn welcome-btn-primary" (click)="createTraining()">
@@ -45,15 +44,11 @@
           <div class="stat-icon blue">
             <mat-icon>menu_book</mat-icon>
           </div>
-          <div class="stat-trend up">
-            <mat-icon style="font-size: 14px; width: 14px; height: 14px">trending_up</mat-icon>
-            +12%
-          </div>
         </div>
-        <div class="stat-value">{{ stats.totalCourses }}</div>
+        <div class="stat-value">{{ stats().totalCourses }}</div>
         <div class="stat-label">Active Courses</div>
         <div class="stat-progress">
-          <div class="stat-progress-bar" style="width: 78%; background: var(--info)"></div>
+          <div class="stat-progress-bar" style="width: 100%; background: var(--info)"></div>
         </div>
       </div>
 
@@ -62,32 +57,24 @@
           <div class="stat-icon green">
             <mat-icon>groups</mat-icon>
           </div>
-          <div class="stat-trend up">
-            <mat-icon style="font-size: 14px; width: 14px; height: 14px">trending_up</mat-icon>
-            +8%
-          </div>
         </div>
-        <div class="stat-value">{{ stats.totalEmployees }}</div>
-        <div class="stat-label">Enrolled Students</div>
+        <div class="stat-value">{{ stats().activeLearners }}</div>
+        <div class="stat-label">Active Learners</div>
         <div class="stat-progress">
-          <div class="stat-progress-bar" style="width: 65%; background: var(--success)"></div>
+          <div class="stat-progress-bar" style="width: 100%; background: var(--success)"></div>
         </div>
       </div>
 
       <div class="stat-card animate-in delay-3">
         <div class="stat-card-header">
           <div class="stat-icon orange">
-            <mat-icon>workspace_premium</mat-icon>
-          </div>
-          <div class="stat-trend down">
-            <mat-icon style="font-size: 14px; width: 14px; height: 14px">trending_down</mat-icon>
-            -3%
+            <mat-icon>school</mat-icon>
           </div>
         </div>
-        <div class="stat-value">{{ stats.certifications }}</div>
-        <div class="stat-label">Certifications Issued</div>
+        <div class="stat-value">{{ stats().totalEnrollments }}</div>
+        <div class="stat-label">Total Enrollments</div>
         <div class="stat-progress">
-          <div class="stat-progress-bar" style="width: 52%; background: var(--warning)"></div>
+          <div class="stat-progress-bar" style="width: 100%; background: var(--warning)"></div>
         </div>
       </div>
 
@@ -96,15 +83,11 @@
           <div class="stat-icon purple">
             <mat-icon>trending_up</mat-icon>
           </div>
-          <div class="stat-trend up">
-            <mat-icon style="font-size: 14px; width: 14px; height: 14px">trending_up</mat-icon>
-            +5%
-          </div>
         </div>
-        <div class="stat-value">{{ stats.completionRate }}%</div>
+        <div class="stat-value">{{ stats().completionRate }}%</div>
         <div class="stat-label">Completion Rate</div>
         <div class="stat-progress">
-          <div class="stat-progress-bar" [style.width.%]="stats.completionRate" style="background: #8b5cf6"></div>
+          <div class="stat-progress-bar" [style.width.%]="stats().completionRate" style="background: #8b5cf6"></div>
         </div>
       </div>
     </div>
@@ -157,7 +140,7 @@
         <div class="card-header">
           <div>
             <div class="card-title">Course Categories</div>
-            <div class="card-subtitle">Distribution by department</div>
+            <div class="card-subtitle">Distribution by course type</div>
           </div>
         </div>
         <div class="card-body">
@@ -184,49 +167,43 @@
               <tr>
                 <th>Course</th>
                 <th>Status</th>
-                <th>Progress</th>
                 <th>Enrolled</th>
                 <th>Due Date</th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let course of filteredCourses.slice(0, 6)">
+              <tr *ngFor="let course of filteredCourses()">
                 <td>
                   <div class="course-info">
-                    <div class="course-icon" [style.background]="course.iconBg">
-                      <mat-icon [style.color]="course.iconColor">{{ course.icon }}</mat-icon>
+                    <div class="course-icon" style="background: rgba(59,130,246,0.1)">
+                      <mat-icon style="color: #3b82f6">menu_book</mat-icon>
                     </div>
                     <div>
-                      <div class="course-name">{{ course.name }}</div>
-                      <div class="course-category">{{ course.category }}</div>
+                      <div class="course-name">{{ course.courseName }}</div>
+                      <div class="course-category">{{ course.courseType }}</div>
                     </div>
                   </div>
                 </td>
                 <td>
-                  <span class="status-badge" [ngClass]="'status-' + course.status">{{
-                    course.statusLabel
+                  <span class="status-badge" [ngClass]="'status-' + (course.status?.toLowerCase() || 'upcoming')">{{
+                    course.status
                     }}</span>
                 </td>
                 <td>
-                  <div class="progress-bar-container">
-                    <div class="progress-bar-bg">
-                      <div class="progress-bar-fill" [style.width.%]="course.progress"
-                        [style.background]="course.progressColor"></div>
-                    </div>
-                    <span class="progress-text">{{ course.progress }}%</span>
-                  </div>
-                </td>
-                <td>
-                  <span style="font-weight: 600">{{ course.enrolled }}</span>
+                  <span style="font-weight: 600">{{ course.displayEnrollmentCount || 0 }}</span>
                   <span style="color: var(--text-secondary); font-size: 11px">
-                    / {{ course.capacity }}</span>
+                    / {{ course.maxCapacity || 30 }}</span>
                 </td>
                 <td>
-                  <span style="font-size: 13px">{{ course.dueDate }}</span>
+                  <span style="font-size: 13px">{{ (course.updatedAt || course.createdAt) | date }}</span>
                 </td>
               </tr>
             </tbody>
           </table>
+          <div *ngIf="filteredCourses().length === 0"
+            style="padding: 20px; text-align: center; color: var(--text-secondary);">
+            No courses found.
+          </div>
         </div>
       </div>
 
@@ -238,7 +215,11 @@
           </div>
         </div>
         <div class="card-body recent-activity-scroll">
-          <div class="activity-item" *ngFor="let activity of activities">
+          <div *ngIf="recentActivities().length === 0"
+            style="padding: 20px; text-align: center; color: var(--text-secondary);">
+            No recent activity.
+          </div>
+          <div class="activity-item" *ngFor="let activity of recentActivities()">
             <div class="activity-icon" [style.background]="activity.iconBg">
               <mat-icon [style.color]="activity.iconColor">{{ activity.icon }}</mat-icon>
             </div>
@@ -246,133 +227,6 @@
               <div class="activity-text" [innerHTML]="activity.text"></div>
               <div class="activity-time">{{ activity.time }}</div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Bottom Row -->
-    <div class="content-grid-equal animate-in delay-5">
-      <!-- Upcoming Trainings -->
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <div class="card-title">Upcoming Sessions</div>
-            <div class="card-subtitle">Next 7 days</div>
-          </div>
-          <button class="card-action" (click)="setPage('schedule')">See All</button>
-        </div>
-        <div class="card-body">
-          <div class="upcoming-item" *ngFor="let item of upcomingTrainings">
-            <div class="upcoming-date">
-              <span class="day">{{ item.day }}</span>
-              <span class="month">{{ item.month }}</span>
-            </div>
-            <div class="upcoming-info">
-              <div class="upcoming-title">{{ item.title }}</div>
-              <div class="upcoming-meta">{{ item.time }} • {{ item.trainer }}</div>
-            </div>
-            <div class="upcoming-avatars">
-              <div class="mini-avatar" *ngFor="let av of item.avatars" [style.background]="av.color">
-                {{ av.initials }}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Quick Actions & Calendar -->
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <div class="card-title">Quick Actions</div>
-            <div class="card-subtitle">September 2026</div>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="quick-actions" style="margin-bottom: 20px">
-            <button class="quick-action-btn" (click)="createTraining()">
-              <mat-icon>add_circle</mat-icon>
-              <span>New Course</span>
-            </button>
-            <button class="quick-action-btn">
-              <mat-icon>person_add</mat-icon>
-              <span>Add Employee</span>
-            </button>
-            <button class="quick-action-btn">
-              <mat-icon>event</mat-icon>
-              <span>Schedule Session</span>
-            </button>
-            <button class="quick-action-btn">
-              <mat-icon>assessment</mat-icon>
-              <span>Create Assessment</span>
-            </button>
-          </div>
-
-          <!-- Mini Calendar -->
-          <div style="border-top: 1px solid var(--bg); padding-top: 16px">
-            <div style="
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                margin-bottom: 12px;
-              ">
-              <span style="font-size: 14px; font-weight: 600">September 2026</span>
-              <div style="display: flex; gap: 4px">
-                <mat-icon style="
-                    font-size: 18px;
-                    width: 18px;
-                    height: 18px;
-                    cursor: pointer;
-                    color: var(--text-secondary);
-                  ">chevron_left</mat-icon>
-                <mat-icon style="
-                    font-size: 18px;
-                    width: 18px;
-                    height: 18px;
-                    cursor: pointer;
-                    color: var(--text-secondary);
-                  ">chevron_right</mat-icon>
-              </div>
-            </div>
-            <div class="calendar-grid">
-              <div class="calendar-header-cell" *ngFor="let d of calendarDays">{{ d }}</div>
-              <div class="calendar-cell" *ngFor="let cell of calendarCells" [ngClass]="{
-                  today: cell.isToday,
-                  'has-event': cell.hasEvent,
-                  'other-month': cell.otherMonth,
-                }">
-                {{ cell.day }}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Certifications -->
-    <div class="content-grid-single">
-      <div class="card">
-        <div class="card-header">
-          <div>
-            <div class="card-title">Certification Status</div>
-            <div class="card-subtitle">Upcoming renewals and expirations</div>
-          </div>
-          <button class="card-action" (click)="setPage('certifications')">Manage</button>
-        </div>
-        <div class="card-body">
-          <div class="cert-item" *ngFor="let cert of certifications">
-            <div class="cert-info">
-              <div class="cert-icon" [style.background]="cert.iconBg">
-                <mat-icon [style.color]="cert.iconColor" style="font-size: 18px; width: 18px; height: 18px">{{ cert.icon
-                  }}</mat-icon>
-              </div>
-              <div>
-                <div class="cert-name">{{ cert.name }}</div>
-                <div class="cert-expiry">Expires: {{ cert.expiry }}</div>
-              </div>
-            </div>
-            <span class="chip" [ngClass]="cert.chipClass">{{ cert.status }}</span>
           </div>
         </div>
       </div>

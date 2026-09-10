@@ -140,7 +140,7 @@
               <div class="form-grid">
                 <mat-form-field appearance="outline" class="form-field">
                   <mat-label>Department</mat-label>
-                  <mat-select formControlName="departmentId">
+                  <mat-select formControlName="departmentId" (selectionChange)="onDepartmentChange()">
                     @for (department of departmentOptions(); track department.id) {
                       <mat-option [value]="department.id">{{ department.label }}</mat-option>
                     }
