@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal, DestroyRef, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { AuthService } from '../../services/auth.service';
 import { LiveSyncService } from '../../services/live-sync.service';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
@@ -61,8 +63,48 @@ export class ShellComponent {
   readonly notifications = this.notificationStore.notifications;
   readonly unreadNotificationsCount = this.notificationStore.unreadCount;
 
+  private readonly destroyRef = inject(DestroyRef);
+  readonly currentPageTitle = signal('Dashboard');
+
   ngOnInit() {
     this.liveSyncService.connect();
+    
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe((event: any) => {
+      this.updatePageTitle(event.urlAfterRedirects);
+    });
+
+    // Initial check
+    this.updatePageTitle(this.router.url);
+  }
+
+  private updatePageTitle(url: string): void {
+    // Exact matches first
+    for (const group of this.navGroups) {
+      for (const item of group.items) {
+        if (item.route !== '#' && url === item.route) {
+          this.currentPageTitle.set(item.label);
+          return;
+        }
+      }
+    }
+
+    // Partial matches
+    let bestMatch = 'Dashboard';
+    let longestRoute = '';
+    for (const group of this.navGroups) {
+      for (const item of group.items) {
+        if (item.route !== '#' && !item.exact && url.startsWith(item.route)) {
+          if (item.route.length > longestRoute.length) {
+            longestRoute = item.route;
+            bestMatch = item.label;
+          }
+        }
+      }
+    }
+    this.currentPageTitle.set(bestMatch);
   }
 
   get userDisplayName(): string {

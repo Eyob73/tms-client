@@ -55,11 +55,11 @@
           <mat-icon>{{ isCollapsed ? 'menu' : 'menu_open' }}</mat-icon>
         </button>
         <div class="header-title-group">
-          <h1 class="page-title">Dashboard</h1>
+          <h1 class="page-title">{{ currentPageTitle() }}</h1>
           <div class="page-breadcrumb">
             <span class="crumb">Home</span>
             <mat-icon class="crumb-sep">chevron_right</mat-icon>
-            <span class="crumb active">Dashboard</span>
+            <span class="crumb active">{{ currentPageTitle() }}</span>
           </div>
         </div>
       </div>
